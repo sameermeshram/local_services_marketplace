@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Provider Profile | FixIt Local</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .bento-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-container": "#5c2400",
+                "inverse-primary": "#80d5cb",
+                "tertiary-container": "#5f6a7f",
+                "surface-container": "#eeeeed",
+                "outline": "#6e7977",
+                "surface-bright": "#f9f9f8",
+                "primary": "#005c55",
+                "surface": "#f9f9f8",
+                "on-background": "#1a1c1c",
+                "error": "#ba1a1a",
+                "surface-container-low": "#f3f4f3",
+                "on-error": "#ffffff",
+                "surface-container-high": "#e8e8e7",
+                "primary-container": "#0f766e",
+                "tertiary-fixed": "#d8e3fb",
+                "on-error-container": "#93000a",
+                "surface-dim": "#dadad9",
+                "secondary-container": "#fd761a",
+                "outline-variant": "#bdc9c6",
+                "on-primary": "#ffffff",
+                "on-tertiary-fixed": "#111c2d",
+                "on-primary-container": "#a3faef",
+                "on-surface": "#1a1c1c",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed-variant": "#3c475a",
+                "on-secondary-fixed-variant": "#783200",
+                "on-primary-fixed-variant": "#00504a",
+                "primary-fixed-dim": "#80d5cb",
+                "on-primary-fixed": "#00201d",
+                "inverse-surface": "#2f3130",
+                "secondary-fixed-dim": "#ffb690",
+                "on-secondary": "#ffffff",
+                "secondary": "#9d4300",
+                "on-secondary-fixed": "#341100",
+                "surface-container-lowest": "#ffffff",
+                "on-tertiary-container": "#e2ebff",
+                "background": "#f9f9f8",
+                "inverse-on-surface": "#f1f1f0",
+                "surface-variant": "#e2e2e2",
+                "primary-fixed": "#9cf2e8",
+                "secondary-fixed": "#ffdbca",
+                "tertiary": "#475266",
+                "surface-tint": "#006a63",
+                "on-surface-variant": "#3e4947",
+                "on-tertiary": "#ffffff",
+                "surface-container-highest": "#e2e2e2",
+                "tertiary-fixed-dim": "#bcc7de"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "container-max": "1280px",
+                "gutter": "24px",
+                "margin-mobile": "16px",
+                "base": "4px",
+                "margin-desktop": "32px"
+            },
+            "fontFamily": {
+                "headline-lg-mobile": ["Inter"],
+                "headline-md": ["Inter"],
+                "display": ["Inter"],
+                "headline-sm": ["Inter"],
+                "body-sm": ["Inter"],
+                "body-lg": ["Inter"],
+                "label-md": ["Inter"],
+                "headline-lg": ["Inter"],
+                "body-md": ["Inter"]
+            },
+            "fontSize": {
+                "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Sidebar (Predicted) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant shadow-sm flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">FixIt Local</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Local Service Marketplace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-md text-label-md">My Bookings</span>
+</a>
+<a class="flex items-center gap-3 bg-primary-container/10 text-primary border-l-4 border-primary px-6 py-4 font-bold" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:text-primary hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+</nav>
+<div class="px-6 pt-6 border-t border-outline-variant">
+<button class="w-full bg-secondary-container text-on-secondary-container py-3 px-4 rounded-lg font-bold hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">swap_horiz</span>
+                Switch to Provider
+            </button>
+<a class="flex items-center gap-3 text-on-surface-variant py-6 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] min-h-screen">
+<!-- Top App Bar (Predicted) -->
+<header class="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16">
+<div class="flex items-center gap-4">
+<h2 class="font-headline-sm text-headline-sm text-primary">Edit Provider Profile</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer group-hover:text-primary transition-colors">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:text-primary transition-colors">help</span>
+<div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly local service provider in their late 30s, wearing a clean uniform with the FixIt Local logo. The background is a bright, modern interior setting with warm sunlight and soft shadows, conveying trust and reliability. The visual style is high-end corporate photography with a teal and orange color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCesrPwIwR0QyRzskEY9eu6nEdarxgYrT4Lvo4guBHKwV3a0Jipuo1iTQez8uFW9g_ofnk2yoy43yQvREzZbJVf3mkNJ0xewLnz0-_nyHvphigTbSHD_WStw7ZnnScraLEs_HI85VZNpMrj63e739wPxwrAG1zOZw9ZfTO93EnL8RdyPbnvPRFvpIjuLF5RPJo6xEepPDfCKXKK9lFq8VqKT_uY5oGVUdGdnaHEzmwYwCHC6LYgb2VGmu76bO2vqdHL3Nc8e7p1YJNL"/>
+</div>
+</div>
+</header>
+<div class="p-margin-desktop max-w-5xl mx-auto space-y-gutter">
+<!-- Header Section -->
+<div class="flex items-center justify-between">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Service Provider Settings</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Update your details to attract more local clients and maintain your professional reputation.</p>
+</div>
+<button class="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                    Save All Changes
+                </button>
+</div>
+<form class="grid grid-cols-12 gap-gutter">
+<!-- Profile Identity & Photo (Bento Card) -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card flex flex-col items-center text-center">
+<div class="relative mb-6">
+<div class="w-40 h-40 rounded-full overflow-hidden border-4 border-primary/20 bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="A close-up shot of a professional tool belt and equipment neatly organized on a clean wooden workbench. The lighting is bright and airy, reflecting a modern workspace aesthetic. The color palette focuses on deep teals and warm orange accents, creating a professional and organized atmosphere." id="profile-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHYBla5c84ibD6ZvFbGsmNz9pO2yxivVC_izcri6f72nS0C7fXEGn8AykiDlkNDQF0sIqVGwzmM_mtSoLKJmMst1Gk-6OI2HElQ2HoVse6TEE9gscyv0wfU-f8JI-S1dq147_lqxaHERxaBurVW_EycyMl0hqzuN5Vv4jKIzdMTB4vNU3ynxQsK7rVoRuK7yEZang4t1iLPIsWrHMqjiFFeuqN7hpkaTpcFuxeB9Q6TMVrEPV7cyPZ4fl7egTmjy9rUZZLSpK5P9Dd"/>
+</div>
+<label class="absolute bottom-1 right-1 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center cursor-pointer shadow-md hover:bg-primary-container transition-colors" for="photo-upload">
+<span class="material-symbols-outlined">photo_camera</span>
+<input class="hidden" id="photo-upload" type="file"/>
+</label>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Upload Business Photo</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-2">Professional photos increase bookings by 40%.</p>
+</div>
+<!-- Bio & Details (Bento Card) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card space-y-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-4">General Information</h3>
+<div class="space-y-4">
+<div class="group relative">
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Professional Bio</label>
+<textarea class="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[160px]" placeholder="Tell clients about your expertise, your approach to work, and why they should choose you..."></textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Service Category</label>
+<select class="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
+<option>Electrical Repairs</option>
+<option>Plumbing</option>
+<option>Carpentry</option>
+<option>Painting &amp; Decorating</option>
+<option>HVAC Maintenance</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Price Per Visit (Min)</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">$</span>
+<input class="w-full bg-surface border border-outline-variant rounded-lg p-3 pl-8 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" type="number" value="45.00"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Experience & Pincodes -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card space-y-6">
+<h3 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant pb-4">Expertise &amp; Reach</h3>
+<div class="space-y-6">
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">Years of Experience</label>
+<input class="w-full accent-primary h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer" max="30" min="0" type="range" value="8"/>
+<div class="flex justify-between mt-2 text-on-surface-variant font-body-sm">
+<span>New Professional</span>
+<span class="text-primary font-bold">8 Years Experience</span>
+<span>Expert (30+)</span>
+</div>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface-variant mb-3 ml-1">Service Areas (Pincodes)</label>
+<div class="flex flex-wrap gap-2 mb-3" id="pincode-container">
+<span class="bg-primary-container/20 text-primary-container px-3 py-1 rounded-full flex items-center gap-1 font-label-md border border-primary/20">
+                                    90001 <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<span class="bg-primary-container/20 text-primary-container px-3 py-1 rounded-full flex items-center gap-1 font-label-md border border-primary/20">
+                                    90012 <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<span class="bg-primary-container/20 text-primary-container px-3 py-1 rounded-full flex items-center gap-1 font-label-md border border-primary/20">
+                                    90210 <button class="material-symbols-outlined text-[14px]">close</button>
+</span>
+<button class="border border-dashed border-outline text-on-surface-variant px-3 py-1 rounded-full font-label-md hover:bg-surface-container-high transition-colors" type="button">
+                                    + Add New
+                                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Verification Upload (Bento Card) -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card space-y-6">
+<div class="flex items-center justify-between border-b border-outline-variant pb-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Verification</h3>
+<span class="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">Unverified</span>
+</div>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-primary/5 hover:border-primary transition-all cursor-pointer group" id="drop-zone">
+<div class="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-container/20 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-3xl">upload_file</span>
+</div>
+<p class="font-headline-sm text-headline-sm text-on-surface mb-1">ID or Business License</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Drag and drop your document here, or click to browse files.</p>
+<input class="hidden" id="file-upload" type="file"/>
+</div>
+<div class="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-primary-container">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Your documents are encrypted and only used for identity verification by our security team.</p>
+</div>
+</div>
+<!-- Form Actions (Sticky Bottom Mobile Style) -->
+<div class="col-span-12 pt-8 flex items-center justify-between border-t border-outline-variant">
+<button class="text-error font-bold flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-error/5 transition-colors" type="button">
+<span class="material-symbols-outlined">delete_forever</span>
+                        Deactivate Account
+                    </button>
+<div class="flex gap-4">
+<button class="border border-outline text-on-surface font-bold px-8 py-3 rounded-lg hover:bg-surface-container-high transition-all" type="button">
+                            Discard Changes
+                        </button>
+<button class="bg-secondary-container text-on-secondary-container font-bold px-12 py-3 rounded-lg shadow-lg hover:shadow-xl active:scale-[0.95] transition-all" type="submit">
+                            Save Changes
+                        </button>
+</div>
+</div>
+</form>
+</div>
+</main>
+<script>
+        // Micro-interactions
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-upload');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-primary', 'bg-primary/5');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-primary', 'bg-primary/5');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-primary', 'bg-primary/5');
+            const files = e.dataTransfer.files;
+            if(files.length > 0) {
+                alert(`File "${files[0].name}" staged for upload.`);
+            }
+        });
+
+        // Photo preview simulation
+        const photoInput = document.getElementById('photo-upload');
+        const profilePreview = document.getElementById('profile-preview');
+
+        photoInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    profilePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    </script>
+</body></html>

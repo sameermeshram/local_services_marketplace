@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FixIt Local - Customer Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        /* Custom scrollbar for a cleaner SaaS look */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #bdc9c6;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #005c55;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(231, 229, 228, 0.5);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-secondary-container": "#5c2400",
+                      "inverse-primary": "#80d5cb",
+                      "tertiary-container": "#5f6a7f",
+                      "surface-container": "#eeeeed",
+                      "outline": "#6e7977",
+                      "surface-bright": "#f9f9f8",
+                      "primary": "#005c55",
+                      "surface": "#f9f9f8",
+                      "on-background": "#1a1c1c",
+                      "error": "#ba1a1a",
+                      "surface-container-low": "#f3f4f3",
+                      "on-error": "#ffffff",
+                      "surface-container-high": "#e8e8e7",
+                      "primary-container": "#0f766e",
+                      "tertiary-fixed": "#d8e3fb",
+                      "on-error-container": "#93000a",
+                      "surface-dim": "#dadad9",
+                      "secondary-container": "#fd761a",
+                      "outline-variant": "#bdc9c6",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#111c2d",
+                      "on-primary-container": "#a3faef",
+                      "on-surface": "#1a1c1c",
+                      "error-container": "#ffdad6",
+                      "on-tertiary-fixed-variant": "#3c475a",
+                      "on-secondary-fixed-variant": "#783200",
+                      "on-primary-fixed-variant": "#00504a",
+                      "primary-fixed-dim": "#80d5cb",
+                      "on-primary-fixed": "#00201d",
+                      "inverse-surface": "#2f3130",
+                      "secondary-fixed-dim": "#ffb690",
+                      "on-secondary": "#ffffff",
+                      "secondary": "#9d4300",
+                      "on-secondary-fixed": "#341100",
+                      "surface-container-lowest": "#ffffff",
+                      "on-tertiary-container": "#e2ebff",
+                      "background": "#f9f9f8",
+                      "inverse-on-surface": "#f1f1f0",
+                      "surface-variant": "#e2e2e2",
+                      "primary-fixed": "#9cf2e8",
+                      "secondary-fixed": "#ffdbca",
+                      "tertiary": "#475266",
+                      "surface-tint": "#006a63",
+                      "on-surface-variant": "#3e4947",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-highest": "#e2e2e2",
+                      "tertiary-fixed-dim": "#bcc7de"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "margin-mobile": "16px",
+                      "base": "4px",
+                      "margin-desktop": "32px"
+              },
+              "fontFamily": {
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "display": ["Inter"],
+                      "headline-sm": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "label-md": ["Inter"],
+                      "headline-lg": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "display": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant shadow-sm flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-headline-md font-headline-md font-bold text-primary">FixIt Local</h1>
+<p class="font-label-md text-label-md text-on-surface-variant">Local Service Marketplace</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 bg-primary-container/10 text-primary border-l-4 border-primary px-6 py-4 font-bold transition-transform active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label-md text-label-md">Home</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:bg-surface-container-high hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">search</span>
+<span class="font-label-md text-label-md">Search</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:bg-surface-container-high hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="font-label-md text-label-md">My Bookings</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:bg-surface-container-high hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Profile</span>
+</a>
+<a class="flex items-center gap-3 text-on-surface-variant px-6 py-4 hover:bg-surface-container-high hover:text-primary transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-label-md text-label-md">Notifications</span>
+</a>
+</nav>
+<div class="px-6 mt-auto pt-8 border-t border-outline-variant space-y-4">
+<button class="w-full bg-primary/5 text-primary border border-primary/20 py-3 rounded-lg font-bold hover:bg-primary/10 transition-colors">
+                Switch to Provider
+            </button>
+<a class="flex items-center gap-3 text-on-surface-variant px-0 py-2 hover:text-error transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 ml-[280px] max-w-[calc(100%-280px)]">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Search for help..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border-2 border-primary-container">
+<img class="w-full h-full object-cover" data-alt="A professional and friendly headshot of a middle-aged woman with a warm smile, wearing a modern business-casual outfit. She is positioned against a clean, softly out-of-focus home office background with warm lighting, reflecting the reliable and community-focused atmosphere of the FixIt Local platform. The overall image has a high-quality, professional photography look with vibrant colors and crisp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQApnaEVrMBE2XPOjn3TUL0o_NSki-6ozwal6Qhj3LNCpL1l6s_Jx9KpbpTGuycZ49BFhj3hPsiykbfSx9nRVMXyXJfvyVg8ZJTuSZWKmLnFpbZVmJtd4koTL7NRLh8eCgO3hxZeCpfcRCE5aUU3C2f6oti_ufi_Ao1wLVkxN3jXDytRgfh4dnyEa6YXdzOYVmUAAH3BwTqsbArWRKFAxZAdLDOmVuBI6xeBZjYUGw7Ounwk1pK_wJdf_J-hbEBoGCfmGPlPm_3NYS"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] p-margin-desktop bg-surface min-h-[calc(100vh-64px)]">
+<!-- Hero Search Section -->
+<section class="relative mb-12 rounded-2xl overflow-hidden min-h-[320px] flex flex-col justify-center px-12">
+
+<div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-transparent pointer-events-none"></div>
+<div class="relative z-10 max-w-3xl">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-2">Find reliable experts near you</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-8">Verified professionals for your home maintenance and repair needs.</p>
+<div class="flex flex-col md:flex-row gap-4 p-2 bg-white/90 backdrop-blur-md rounded-xl shadow-lg border border-white">
+<div class="flex-1 relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">location_on</span>
+<input class="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 font-bold text-on-surface" placeholder="Enter Pincode" type="text" value="110001"/>
+</div>
+<div class="w-px bg-outline-variant hidden md:block my-2"></div>
+<div class="flex-1 relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary">category</span>
+<select class="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 appearance-none font-bold text-on-surface cursor-pointer">
+<option>All Categories</option>
+<option>Plumber</option>
+<option>Electrician</option>
+<option>Carpenter</option>
+<option>Painter</option>
+<option>Cleaner</option>
+</select>
+</div>
+<button class="bg-secondary text-white px-10 py-4 rounded-lg font-bold hover:bg-on-secondary-container transition-all shadow-md active:scale-95">
+                        Find Experts
+                    </button>
+</div>
+</div>
+</section>
+<!-- Filters and View Toggle -->
+<div class="flex justify-between items-center mb-8">
+<div class="flex gap-4">
+<button class="px-4 py-2 rounded-full border border-primary text-primary font-bold bg-primary/5 hover:bg-primary/10 transition-colors">Recommended</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors">Top Rated</button>
+<button class="px-4 py-2 rounded-full border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-colors">Nearby</button>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high p-1 rounded-full">
+<button class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-primary shadow-sm font-bold transition-all" id="listViewBtn">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+                    Grid
+                </button>
+<button class="flex items-center gap-2 px-4 py-1.5 rounded-full text-on-surface-variant hover:text-primary transition-all font-bold" id="mapViewBtn">
+<span class="material-symbols-outlined text-[18px]">map</span>
+                    Map
+                </button>
+</div>
+</div>
+<!-- Provider Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8" id="providerGrid">
+<!-- Card 1 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A focused male plumber in his 40s wearing a professional navy blue uniform with a 'FixIt' patch. He is standing in a brightly lit, modern kitchen, holding a wrench, with a friendly and reliable expression. The lighting is crisp and natural, highlighting a clean and professional environment that instills trust. Professional portrait photography style with a shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXfT7pomDkuVTgnKvzCUz9-NS-9QQg2OLcvU3LaftS6cPb4t9YLSEcNUz_rHzadzVXJMyyBJ69h2VQK587hEVQn3hpbbQJa0hyxv_p1fFSS-8BQUnWPqkiVyGACunUckTewDAaZGM_uOmTC4N27ZBPqXvsaoLnBaxrVK6uTkKS8sQANM9nirp0t3l7KcMMADyjVW1uKkLEEi2OyY18RIC5htxuEKhostY-WTEBoi0xQuPnFn8fUS11kUSDn2o76a3tAxDzXYWI6zWY"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            Available Now
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">4.9</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(128)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">David Miller</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Master Plumber</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Expert in leak detection, pipe replacement, and modern fixture installations with over 15 years experience.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$45<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A skilled female electrician in a high-visibility vest over a gray utility shirt, working on a clean electrical panel. She has tools neatly organized in a belt and a confident, professional look. The setting is a contemporary, well-lit residential interior. High-end commercial photography style with vibrant, clean colors and warm ambient lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzjp31hsxqM5Y-hJWmWz9zxYNT9QovT1jY0GFPDftSX9vZB6hv4BdrD7EexbYg5NOwMbqV-otF2ifUhzs3t2h-gRD6cOKCxULgfpd4koLqdxgEATRJdo8VdxcKtm-vLii9Rf8CD_FyRBW6WQyRr26gB0tNTRqHuirRbVnAl0noM1j_OgcmXHigE6qFbyaoUVNmeneWyE00IdojKWnK2JYd15m5kSdhFHhov0pz6svkuT0SA-sjaCXYzpKz69g5zv_XIVdjmBIJ0RrS"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-slate-400 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+                            Busy
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">4.7</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(85)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">Sarah Jenkins</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Electrician</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Specialized in smart home wiring, lighting design, and safety inspections. Certified and fully insured.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$60<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="An expert carpenter in his early 50s with wood shavings on his apron, standing in a sunlit workshop filled with professional woodworking tools. He is holding a piece of polished oak, looking at the camera with a prideful, expert smile. The lighting is warm and golden, emphasizing the craftsmanship and authentic wood textures. Rich, detailed lifestyle photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLnDp4mVi8Tb1MwJQ1EJxASLlOdFidzUqcvLcAxy3K0mmokv8XEvujnX-DOLnbTuxLq4b5HDMDeWHrEAjw9LwG1eHsdKNUAok2gaGwxuflHf5jOrPbbjV6W-OQYt7ytmLH4CNgTgalpBkkhaOPkiZUJe7SmaOWXm966ug631vHQAx8k29_KG-U8Y_M0afQtQ4uuu4y4yXzs99qyJrxu_Lz8g6jbUx__3q56Zq6PEmaqBSshLL_-AERAxE1RQwDesHIc0w_Y6Pse-nm"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Available Now
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">5.0</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(210)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">Michael Chen</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Master Carpenter</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Custom furniture, cabinetry repair, and fine wood finishing. Precision and quality guaranteed on every job.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$55<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional house painter in white overalls, holding a high-quality paint roller and smiling. She stands in a beautifully painted room with soft pastel walls and modern decor. The scene is bright and airy, representing cleanliness and professional results. Soft, high-key studio lighting with a focus on fresh, vibrant colors." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSgHDHF7FILrPH0eICWkj4qIF9Y6yq5Eqn8PAC0P_88KiPAVuW1ORXjN9iFaL96LpJMoZegx0CKZL-stWrUODIBFt9wxk1EAlW-MhLC8AUHtaLSa_lOdeprcoj5aPLfssZAD6LzwWZUpWhkJVG9AeWxqBD7KBCTyKH_0qcMjMIJMG-JGbYDNn_k1LUQGeeF-dNUK6makwBl_FzC4f1D5pzJgbGXgrenoZ-X9W-2FjH6D8SPGr9xW7VWUl0mM9pdo4t5t7UZZT-qJAS"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Available Now
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">4.8</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(56)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">Emma Watson</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Pro Painter</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Interior and exterior painting, wallpaper installation, and color consultation services. Fast and clean.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$40<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 5 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A friendly male cleaning professional in a branded polo shirt, holding eco-friendly cleaning supplies in a caddy. He is standing in a pristine, modern living room with large windows and lots of natural light. The mood is fresh, energetic, and trustworthy. High-definition commercial style with bright, clean aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtPz0QxefhJoIQgVa9Gbp4iiEf3QNNUu3Ab7E7VHgdcGAntxgLStDOpo4CvK0n6fBqd0Yd_KDidKPDvpLGmrzBJr8eLCQjKerTU8dmtgT2mFQ-eRWJJvkVQJ14q9VGbkRsRLj8Qofk1PyeCCX3dmyhjM_2GnpXQt7KhTXPd2cwjytjpYDJW2wfmEuTbbdr_O2aU-ohYm1er0Q-Wv7zWEix4vCyuLc1Q4M8NxRZHFgyCAvIABEVhBq269u0DpNJXsd7n1IMrCcz8Bag"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-slate-400 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+                            Busy
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">4.6</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(342)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">Robert Garcia</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Home Cleaner</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Deep cleaning, move-in/move-out services, and regular maintenance. Using only eco-friendly products.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$35<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+<!-- Card 6 -->
+<div class="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
+<div class="flex justify-between items-start mb-6">
+<div class="relative">
+<div class="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
+<img class="w-full h-full object-cover" data-alt="A professional young male electrician testing a socket with a digital multimeter in a contemporary apartment. He is wearing a clean technician's uniform and has a focused, professional attitude. The apartment has modern decor and warm ambient lighting. Sharp, clear commercial photography with a professional and reliable vibe." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdJ0Rqv7hjoL12Y3--yID4yxRBNk68q-awXnKHNp92y45hYlOZ-mwkv3f1p5iourqq51QjgzGRluyTFEascw4HcfE1I2Mm2sXuDaBL8mLJDhs57VZqBcRUBmZZHBoXHKR_1PmCILT3Yow7jGMdf3v3TimTyRJIby7nlC0GLNHFUxGoOvPfiOkwpbRGLxlRQXHSdp_O4LP1NF2FXNvA5nlnDehchihh2o-2QLKYWMfItvYYY3ejev4qj8uNkcCYKwe0UcCH9c2E4six"/>
+</div>
+<div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-4 border-white rounded-full"></div>
+</div>
+<div class="flex flex-col items-end">
+<span class="bg-green-100 text-green-700 text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            Available Now
+                        </span>
+<div class="flex items-center gap-1 mt-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] fill-icon">star</span>
+<span class="font-bold">4.9</span>
+<span class="text-on-surface-variant font-normal text-[12px]">(19)</span>
+</div>
+</div>
+</div>
+<div class="mb-4">
+<h3 class="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">Kevin Hart</h3>
+<span class="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">Electrician</span>
+</div>
+<p class="text-on-surface-variant text-body-sm mb-6 line-clamp-2">Fault finding, panel upgrades, and lighting installations. Highly responsive and local to your area.</p>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+<div>
+<p class="text-on-surface-variant text-label-md">Starts from</p>
+<p class="text-headline-sm font-bold text-on-surface">$50<span class="text-body-sm font-normal text-on-surface-variant">/visit</span></p>
+</div>
+<button class="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md">
+                        Book Now
+                    </button>
+</div>
+</div>
+</div>
+<!-- Hidden Map View Canvas -->
+<div class="hidden h-[600px] w-full rounded-2xl border border-outline-variant relative overflow-hidden" id="mapView">
+<div class="absolute inset-0 bg-surface-container flex items-center justify-center">
+<div class="absolute inset-0 opacity-40">
+<!-- Map background simulation -->
+<div class="w-full h-full" data-alt="A high-quality, professional digital map interface showing a suburban neighborhood layout with clean lines, minimalist color palette of light grays and soft greens. It features distinct icons for service providers like wrenches and lightbulbs placed strategically on residential streets. The design is modern and clean, similar to high-end real estate or logistics software maps." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD4VzYTso1G-WvKkkkmbSe80YzBFdVVc5GNE15XJpsOoBamrEz2xy-4YxXKy7VdQuCXxiPbeeGSygMzjr-7pzOQ0OXmd6QDJBbQM7EBxUsHBM5EMA8jpsr-5YMuDqXjtX29g-U0lWM9I4Z3x0yfr3bqrMuwF1qKpSHyxG7Lz38jczyM5TsCP31QD-E6CIy_X4iVwZNiqP8shphwnbE9q6ejRp0-1n0hBdMbPLGgXgBU_ftlkOMBeISWWO3U0sNhGbaM5NBcyXlhrnNM')"></div>
+</div>
+<div class="relative z-10 text-center p-8 glass-card rounded-2xl shadow-xl max-w-sm">
+<span class="material-symbols-outlined text-primary text-[48px] mb-4">map</span>
+<h3 class="text-headline-sm font-bold mb-2">Interactive Map Active</h3>
+<p class="text-on-surface-variant mb-6">Find providers literally next door. 14 experts found in your immediate area.</p>
+<button class="bg-primary text-white px-6 py-2 rounded-lg font-bold" id="closeMapBtn">Back to Grid</button>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple View Toggling Logic
+        const gridBtn = document.getElementById('listViewBtn');
+        const mapBtn = document.getElementById('mapViewBtn');
+        const gridView = document.getElementById('providerGrid');
+        const mapView = document.getElementById('mapView');
+        const closeMapBtn = document.getElementById('closeMapBtn');
+
+        function showMap() {
+            gridView.classList.add('hidden');
+            mapView.classList.remove('hidden');
+            mapBtn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+            mapBtn.classList.remove('text-on-surface-variant');
+            gridBtn.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+            gridBtn.classList.add('text-on-surface-variant');
+        }
+
+        function showGrid() {
+            mapView.classList.add('hidden');
+            gridView.classList.remove('hidden');
+            gridBtn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+            gridBtn.classList.remove('text-on-surface-variant');
+            mapBtn.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+            mapBtn.classList.add('text-on-surface-variant');
+        }
+
+        mapBtn.addEventListener('click', showMap);
+        gridBtn.addEventListener('click', showGrid);
+        closeMapBtn.addEventListener('click', showGrid);
+
+        // Active State UI Enhancement
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                navLinks.forEach(l => {
+                    l.classList.remove('bg-primary-container/10', 'text-primary', 'border-l-4', 'border-primary', 'font-bold');
+                    l.classList.add('text-on-surface-variant');
+                    const icon = l.querySelector('.material-symbols-outlined');
+                    if(icon) icon.classList.remove('fill-icon');
+                });
+                link.classList.add('bg-primary-container/10', 'text-primary', 'border-l-4', 'border-primary', 'font-bold');
+                link.classList.remove('text-on-surface-variant');
+                const icon = link.querySelector('.material-symbols-outlined');
+                if(icon) icon.classList.add('fill-icon');
+            });
+        });
+    </script>
+</body></html>

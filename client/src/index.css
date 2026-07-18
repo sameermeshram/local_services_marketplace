@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-body-md text-on-surface antialiased;
+  }
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  vertical-align: middle;
+}
+
+.fill-icon {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.floating-input:focus-within label,
+.floating-input input:not(:placeholder-shown) + label {
+  transform: translateY(-1.5rem) scale(0.85);
+  color: #005c55;
+  background-color: #ffffff;
+  padding: 0 4px;
+}
+
+.floating-input label {
+  transition: all 0.2s ease-out;
+  pointer-events: none;
+}
+
+.active-tab {
+  background-color: white;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(231, 229, 228, 0.5);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(231, 229, 228, 0.5);
+}
+
+.slot-chip:checked + label {
+  background-color: #0f766e;
+  color: #a3faef;
+  border-color: #0f766e;
+}
+
+.day-chip:checked + label {
+  background-color: #005c55;
+  color: #ffffff;
+  border-color: #005c55;
+}
+
+.status-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.bento-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.bento-card:hover {
+  transform: translateY(-2px);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #bdc9c6;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #005c55;
+}
+
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-track {
+  background: #f1f1f0;
+}
+
+textarea::-webkit-scrollbar-thumb {
+  background: #bdc9c6;
+  border-radius: 10px;
+}
