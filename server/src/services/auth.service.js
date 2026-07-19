@@ -13,7 +13,7 @@ async function issueTokens(user) {
 }
 
 export async function registerUser(payload) {
-  const existing = await User.findOne({ email: payload.email });
+  const existing = await User.findOne({ email: payload.email.toLowerCase() });
   if (existing) {
     throw new AppError("Email already registered", 409);
   }
@@ -33,7 +33,7 @@ export async function registerUser(payload) {
 }
 
 export async function loginUser(email, password) {
-  const user = await User.findOne({ email }).select("+password +refreshTokenHash");
+  const user = await User.findOne({ email: email.toLowerCase() }).select("+password +refreshTokenHash");
 
   if (!user || !(await user.comparePassword(password))) {
     throw new AppError("Invalid email or password", 401);

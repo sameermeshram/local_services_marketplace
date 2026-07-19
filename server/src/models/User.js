@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
+import { USER_ROLES } from "../constants/roles.constant.js";
 
 const SERVICE_TYPES = ["plumbing", "electrical", "hvac", "carpentry", "cleaning"];
 
@@ -9,9 +10,12 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     phone: { type: String, required: true, trim: true },
-    pincode: { type: String, required: true, trim: true },
     password: { type: String, required: true, minlength: 8, select: false },
-    role: { type: String, enum: ["customer", "provider"], required: true },
+    role: { type: String, enum: Object.values(USER_ROLES), required: true },
+    pincode: { type: String, required: true, trim: true },
+    avatar: { type: String, default: null },
+    isVerified: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: true },
     serviceType: {
       type: String,
       enum: SERVICE_TYPES,
@@ -19,8 +23,6 @@ const userSchema = new mongoose.Schema(
         return this.role === "provider";
       },
     },
-    avatarUrl: { type: String, default: null },
-    isActive: { type: Boolean, default: true },
     termsAcceptedAt: { type: Date, required: true },
     refreshTokenHash: { type: String, select: false, default: null },
   },
@@ -60,9 +62,11 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
     pincode: this.pincode,
     role: this.role,
     serviceType: this.serviceType ?? null,
-    avatarUrl: this.avatarUrl,
+    avatar: this.avatar,
     isActive: this.isActive,
+    isVerified: this.isVerified,
     createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
   };
 };
 

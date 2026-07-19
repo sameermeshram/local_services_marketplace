@@ -4,6 +4,7 @@ import AuthLayout from "../layouts/AuthLayout";
 import FloatingInput, { PasswordInput } from "../components/ui/FloatingInput";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import { loginHeroImage } from "../data/mockData";
+import { authService } from "../services/authService";
 
 function GoogleIcon() {
   return (
@@ -39,10 +40,50 @@ function FacebookIcon() {
 export default function LoginRegisterPage() {
   const navigate = useNavigate();
   const [userType, setUserType] = useState("customer");
+  const [authMode, setAuthMode] = useState("register");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const getErrorMessage = (err) => {
+    const response = err.response?.data;
+    const firstError = response?.errors?.[0];
+    return firstError?.message || response?.message || "Something went wrong. Please try again.";
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate(userType === "provider" ? "/provider/dashboard" : "/");
+    setError("");
+    setLoading(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const payload = {
+        email: formData.get("email"),
+        password: formData.get("password"),
+      };
+
+      const response =
+        authMode === "login"
+          ? await authService.login(payload)
+          : await authService.register({
+              ...payload,
+              name: formData.get("name"),
+              phone: formData.get("phone"),
+              pincode: formData.get("pincode"),
+              role: userType,
+              serviceType: userType === "provider" ? formData.get("serviceType") : undefined,
+              termsAccepted: formData.get("terms") === "on",
+            });
+
+      const role = response.data?.user?.role || userType;
+      navigate(role === "provider" ? "/provider/dashboard" : "/");
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -89,9 +130,13 @@ export default function LoginRegisterPage() {
         <section className="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
             <div className="mb-10">
-              <h2 className="font-headline-lg text-headline-lg mb-2">Create an Account</h2>
+              <h2 className="font-headline-lg text-headline-lg mb-2">
+                {authMode === "login" ? "Log In" : "Create an Account"}
+              </h2>
               <p className="text-on-surface-variant font-body-md">
-                Join the community and start getting things fixed.
+                {authMode === "login"
+                  ? "Welcome back to FixIt Local."
+                  : "Join the community and start getting things fixed."}
               </p>
             </div>
 
@@ -121,18 +166,27 @@ export default function LoginRegisterPage() {
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <FloatingInput id="name" label="Full Name" />
-              <FloatingInput id="email" label="Email Address" type="email" />
-              <div className="flex gap-4">
-                <FloatingInput id="phone" label="Phone Number" type="tel" className="flex-[2]" />
-                <FloatingInput id="pincode" label="Pincode" className="flex-1" />
-              </div>
-              <PasswordInput id="password" label="Create Password" />
+              {authMode === "register" && <FloatingInput id="name" name="name" label="Full Name" />}
+              <FloatingInput id="email" name="email" label="Email Address" type="email" />
+              {authMode === "register" && (
+                <div className="flex gap-4">
+                  <FloatingInput
+                    id="phone"
+                    name="phone"
+                    label="Phone Number"
+                    type="tel"
+                    className="flex-[2]"
+                  />
+                  <FloatingInput id="pincode" name="pincode" label="Pincode" className="flex-1" />
+                </div>
+              )}
+              <PasswordInput id="password" name="password" label="Create Password" />
 
-              {userType === "provider" && (
+              {authMode === "register" && userType === "provider" && (
                 <div className="relative">
                   <select
                     id="serviceType"
+                    name="serviceType"
                     className="w-full h-14 px-4 pt-4 border-2 border-outline-variant rounded-lg focus:outline-none focus:border-primary transition-colors bg-transparent appearance-none"
                     defaultValue=""
                   >
@@ -157,9 +211,11 @@ export default function LoginRegisterPage() {
                 </div>
               )}
 
+              {authMode === "register" && (
               <div className="flex items-start gap-3 py-2">
                 <input
                   id="terms"
+                  name="terms"
                   type="checkbox"
                   className="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary"
                 />
@@ -175,25 +231,49 @@ export default function LoginRegisterPage() {
                   .
                 </label>
               </div>
+              )}
+
+              {error && (
+                <p className="text-error font-body-sm text-body-sm" role="alert">
+                  {error}
+                </p>
+              )}
 
               <button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-secondary-container hover:bg-secondary text-white font-headline-sm py-4 rounded-xl shadow-lg transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2 group"
               >
-                Get Started
-                <MaterialIcon
-                  name="arrow_forward"
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                {loading ? (
+                  <>
+                    <MaterialIcon name="progress_activity" className="animate-spin" />
+                    Please wait...
+                  </>
+                ) : (
+                  <>
+                    {authMode === "login" ? "Log In" : "Get Started"}
+                    <MaterialIcon
+                      name="arrow_forward"
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
+                  </>
+                )}
               </button>
             </form>
 
             <div className="mt-8 text-center">
               <p className="text-on-surface-variant font-body-md">
-                Already have an account?{" "}
-                <a className="text-primary font-bold hover:underline" href="#">
-                  Log In
-                </a>
+                {authMode === "login" ? "New to FixIt Local?" : "Already have an account?"}{" "}
+                <button
+                  type="button"
+                  className="text-primary font-bold hover:underline"
+                  onClick={() => {
+                    setError("");
+                    setAuthMode(authMode === "login" ? "register" : "login");
+                  }}
+                >
+                  {authMode === "login" ? "Create an Account" : "Log In"}
+                </button>
               </p>
             </div>
 

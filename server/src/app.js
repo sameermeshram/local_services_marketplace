@@ -1,41 +1,34 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+import compression from "compression";
 import cors from "cors";
-import { connectDB } from "./config/db.js";
-import { env } from "./config/env.js";
+import helmet from "helmet";
+import morgan from "morgan";
+import { corsOptions } from "./config/cors.js";
+import { authRateLimiter } from "./config/rateLimiter.js";
 import authRoutes from "./routes/auth.routes.js";
-import { errorHandler, notFound } from "./middleware/errorHandler.js";
+import categoryRoutes from "./routes/category.routes.js";
+import { errorHandler, notFound } from "./middlewares/error.middleware.js";
+import { sendSuccess } from "./utils/response.js";
 
 const app = express();
 
-app.use(
-  cors({
-    origin: env.clientUrl,
-    credentials: true,
-  })
-);
+app.use(helmet());
+app.use(compression());
+app.use(cors(corsOptions));
+app.use(morgan("dev"));
 app.use(express.json({ limit: "10kb" }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.get("/api/health", (_req, res) => {
-  res.json({ success: true, message: "OK" });
+  sendSuccess(res, { message: "OK", data: { service: "fixit-local-api" } });
 });
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRateLimiter, authRoutes);
+app.use("/api/v1/categories", categoryRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-
-async function start() {
-  await connectDB();
-  app.listen(env.port, () => {
-    console.log(`Server running on port ${env.port}`);
-  });
-}
-
-start().catch((err) => {
-  console.error("Failed to start server:", err);
-  process.exit(1);
-});
 
 export default app;

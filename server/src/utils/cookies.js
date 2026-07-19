@@ -1,4 +1,5 @@
 import { env } from "../config/env.js";
+import { AUTH_COOKIE_NAMES } from "../constants/auth.constant.js";
 
 const isProduction = env.nodeEnv === "production";
 
@@ -10,29 +11,31 @@ const baseCookieOptions = {
 };
 
 export function setAuthCookies(res, { accessToken, refreshToken }) {
-  res.cookie("accessToken", accessToken, {
+  res.cookie(AUTH_COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
     ...baseCookieOptions,
     maxAge: 15 * 60 * 1000,
   });
 
-  res.cookie("refreshToken", refreshToken, {
+  res.cookie(AUTH_COOKIE_NAMES.REFRESH_TOKEN, refreshToken, {
     ...baseCookieOptions,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
 }
 
 export function clearAuthCookies(res) {
-  res.clearCookie("accessToken", baseCookieOptions);
-  res.clearCookie("refreshToken", baseCookieOptions);
+  res.clearCookie(AUTH_COOKIE_NAMES.ACCESS_TOKEN, baseCookieOptions);
+  res.clearCookie(AUTH_COOKIE_NAMES.REFRESH_TOKEN, baseCookieOptions);
 }
 
 export function getAccessTokenFromRequest(req) {
-  if (req.cookies?.accessToken) return req.cookies.accessToken;
+  if (req.cookies?.[AUTH_COOKIE_NAMES.ACCESS_TOKEN]) {
+    return req.cookies[AUTH_COOKIE_NAMES.ACCESS_TOKEN];
+  }
   const header = req.headers.authorization;
   if (header?.startsWith("Bearer ")) return header.slice(7);
   return null;
 }
 
 export function getRefreshTokenFromRequest(req) {
-  return req.cookies?.refreshToken ?? null;
+  return req.cookies?.[AUTH_COOKIE_NAMES.REFRESH_TOKEN] ?? null;
 }

@@ -15,6 +15,7 @@ export const env = {
   nodeEnv: process.env.NODE_ENV || "development",
   mongoUri: process.env.MONGODB_URI,
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
+  cookieSecret: process.env.COOKIE_SECRET || null,
   jwt: {
     accessSecret: process.env.JWT_ACCESS_SECRET,
     refreshSecret: process.env.JWT_REFRESH_SECRET,

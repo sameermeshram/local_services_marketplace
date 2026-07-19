@@ -6,6 +6,7 @@ import {
   setAuthCookies,
 } from "../utils/cookies.js";
 import * as authService from "../services/auth.service.js";
+import { AUTH_MESSAGES } from "../constants/auth.constant.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken, user } = await authService.registerUser(req.body);
@@ -14,7 +15,7 @@ export const register = asyncHandler(async (req, res) => {
 
   sendSuccess(res, {
     statusCode: 201,
-    message: "Registration successful",
+    message: AUTH_MESSAGES.REGISTERED,
     data: { user: user.toAuthJSON() },
   });
 });
@@ -26,7 +27,7 @@ export const login = asyncHandler(async (req, res) => {
   setAuthCookies(res, { accessToken, refreshToken });
 
   sendSuccess(res, {
-    message: "Login successful",
+    message: AUTH_MESSAGES.LOGGED_IN,
     data: { user: user.toAuthJSON() },
   });
 });
@@ -35,7 +36,7 @@ export const logout = asyncHandler(async (req, res) => {
   await authService.logoutUser(req.user.id);
   clearAuthCookies(res);
 
-  sendSuccess(res, { message: "Logout successful" });
+  sendSuccess(res, { message: AUTH_MESSAGES.LOGGED_OUT });
 });
 
 export const refresh = asyncHandler(async (req, res) => {
@@ -46,7 +47,7 @@ export const refresh = asyncHandler(async (req, res) => {
   setAuthCookies(res, { accessToken, refreshToken: newRefreshToken });
 
   sendSuccess(res, {
-    message: "Token refreshed",
+    message: AUTH_MESSAGES.REFRESHED,
     data: { user: user.toAuthJSON() },
   });
 });
@@ -55,7 +56,7 @@ export const getMe = asyncHandler(async (req, res) => {
   const user = await authService.getUserById(req.user.id);
 
   sendSuccess(res, {
-    message: "User profile fetched",
+    message: AUTH_MESSAGES.ME,
     data: { user: user.toAuthJSON() },
   });
 });
