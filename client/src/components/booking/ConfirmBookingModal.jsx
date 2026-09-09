@@ -2,6 +2,7 @@ import { useState } from "react";
 import MaterialIcon from "../ui/MaterialIcon";
 import StarRating from "../ui/StarRating";
 import { bookingModalProvider } from "../../data/mockData";
+import { bookingService } from "../../services/api";
 
 const CALENDAR_DAYS = [
   { id: "day1", label: "01", disabled: false },
@@ -26,24 +27,49 @@ const TIME_SLOTS = [
   { id: "evening", label: "Evening", range: "4PM - 8PM", icon: "dark_mode" },
 ];
 
-export default function ConfirmBookingModal({ open, onClose, provider = bookingModalProvider }) {
+export default function ConfirmBookingModal({
+  open,
+  onClose,
+  provider = bookingModalProvider,
+}) {
   const [selectedDay, setSelectedDay] = useState("day1");
   const [selectedSlot, setSelectedSlot] = useState("morning");
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [error, setError] = useState("");
 
   if (!open) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     setSubmitting(true);
-    setTimeout(() => {
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      await bookingService.create({
+        providerId:
+          provider.id || provider.name.toLowerCase().replace(/\s+/g, "-"),
+        providerName: provider.name,
+        service: provider.trade,
+        date: selectedDay,
+        timeSlot: selectedSlot,
+        address: formData.get("address"),
+        details: formData.get("details"),
+      });
       setSubmitting(false);
       setConfirmed(true);
       setShowToast(true);
       setTimeout(() => setShowToast(false), 4000);
-    }, 1200);
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.errors?.[0]?.message ||
+          requestError.response?.data?.message ||
+          "Unable to create this booking. Please try again.",
+      );
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -57,7 +83,9 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
         <div className="relative w-full max-w-2xl bg-surface rounded-xl shadow-2xl overflow-hidden max-h-[921px] flex flex-col pointer-events-auto">
           <div className="flex items-center justify-between px-8 py-6 border-b border-outline-variant bg-surface-container-lowest">
             <div>
-              <h2 className="font-headline-sm text-headline-sm text-on-surface">Book Your Service</h2>
+              <h2 className="font-headline-sm text-headline-sm text-on-surface">
+                Book Your Service
+              </h2>
               <p className="font-body-sm text-body-sm text-on-surface-variant">
                 Secure a local pro in just a few steps
               </p>
@@ -80,7 +108,11 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                   className="w-16 h-16 rounded-lg object-cover"
                 />
                 <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-surface flex items-center justify-center">
-                  <MaterialIcon name="verified" filled className="text-[14px]" />
+                  <MaterialIcon
+                    name="verified"
+                    filled
+                    className="text-[14px]"
+                  />
                 </div>
               </div>
               <div className="flex-1">
@@ -108,7 +140,11 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
               </div>
             </div>
 
-            <form className="space-y-6" id="bookingForm" onSubmit={handleSubmit}>
+            <form
+              className="space-y-6"
+              id="bookingForm"
+              onSubmit={handleSubmit}
+            >
               <section>
                 <label className="block font-headline-sm text-headline-sm mb-4 text-on-surface">
                   1. Select a Date
@@ -123,7 +159,10 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                     </div>
                   ))}
                   {[28, 29, 30, 31].map((d) => (
-                    <div key={`prev-${d}`} className="opacity-30 p-2 text-center text-body-sm">
+                    <div
+                      key={`prev-${d}`}
+                      className="opacity-30 p-2 text-center text-body-sm"
+                    >
                       {d}
                     </div>
                   ))}
@@ -152,7 +191,7 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                           {day.label}
                         </label>
                       </span>
-                    )
+                    ),
                   )}
                 </div>
               </section>
@@ -180,8 +219,12 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                           name={slot.icon}
                           className="mb-1 group-hover:scale-110 transition-transform"
                         />
-                        <span className="font-label-md text-label-md">{slot.label}</span>
-                        <span className="text-[10px] opacity-70">{slot.range}</span>
+                        <span className="font-label-md text-label-md">
+                          {slot.label}
+                        </span>
+                        <span className="text-[10px] opacity-70">
+                          {slot.range}
+                        </span>
                       </label>
                     </div>
                   ))}
@@ -199,6 +242,7 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                   />
                   <input
                     type="text"
+                    name="address"
                     placeholder="Enter street address"
                     className="w-full pl-12 pr-4 py-4 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant"
                   />
@@ -212,14 +256,22 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
                 <div className="relative group">
                   <textarea
                     rows={4}
+                    name="details"
                     placeholder="Briefly describe the issue (e.g. 'Faulty kitchen outlet causing short circuit...')"
                     className="w-full p-4 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant resize-none"
                   />
                   <div className="absolute right-4 bottom-4 flex items-center gap-2 text-outline-variant hover:text-primary cursor-pointer transition-colors">
                     <MaterialIcon name="attach_file" className="text-sm" />
-                    <span className="font-label-md text-label-md">Add photos</span>
+                    <span className="font-label-md text-label-md">
+                      Add photos
+                    </span>
                   </div>
                 </div>
+                {error && (
+                  <p className="text-error text-body-sm" role="alert">
+                    {error}
+                  </p>
+                )}
               </section>
             </form>
           </div>
@@ -229,7 +281,9 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
               <p className="font-label-md text-label-md text-on-surface-variant uppercase">
                 Estimated Total
               </p>
-              <p className="font-headline-sm text-headline-sm text-on-surface">$65.00 - $90.00</p>
+              <p className="font-headline-sm text-headline-sm text-on-surface">
+                $65.00 - $90.00
+              </p>
             </div>
             <div className="flex gap-4 w-full sm:w-auto">
               <button
@@ -249,7 +303,10 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
               >
                 {submitting ? (
                   <>
-                    <MaterialIcon name="progress_activity" className="animate-spin" />
+                    <MaterialIcon
+                      name="progress_activity"
+                      className="animate-spin"
+                    />
                     Processing...
                   </>
                 ) : confirmed ? (
@@ -275,8 +332,12 @@ export default function ConfirmBookingModal({ open, onClose, provider = bookingM
           <MaterialIcon name="check_circle" filled />
         </div>
         <div>
-          <p className="font-label-md text-label-md font-bold">Booking Request Sent!</p>
-          <p className="text-[10px] opacity-90">{provider.name.split(" ")[0]} will respond shortly.</p>
+          <p className="font-label-md text-label-md font-bold">
+            Booking Request Sent!
+          </p>
+          <p className="text-[10px] opacity-90">
+            {provider.name.split(" ")[0]} will respond shortly.
+          </p>
         </div>
       </div>
     </>

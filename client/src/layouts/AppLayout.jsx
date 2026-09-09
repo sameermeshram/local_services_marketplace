@@ -10,7 +10,7 @@ export default function AppLayout({
   mobileNav,
   children,
   className = "",
-  mainClassName = "ml-[280px] p-margin-desktop bg-surface min-h-[calc(100vh-64px)]",
+  mainClassName = "md:ml-[280px] p-margin-desktop bg-surface min-h-[calc(100vh-64px)]",
 }) {
   return (
     <div className={`bg-surface font-body-md text-on-surface min-h-screen ${className}`}>

@@ -1,20 +1,48 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import AppLayout, { TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import StatsCard from "../components/provider/StatsCard";
 import ReviewCard from "../components/provider/ReviewCard";
 import BookingWidget from "../components/provider/BookingWidget";
 import BookingConfirmedModal from "../components/booking/BookingConfirmedModal";
-import { featuredProvider, reviews, profileClientAvatar } from "../data/mockData";
+import {
+  featuredProvider,
+  providers,
+  reviews,
+  profileClientAvatar,
+} from "../data/mockData";
 
 export default function ProviderProfilePage() {
+  const { id } = useParams();
   const [confirmedOpen, setConfirmedOpen] = useState(false);
-  const provider = featuredProvider;
+  const provider = (() => {
+    if (id === featuredProvider.id) return featuredProvider;
+
+    const cardProvider = providers.find((item) => item.id === id);
+    if (!cardProvider) return featuredProvider;
+
+    return {
+      ...cardProvider,
+      trade: cardProvider.trade.toUpperCase(),
+      location: "Local service area",
+      hourlyRate: cardProvider.price,
+      serviceFee: 15,
+      availableToday: cardProvider.available,
+      yearsExperience: "5+",
+      jobsCompleted: "100+",
+      responseMinutes: "~60",
+      skills: [cardProvider.trade, "Verified Service", "Local Expertise"],
+      coverImage: cardProvider.image,
+      avatar: cardProvider.image,
+      avatarAlt: cardProvider.imageAlt,
+    };
+  })();
 
   return (
     <AppLayout
       activeItem="search"
-      mainClassName="ml-[280px] pt-8 px-margin-desktop pb-32"
+      mainClassName="md:ml-[280px] pt-8 px-margin-desktop pb-32"
       topBar={
         <TopAppBar
           showSearch
@@ -50,12 +78,18 @@ export default function ProviderProfilePage() {
               <span className="bg-primary text-on-primary-container px-3 py-1 rounded-full text-label-md font-bold tracking-wider mb-2 inline-block">
                 {provider.trade}
               </span>
-              <h2 className="font-display text-headline-lg leading-tight">{provider.name}</h2>
+              <h2 className="font-display text-headline-lg leading-tight">
+                {provider.name}
+              </h2>
               <div className="flex items-center gap-4 mt-1">
                 <div className="flex items-center gap-1 text-secondary-fixed">
                   <MaterialIcon name="star" filled className="text-[20px]" />
-                  <span className="font-bold text-body-lg">{provider.rating}</span>
-                  <span className="text-white/70 text-body-sm">({provider.reviewCount} reviews)</span>
+                  <span className="font-bold text-body-lg">
+                    {provider.rating}
+                  </span>
+                  <span className="text-white/70 text-body-sm">
+                    ({provider.reviewCount} reviews)
+                  </span>
                 </div>
                 <span className="w-1 h-1 bg-white/50 rounded-full" />
                 <div className="flex items-center gap-1 text-white/90">
@@ -136,7 +170,9 @@ export default function ProviderProfilePage() {
 
           <section className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="font-headline-sm text-on-surface">Verified Reviews</h3>
+              <h3 className="font-headline-sm text-on-surface">
+                Verified Reviews
+              </h3>
               <button
                 type="button"
                 className="text-primary font-bold text-label-md flex items-center gap-1 hover:underline"
@@ -154,14 +190,21 @@ export default function ProviderProfilePage() {
         </div>
 
         <div className="col-span-12 lg:col-span-4 hidden lg:block">
-          <BookingWidget provider={provider} onBook={() => setConfirmedOpen(true)} />
+          <BookingWidget
+            provider={provider}
+            onBook={() => setConfirmedOpen(true)}
+          />
         </div>
       </div>
 
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant px-6 py-4 flex items-center justify-between z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
         <div className="flex flex-col">
-          <span className="text-headline-sm font-black">${provider.hourlyRate}/hr</span>
-          <span className="text-label-md text-primary font-bold">Top Rated Provider</span>
+          <span className="text-headline-sm font-black">
+            ${provider.hourlyRate}/hr
+          </span>
+          <span className="text-label-md text-primary font-bold">
+            Top Rated Provider
+          </span>
         </div>
         <button
           type="button"

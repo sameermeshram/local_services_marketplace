@@ -1,16 +1,32 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import MaterialIcon from "../ui/MaterialIcon";
 import { NAV_ITEMS } from "../../constants/navigation";
+import { authService } from "../../services/authService";
 
-export default function SideNavBar({ activeItem, role = "customer", notificationDot = false }) {
+export default function SideNavBar({
+  activeItem,
+  role = "customer",
+  notificationDot = false,
+}) {
   const navigate = useNavigate();
-  const switchLabel = role === "provider" ? "Switch to Customer" : "Switch to Provider";
+  const switchLabel =
+    role === "provider" ? "Switch to Customer" : "Switch to Provider";
   const switchPath = role === "provider" ? "/" : "/provider/dashboard";
 
+  const handleLogout = async () => {
+    try {
+      await authService.logout();
+    } finally {
+      navigate("/login", { replace: true });
+    }
+  };
+
   return (
-    <aside className="fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant shadow-sm flex flex-col py-8 z-50">
+    <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant shadow-sm flex-col py-8 z-50">
       <div className="px-6 mb-10">
-        <h1 className="text-headline-md font-headline-md font-bold text-primary">FixIt Local</h1>
+        <h1 className="text-headline-md font-headline-md font-bold text-primary">
+          FixIt Local
+        </h1>
         <p className="font-label-md text-label-md text-on-surface-variant">
           Local Service Marketplace
         </p>
@@ -60,6 +76,7 @@ export default function SideNavBar({ activeItem, role = "customer", notification
         )}
         <button
           type="button"
+          onClick={handleLogout}
           className="flex items-center gap-3 text-on-surface-variant px-0 py-2 hover:text-error transition-colors duration-200 w-full"
         >
           <MaterialIcon name="logout" />

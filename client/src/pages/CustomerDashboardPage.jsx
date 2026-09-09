@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import AppLayout, { TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import FilterPills from "../components/ui/FilterPills";
@@ -14,15 +13,18 @@ const FILTER_OPTIONS = [
 ];
 
 export default function CustomerDashboardPage() {
-  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState("recommended");
   const [viewMode, setViewMode] = useState("grid");
   const [bookingOpen, setBookingOpen] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState(null);
 
   const handleBook = (provider) => {
-    if (provider.id === "david-miller" || provider) {
-      navigate(`/providers/marcus-chen`);
-    }
+    setSelectedProvider({
+      ...provider,
+      hourlyRate: provider.price,
+      serviceFee: 15,
+    });
+    setBookingOpen(true);
   };
 
   return (
@@ -119,10 +121,7 @@ export default function CustomerDashboardPage() {
             <ProviderCard
               key={provider.id}
               provider={provider}
-              onBook={() => {
-                setBookingOpen(true);
-                handleBook(provider);
-              }}
+              onBook={handleBook}
             />
           ))}
         </div>
@@ -155,7 +154,11 @@ export default function CustomerDashboardPage() {
         </div>
       )}
 
-      <ConfirmBookingModal open={bookingOpen} onClose={() => setBookingOpen(false)} />
+      <ConfirmBookingModal
+        open={bookingOpen}
+        provider={selectedProvider || undefined}
+        onClose={() => setBookingOpen(false)}
+      />
     </AppLayout>
   );
 }

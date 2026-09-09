@@ -1,13 +1,15 @@
 import MaterialIcon from "../ui/MaterialIcon";
 import StatusPill from "../ui/StatusPill";
 
-function BookingActions({ actions }) {
+function BookingActions({ actions, onAction, disabled }) {
   return (
     <div className="flex gap-2">
       {actions.includes("reschedule") && (
         <button
           type="button"
-          className="px-4 py-1.5 rounded-lg border border-outline text-on-surface-variant font-semibold hover:bg-surface-container transition-colors text-sm"
+          disabled={disabled}
+          onClick={() => onAction("reschedule")}
+          className="px-4 py-1.5 rounded-lg border border-outline text-on-surface-variant font-semibold hover:bg-surface-container transition-colors text-sm disabled:opacity-50"
         >
           Reschedule
         </button>
@@ -15,7 +17,9 @@ function BookingActions({ actions }) {
       {actions.includes("cancel") && (
         <button
           type="button"
-          className="px-4 py-1.5 rounded-lg bg-error text-on-error font-semibold hover:opacity-90 transition-opacity text-sm"
+          disabled={disabled}
+          onClick={() => onAction("cancel")}
+          className="px-4 py-1.5 rounded-lg bg-error text-on-error font-semibold hover:opacity-90 transition-opacity text-sm disabled:opacity-50"
         >
           Cancel
         </button>
@@ -48,9 +52,16 @@ function BookingActions({ actions }) {
   );
 }
 
-export default function BookingCard({ booking }) {
+export default function BookingCard({
+  booking,
+  onAction = () => {},
+  actionDisabled = false,
+}) {
   const cardOpacity = booking.opacity === 60 ? "opacity-60" : "";
-  const contentOpacity = booking.dimmed && !booking.opacity ? "opacity-75 group-hover:opacity-100 transition-opacity" : "";
+  const contentOpacity =
+    booking.dimmed && !booking.opacity
+      ? "opacity-75 group-hover:opacity-100 transition-opacity"
+      : "";
 
   return (
     <div
@@ -58,13 +69,19 @@ export default function BookingCard({ booking }) {
     >
       <div className={`flex items-center gap-6 ${contentOpacity}`}>
         <div className="w-16 h-16 rounded-xl overflow-hidden shadow-sm flex-shrink-0">
-          <img
-            src={booking.image}
-            alt={booking.imageAlt}
-            className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${
-              booking.grayscale ? "grayscale group-hover:grayscale-0" : ""
-            }`}
-          />
+          {booking.image ? (
+            <img
+              src={booking.image}
+              alt={booking.imageAlt}
+              className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${
+                booking.grayscale ? "grayscale group-hover:grayscale-0" : ""
+              }`}
+            />
+          ) : (
+            <div className="w-full h-full bg-primary-container/20 text-primary flex items-center justify-center">
+              <MaterialIcon name={booking.serviceIcon || "build"} />
+            </div>
+          )}
         </div>
         <div>
           <h3 className="font-headline-sm text-headline-sm text-on-surface mb-1">
@@ -83,12 +100,18 @@ export default function BookingCard({ booking }) {
             <p className="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">
               {booking.dateLabel}
             </p>
-            <p className="font-body-md text-body-md font-semibold">{booking.date}</p>
+            <p className="font-body-md text-body-md font-semibold">
+              {booking.date}
+            </p>
           </div>
           <div className="h-10 w-[1px] bg-outline-variant hidden md:block" />
           <StatusPill status={booking.status} />
         </div>
-        <BookingActions actions={booking.actions} />
+        <BookingActions
+          actions={booking.actions}
+          onAction={onAction}
+          disabled={actionDisabled}
+        />
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import { corsOptions } from "./config/cors.js";
 import { authRateLimiter } from "./config/rateLimiter.js";
 import authRoutes from "./routes/auth.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
+import bookingRoutes from "./routes/booking.routes.js";
+import providerRoutes from "./routes/provider.routes.js";
 import { errorHandler, notFound } from "./middlewares/error.middleware.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -27,6 +29,8 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api/auth", authRateLimiter, authRoutes);
 app.use("/api/v1/categories", categoryRoutes);
+app.use("/api/bookings", bookingRoutes);
+app.use("/api/providers", providerRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import { editProfileAvatar, editProfilePreview } from "../data/mockData";
+import { providerService } from "../services/api";
 
 const INITIAL_PINCODES = ["90001", "90012", "90210"];
 
@@ -9,6 +10,9 @@ export default function EditProviderProfilePage() {
   const [previewSrc, setPreviewSrc] = useState(editProfilePreview);
   const [pincodes, setPincodes] = useState(INITIAL_PINCODES);
   const [experience, setExperience] = useState(8);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const photoInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -30,14 +34,42 @@ export default function EditProviderProfilePage() {
     setPincodes((prev) => prev.filter((p) => p !== pin));
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    setSaving(true);
+    setMessage("");
+    setError("");
+
+    try {
+      await providerService.updateProfile({
+        bio: formData.get("bio"),
+        serviceType: formData.get("serviceType"),
+        pricePerVisit: Number(formData.get("pricePerVisit")),
+        yearsExperience: experience,
+        serviceAreas: pincodes,
+      });
+      setMessage("Profile changes saved.");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to save profile changes.",
+      );
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
     <AppLayout
       activeItem="profile"
-      mainClassName="ml-[280px] min-h-screen"
+      mainClassName="md:ml-[280px] min-h-screen"
       topBar={
         <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16">
           <div className="flex items-center gap-4">
-            <h2 className="font-headline-sm text-headline-sm text-primary">Edit Provider Profile</h2>
+            <h2 className="font-headline-sm text-headline-sm text-primary">
+              Edit Provider Profile
+            </h2>
           </div>
           <div className="flex items-center gap-6">
             <div className="relative group">
@@ -52,7 +84,11 @@ export default function EditProviderProfilePage() {
               className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
             />
             <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
-              <img src={editProfileAvatar} alt="Provider headshot" className="w-full h-full object-cover" />
+              <img
+                src={editProfileAvatar}
+                alt="Provider headshot"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </header>
@@ -65,27 +101,44 @@ export default function EditProviderProfilePage() {
               Service Provider Settings
             </h1>
             <p className="font-body-md text-body-md text-on-surface-variant">
-              Update your details to attract more local clients and maintain your professional
-              reputation.
+              Update your details to attract more local clients and maintain
+              your professional reputation.
             </p>
           </div>
           <button
-            type="button"
+            type="submit"
+            form="provider-profile-form"
+            disabled={saving}
             className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center gap-2"
           >
             <MaterialIcon name="save" />
             Save All Changes
           </button>
         </div>
+        {message && (
+          <p className="text-primary text-body-sm" role="status">
+            {message}
+          </p>
+        )}
+        {error && (
+          <p className="text-error text-body-sm" role="alert">
+            {error}
+          </p>
+        )}
 
         <form
           className="grid grid-cols-12 gap-gutter"
-          onSubmit={(e) => e.preventDefault()}
+          id="provider-profile-form"
+          onSubmit={handleSubmit}
         >
           <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card flex flex-col items-center text-center">
             <div className="relative mb-6">
               <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-primary/20 bg-surface-container">
-                <img src={previewSrc} alt="Profile preview" className="w-full h-full object-cover" />
+                <img
+                  src={previewSrc}
+                  alt="Profile preview"
+                  className="w-full h-full object-cover"
+                />
               </div>
               <label
                 htmlFor="photo-upload"
@@ -102,7 +155,9 @@ export default function EditProviderProfilePage() {
                 />
               </label>
             </div>
-            <h3 className="font-headline-sm text-headline-sm text-on-surface">Upload Business Photo</h3>
+            <h3 className="font-headline-sm text-headline-sm text-on-surface">
+              Upload Business Photo
+            </h3>
             <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
               Professional photos increase bookings by 40%.
             </p>
@@ -118,6 +173,7 @@ export default function EditProviderProfilePage() {
                   Professional Bio
                 </label>
                 <textarea
+                  name="bio"
                   className="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[160px]"
                   placeholder="Tell clients about your expertise, your approach to work, and why they should choose you..."
                 />
@@ -127,12 +183,16 @@ export default function EditProviderProfilePage() {
                   <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                     Service Category
                   </label>
-                  <select className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all">
-                    <option>Electrical Repairs</option>
-                    <option>Plumbing</option>
-                    <option>Carpentry</option>
-                    <option>Painting &amp; Decorating</option>
-                    <option>HVAC Maintenance</option>
+                  <select
+                    name="serviceType"
+                    defaultValue="electrical"
+                    className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  >
+                    <option value="electrical">Electrical Repairs</option>
+                    <option value="plumbing">Plumbing</option>
+                    <option value="carpentry">Carpentry</option>
+                    <option value="hvac">HVAC Maintenance</option>
+                    <option value="cleaning">Cleaning</option>
                   </select>
                 </div>
                 <div>
@@ -145,6 +205,7 @@ export default function EditProviderProfilePage() {
                     </span>
                     <input
                       type="number"
+                      name="pricePerVisit"
                       defaultValue="45.00"
                       className="w-full bg-surface border border-outline-variant rounded-lg p-3 pl-8 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                     />
@@ -173,7 +234,9 @@ export default function EditProviderProfilePage() {
                 />
                 <div className="flex justify-between mt-2 text-on-surface-variant font-body-sm">
                   <span>New Professional</span>
-                  <span className="text-primary font-bold">{experience} Years Experience</span>
+                  <span className="text-primary font-bold">
+                    {experience} Years Experience
+                  </span>
                   <span>Expert (30+)</span>
                 </div>
               </div>
@@ -206,7 +269,9 @@ export default function EditProviderProfilePage() {
 
           <div className="col-span-12 lg:col-span-5 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card space-y-6">
             <div className="flex items-center justify-between border-b border-outline-variant pb-4">
-              <h3 className="font-headline-sm text-headline-sm text-on-surface">Verification</h3>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface">
+                Verification
+              </h3>
               <span className="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
                 Unverified
               </span>
@@ -215,7 +280,9 @@ export default function EditProviderProfilePage() {
               role="button"
               tabIndex={0}
               onClick={() => fileInputRef.current?.click()}
-              onKeyDown={(e) => e.key === "Enter" && fileInputRef.current?.click()}
+              onKeyDown={(e) =>
+                e.key === "Enter" && fileInputRef.current?.click()
+              }
               onDragOver={(e) => e.preventDefault()}
               onDragLeave={(e) => e.preventDefault()}
               onDrop={handleDrop}
@@ -235,8 +302,8 @@ export default function EditProviderProfilePage() {
             <div className="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
               <MaterialIcon name="info" className="text-primary-container" />
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-tight">
-                Your documents are encrypted and only used for identity verification by our security
-                team.
+                Your documents are encrypted and only used for identity
+                verification by our security team.
               </p>
             </div>
           </div>
@@ -258,9 +325,10 @@ export default function EditProviderProfilePage() {
               </button>
               <button
                 type="submit"
+                disabled={saving}
                 className="bg-secondary-container text-on-secondary-container font-bold px-12 py-3 rounded-lg shadow-lg hover:shadow-xl active:scale-[0.95] transition-all"
               >
-                Save Changes
+                {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>

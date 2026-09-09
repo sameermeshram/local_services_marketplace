@@ -11,7 +11,7 @@ export default function TopAppBar({
   children,
 }) {
   return (
-    <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 ml-[280px] max-w-[calc(100%-280px)]">
+    <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 md:ml-[280px] md:max-w-[calc(100%-280px)]">
       <div className="flex items-center gap-4 flex-1">
         {title && (
           <h2 className="font-headline-sm text-headline-sm text-primary font-bold">{title}</h2>

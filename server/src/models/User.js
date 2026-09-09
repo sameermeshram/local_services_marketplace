@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String, default: null },
     isVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
+    isAvailable: { type: Boolean, default: true },
+    bio: { type: String, default: "", trim: true, maxlength: 2000 },
+    pricePerVisit: { type: Number, default: 0, min: 0 },
+    yearsExperience: { type: Number, default: 0, min: 0, max: 80 },
+    serviceAreas: { type: [String], default: [] },
     serviceType: {
       type: String,
       enum: SERVICE_TYPES,
@@ -65,6 +70,10 @@ userSchema.methods.toAuthJSON = function toAuthJSON() {
     avatar: this.avatar,
     isActive: this.isActive,
     isVerified: this.isVerified,
+    bio: this.bio,
+    pricePerVisit: this.pricePerVisit,
+    yearsExperience: this.yearsExperience,
+    serviceAreas: this.serviceAreas,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
   };

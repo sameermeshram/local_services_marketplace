@@ -76,10 +76,10 @@ api.interceptors.response.use(
 export const unwrap = (request) => request.then((response) => response.data);
 
 export const categoryService = {
-  getAll: () => unwrap(api.get("/categories")),
-  create: (payload) => unwrap(api.post("/categories", payload)),
-  update: (id, payload) => unwrap(api.put(`/categories/${id}`, payload)),
-  remove: (id) => unwrap(api.delete(`/categories/${id}`)),
+  getAll: () => unwrap(api.get("/v1/categories")),
+  create: (payload) => unwrap(api.post("/v1/categories", payload)),
+  update: (id, payload) => unwrap(api.put(`/v1/categories/${id}`, payload)),
+  remove: (id) => unwrap(api.delete(`/v1/categories/${id}`)),
 };
 
 export const providerService = {
@@ -105,6 +105,8 @@ export const providerService = {
 export const bookingService = {
   create: (payload) => unwrap(api.post("/bookings", payload)),
   getMine: (params) => unwrap(api.get("/bookings/me", { params })),
+  getProviderBookings: () => unwrap(api.get("/bookings/provider")),
+  updateStatus: (id, status) => unwrap(api.patch(`/bookings/${id}/status`, { status })),
   getById: (id) => unwrap(api.get(`/bookings/${id}`)),
   cancel: (id, payload) => unwrap(api.patch(`/bookings/${id}/cancel`, payload)),
   reschedule: (id, payload) => unwrap(api.patch(`/bookings/${id}/reschedule`, payload)),
