@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import AppLayout, { TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
@@ -6,38 +6,87 @@ import StatsCard from "../components/provider/StatsCard";
 import ReviewCard from "../components/provider/ReviewCard";
 import BookingWidget from "../components/provider/BookingWidget";
 import BookingConfirmedModal from "../components/booking/BookingConfirmedModal";
-import {
-  featuredProvider,
-  providers,
-  reviews,
-  profileClientAvatar,
-} from "../data/mockData";
+import { providerService, reviewService } from "../services/api";
+import { featuredProvider, profileClientAvatar } from "../data/mockData";
 
 export default function ProviderProfilePage() {
   const { id } = useParams();
   const [confirmedOpen, setConfirmedOpen] = useState(false);
-  const provider = (() => {
-    if (id === featuredProvider.id) return featuredProvider;
+  const [provider, setProvider] = useState(null);
+  const [profileReviews, setProfileReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-    const cardProvider = providers.find((item) => item.id === id);
-    if (!cardProvider) return featuredProvider;
+  useEffect(() => {
+    let active = true;
 
-    return {
-      ...cardProvider,
-      trade: cardProvider.trade.toUpperCase(),
-      location: "Local service area",
-      hourlyRate: cardProvider.price,
-      serviceFee: 15,
-      availableToday: cardProvider.available,
-      yearsExperience: "5+",
-      jobsCompleted: "100+",
-      responseMinutes: "~60",
-      skills: [cardProvider.trade, "Verified Service", "Local Expertise"],
-      coverImage: cardProvider.image,
-      avatar: cardProvider.image,
-      avatarAlt: cardProvider.imageAlt,
+    Promise.all([providerService.getById(id), reviewService.getForProvider(id)])
+      .then(([providerResponse, reviewsResponse]) => {
+        if (!active) return;
+        const profile = providerResponse.data?.provider;
+        const apiReviews = reviewsResponse.data?.reviews ?? [];
+        setProfileReviews(
+          apiReviews.map((review) => {
+            const author = review.customer?.name || "Customer";
+            return {
+              ...review,
+              author,
+              initials: author
+                .split(" ")
+                .map((part) => part[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase(),
+              date: new Date(review.createdAt).toLocaleDateString(),
+              quote: review.comment,
+              color: "primary",
+            };
+          }),
+        );
+        setProvider({
+          ...profile,
+          trade: profile.trade?.toUpperCase(),
+          location: profile.serviceAreas?.[0]
+            ? `${profile.serviceAreas[0].city}, ${profile.serviceAreas[0].pincode}`
+            : "Local service area",
+          hourlyRate: profile.price,
+          serviceFee: 15,
+          availableToday: profile.available,
+          yearsExperience: `${profile.yearsExperience}+`,
+          jobsCompleted: profile.completedJobs,
+          responseMinutes: "~60",
+          skills: profile.services?.map((service) => service.name) || [
+            profile.trade,
+          ],
+          coverImage: profile.image || featuredProvider.coverImage,
+          avatar: profile.image || featuredProvider.avatar,
+          avatarAlt: profile.imageAlt,
+        });
+      })
+      .catch((requestError) => {
+        if (active)
+          setError(
+            requestError.response?.data?.message || "Provider not found.",
+          );
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
     };
-  })();
+  }, [id]);
+
+  if (loading)
+    return <div className="min-h-screen bg-surface" aria-busy="true" />;
+  if (error || !provider) {
+    return (
+      <div className="min-h-screen bg-surface p-8 text-center text-error">
+        {error || "Provider not found."}
+      </div>
+    );
+  }
 
   return (
     <AppLayout
@@ -182,9 +231,14 @@ export default function ProviderProfilePage() {
               </button>
             </div>
             <div className="space-y-4">
-              {reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
+              {profileReviews.map((review) => (
+                <ReviewCard key={review._id} review={review} />
               ))}
+              {profileReviews.length === 0 && (
+                <p className="text-body-md text-on-surface-variant">
+                  No reviews yet.
+                </p>
+              )}
             </div>
           </section>
         </div>

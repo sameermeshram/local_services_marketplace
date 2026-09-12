@@ -8,6 +8,8 @@ import {
   updateBookingStatusRules,
 } from "../validators/booking.validator.js";
 import { authorize } from "../middlewares/role.middleware.js";
+import * as reviewController from "../controllers/review.controller.js";
+import { createReviewRules } from "../validators/review.validator.js";
 
 const router = Router();
 
@@ -27,6 +29,15 @@ router.patch(
   authorize("provider"),
   validate(updateBookingStatusRules),
   bookingController.updateBookingStatus
+);
+router.post(
+  "/:id/reviews",
+  authorize("customer"),
+  validate(createReviewRules),
+  (req, res, next) => {
+    req.params.bookingId = req.params.id;
+    return reviewController.createReview(req, res, next);
+  },
 );
 
 export default router;

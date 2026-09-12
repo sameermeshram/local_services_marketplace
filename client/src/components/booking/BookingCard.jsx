@@ -35,7 +35,9 @@ function BookingActions({ actions, onAction, disabled }) {
       {actions.includes("review") && (
         <button
           type="button"
-          className="w-full md:w-auto px-6 py-1.5 rounded-lg border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-all text-sm"
+          onClick={() => onAction("review")}
+          disabled={disabled}
+          className="w-full md:w-auto px-6 py-1.5 rounded-lg border-2 border-secondary text-secondary font-bold hover:bg-secondary hover:text-white transition-all text-sm disabled:opacity-50"
         >
           Leave Review
         </button>

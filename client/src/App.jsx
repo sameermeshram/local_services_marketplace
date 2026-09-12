@@ -6,6 +6,8 @@ import ProviderProfilePage from "./pages/ProviderProfilePage";
 import EditProviderProfilePage from "./pages/EditProviderProfilePage";
 import MyBookingsPage from "./pages/MyBookingsPage";
 import ProtectedRoute from "./components/navigation/ProtectedRoute";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
+import NotificationsPage from "./pages/NotificationsPage";
 
 const protectedPage = (element, requiredRole) => (
   <ProtectedRoute requiredRole={requiredRole}>{element}</ProtectedRoute>
@@ -18,6 +20,10 @@ export default function App() {
       <Route path="/" element={protectedPage(<CustomerDashboardPage />)} />
       <Route path="/bookings" element={protectedPage(<MyBookingsPage />)} />
       <Route
+        path="/notifications"
+        element={protectedPage(<NotificationsPage />)}
+      />
+      <Route
         path="/providers/:id"
         element={protectedPage(<ProviderProfilePage />)}
       />
@@ -28,6 +34,10 @@ export default function App() {
       <Route
         path="/provider/dashboard"
         element={protectedPage(<ProviderDashboardPage />, "provider")}
+      />
+      <Route
+        path="/admin/dashboard"
+        element={protectedPage(<AdminDashboardPage />, "admin")}
       />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

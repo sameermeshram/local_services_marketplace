@@ -15,10 +15,16 @@ export default function ProviderDashboardPage() {
   useEffect(() => {
     let active = true;
 
-    bookingService
-      .getProviderBookings()
-      .then((response) => {
-        if (active) setBookings(response.data?.bookings ?? []);
+    Promise.all([
+      bookingService.getProviderBookings(),
+      providerService.getProfile(),
+    ])
+      .then(([bookingsResponse, profileResponse]) => {
+        if (!active) return;
+        setBookings(bookingsResponse.data?.bookings ?? []);
+        if (typeof profileResponse.data?.profile?.isAvailable === "boolean") {
+          setAvailable(profileResponse.data.profile.isAvailable);
+        }
       })
       .catch((requestError) => {
         if (active)
@@ -226,6 +232,16 @@ export default function ProviderDashboardPage() {
                   </>
                 )}
                 {booking.status === "accepted" && (
+                  <button
+                    type="button"
+                    disabled={updatingId === booking._id}
+                    onClick={() => updateStatus(booking._id, "in_progress")}
+                    className="bg-secondary text-on-secondary px-5 py-2 rounded-lg font-bold disabled:opacity-50"
+                  >
+                    Start Service
+                  </button>
+                )}
+                {booking.status === "in_progress" && (
                   <button
                     type="button"
                     disabled={updatingId === booking._id}

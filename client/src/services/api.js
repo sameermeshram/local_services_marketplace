@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const browserApiHost =
+  typeof window !== "undefined" && window.location.hostname === "localhost"
+    ? "localhost"
+    : "127.0.0.1";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || `http://${browserApiHost}:5000/api`;
 let accessToken = null;
 
 export function getAccessToken() {
@@ -82,9 +87,16 @@ export const categoryService = {
   remove: (id) => unwrap(api.delete(`/v1/categories/${id}`)),
 };
 
+export const adminService = {
+  getPendingProviders: () => unwrap(api.get("/admin/providers/pending")),
+  approveProvider: (id) => unwrap(api.patch(`/admin/providers/${id}/approve`)),
+  rejectProvider: (id, reason) => unwrap(api.patch(`/admin/providers/${id}/reject`, { reason })),
+};
+
 export const providerService = {
   getAll: (params) => unwrap(api.get("/providers", { params })),
   getById: (id) => unwrap(api.get(`/providers/${id}`)),
+  getProfile: () => unwrap(api.get("/providers/me/profile")),
   updateProfile: (payload) => unwrap(api.patch("/providers/me/profile", payload)),
   updateAvailability: (payload) => unwrap(api.patch("/providers/me/availability", payload)),
   uploadPhoto: (formData) =>

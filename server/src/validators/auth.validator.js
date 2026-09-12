@@ -17,7 +17,7 @@ const passwordRules = body("password")
 
 export const registerRules = [
   body("role")
-    .isIn(Object.values(USER_ROLES))
+    .isIn([USER_ROLES.CUSTOMER, USER_ROLES.PROVIDER])
     .withMessage("Role must be customer or provider"),
   body("name")
     .trim()

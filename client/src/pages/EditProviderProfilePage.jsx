@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import { editProfileAvatar, editProfilePreview } from "../data/mockData";
@@ -10,18 +10,71 @@ export default function EditProviderProfilePage() {
   const [previewSrc, setPreviewSrc] = useState(editProfilePreview);
   const [pincodes, setPincodes] = useState(INITIAL_PINCODES);
   const [experience, setExperience] = useState(8);
+  const [profile, setProfile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const photoInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
-  const handlePhotoChange = (e) => {
+  useEffect(() => {
+    let active = true;
+
+    providerService
+      .getProfile()
+      .then((response) => {
+        if (!active) return;
+        const nextProfile = response.data?.profile;
+        if (!nextProfile) return;
+
+        setProfile(nextProfile);
+        setExperience(nextProfile.yearsExperience ?? 0);
+        setPincodes(
+          (nextProfile.serviceAreas ?? [])
+            .map((area) => area.pincode)
+            .filter(Boolean),
+        );
+        if (nextProfile.profileImage) setPreviewSrc(nextProfile.profileImage);
+      })
+      .catch((requestError) => {
+        if (active) {
+          setError(
+            requestError.response?.data?.message ||
+              "Unable to load provider profile.",
+          );
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handlePhotoChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => setPreviewSrc(ev.target.result);
     reader.readAsDataURL(file);
+
+    const formData = new FormData();
+    formData.append("photo", file);
+    setUploadingPhoto(true);
+    setError("");
+    try {
+      const response = await providerService.uploadPhoto(formData);
+      if (response.data?.profileImage)
+        setPreviewSrc(response.data.profileImage);
+      setMessage("Profile photo uploaded.");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to upload profile photo.",
+      );
+    } finally {
+      setUploadingPhoto(false);
+    }
   };
 
   const handleDrop = (e) => {
@@ -48,6 +101,9 @@ export default function EditProviderProfilePage() {
         pricePerVisit: Number(formData.get("pricePerVisit")),
         yearsExperience: experience,
         serviceAreas: pincodes,
+        serviceName: formData.get("serviceName"),
+        serviceDescription: formData.get("serviceDescription"),
+        servicePrice: Number(formData.get("servicePrice")),
       });
       setMessage("Profile changes saved.");
     } catch (requestError) {
@@ -127,6 +183,7 @@ export default function EditProviderProfilePage() {
         )}
 
         <form
+          key={profile?._id || "provider-profile-form"}
           className="grid grid-cols-12 gap-gutter"
           id="provider-profile-form"
           onSubmit={handleSubmit}
@@ -156,7 +213,7 @@ export default function EditProviderProfilePage() {
               </label>
             </div>
             <h3 className="font-headline-sm text-headline-sm text-on-surface">
-              Upload Business Photo
+              {uploadingPhoto ? "Uploading photo..." : "Upload Business Photo"}
             </h3>
             <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
               Professional photos increase bookings by 40%.
@@ -174,6 +231,7 @@ export default function EditProviderProfilePage() {
                 </label>
                 <textarea
                   name="bio"
+                  defaultValue={profile?.bio || ""}
                   className="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[160px]"
                   placeholder="Tell clients about your expertise, your approach to work, and why they should choose you..."
                 />
@@ -185,13 +243,15 @@ export default function EditProviderProfilePage() {
                   </label>
                   <select
                     name="serviceType"
-                    defaultValue="electrical"
+                    defaultValue={
+                      profile?.categories?.[0]?.slug || "electrician"
+                    }
                     className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                   >
-                    <option value="electrical">Electrical Repairs</option>
+                    <option value="electrician">Electrical Repairs</option>
                     <option value="plumbing">Plumbing</option>
                     <option value="carpentry">Carpentry</option>
-                    <option value="hvac">HVAC Maintenance</option>
+                    <option value="painter">Painting</option>
                     <option value="cleaning">Cleaning</option>
                   </select>
                 </div>
@@ -206,11 +266,46 @@ export default function EditProviderProfilePage() {
                     <input
                       type="number"
                       name="pricePerVisit"
-                      defaultValue="45.00"
+                      defaultValue={profile?.pricePerVisit ?? 0}
                       className="w-full bg-surface border border-outline-variant rounded-lg p-3 pl-8 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                     />
                   </div>
                 </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                    Primary Service
+                  </label>
+                  <input
+                    name="serviceName"
+                    defaultValue={profile?.services?.[0]?.name || ""}
+                    className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                    Service Price
+                  </label>
+                  <input
+                    type="number"
+                    name="servicePrice"
+                    defaultValue={profile?.services?.[0]?.price ?? 0}
+                    className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                  Service Description
+                </label>
+                <textarea
+                  name="serviceDescription"
+                  defaultValue={profile?.services?.[0]?.description || ""}
+                  rows={3}
+                  placeholder="Describe what is included in this service."
+                  className="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
+                />
               </div>
             </div>
           </div>

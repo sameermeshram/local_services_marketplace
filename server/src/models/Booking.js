@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const bookingSchema = new mongoose.Schema(
   {
     customer: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    providerId: { type: String, required: true, trim: true },
+    provider: { type: mongoose.Schema.Types.ObjectId, ref: "ProviderProfile", required: true },
+    providerId: { type: String, trim: true },
     providerName: { type: String, required: true, trim: true },
     service: { type: String, required: true, trim: true },
     date: { type: String, required: true, trim: true },
@@ -12,7 +13,7 @@ const bookingSchema = new mongoose.Schema(
     details: { type: String, required: true, trim: true, maxlength: 2000 },
     status: {
       type: String,
-      enum: ["pending", "accepted", "rejected", "completed", "cancelled"],
+      enum: ["pending", "accepted", "rejected", "in_progress", "completed", "cancelled"],
       default: "pending",
     },
   },

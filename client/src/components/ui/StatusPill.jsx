@@ -9,6 +9,11 @@ const STATUS_STYLES = {
     dot: "w-2 h-2 rounded-full bg-[#1e40af]",
     icon: null,
   },
+  in_progress: {
+    wrapper: "bg-[#ffedd5] text-[#9a3412] border-[#fed7aa]",
+    dot: "w-2 h-2 rounded-full bg-[#c2410c]",
+    icon: null,
+  },
   completed: {
     wrapper: "bg-[#dcfce7] text-[#166534] border-[#bbf7d0]",
     dot: null,
@@ -26,7 +31,8 @@ const STATUS_STYLES = {
     label: "Available Now",
   },
   busy: {
-    wrapper: "bg-surface-container-high text-on-surface-variant border-transparent",
+    wrapper:
+      "bg-surface-container-high text-on-surface-variant border-transparent",
     dot: null,
     icon: null,
     label: "Busy",
@@ -35,7 +41,8 @@ const STATUS_STYLES = {
 
 export default function StatusPill({ status, label, className = "" }) {
   const config = STATUS_STYLES[status] || STATUS_STYLES.pending;
-  const text = label || config.label || status.charAt(0).toUpperCase() + status.slice(1);
+  const text =
+    label || config.label || status.charAt(0).toUpperCase() + status.slice(1);
 
   return (
     <span
@@ -43,7 +50,9 @@ export default function StatusPill({ status, label, className = "" }) {
     >
       {config.dot && <span className={config.dot} />}
       {config.icon && (
-        <span className="material-symbols-outlined text-[16px]">{config.icon}</span>
+        <span className="material-symbols-outlined text-[16px]">
+          {config.icon}
+        </span>
       )}
       <span className="font-label-md text-label-md">{text}</span>
     </span>

@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AppLayout, { TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import FilterPills from "../components/ui/FilterPills";
 import ProviderCard from "../components/provider/ProviderCard";
 import ConfirmBookingModal from "../components/booking/ConfirmBookingModal";
-import { providers, customerAvatar, mapBackgroundImage } from "../data/mockData";
+import { customerAvatar, mapBackgroundImage } from "../data/mockData";
+import { providerService } from "../services/api";
 
 const FILTER_OPTIONS = [
   { id: "recommended", label: "Recommended" },
@@ -17,6 +18,30 @@ export default function CustomerDashboardPage() {
   const [viewMode, setViewMode] = useState("grid");
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState(null);
+  const [providers, setProviders] = useState([]);
+  const [pincode, setPincode] = useState("110001");
+  const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadProviders = async (filters = {}) => {
+    setLoading(true);
+    setError("");
+    try {
+      const response = await providerService.getAll(filters);
+      setProviders(response.data?.providers ?? []);
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message || "Unable to load providers.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadProviders();
+  }, []);
 
   const handleBook = (provider) => {
     setSelectedProvider({
@@ -27,11 +52,23 @@ export default function CustomerDashboardPage() {
     setBookingOpen(true);
   };
 
+  const handleSearch = () => {
+    loadProviders({
+      pincode: pincode.trim() || undefined,
+      category: category || undefined,
+      available: activeFilter === "nearby" ? true : undefined,
+    });
+  };
+
   return (
     <AppLayout
       activeItem="home"
       topBar={
-        <TopAppBar showSearch searchPlaceholder="Search for help..." avatarSrc={customerAvatar} />
+        <TopAppBar
+          showSearch
+          searchPlaceholder="Search for help..."
+          avatarSrc={customerAvatar}
+        />
       }
     >
       <section className="relative mb-12 rounded-2xl overflow-hidden min-h-[320px] flex flex-col justify-center px-12">
@@ -51,7 +88,8 @@ export default function CustomerDashboardPage() {
               />
               <input
                 type="text"
-                defaultValue="110001"
+                value={pincode}
+                onChange={(event) => setPincode(event.target.value)}
                 placeholder="Enter Pincode"
                 className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 font-bold text-on-surface"
               />
@@ -62,17 +100,22 @@ export default function CustomerDashboardPage() {
                 name="category"
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-primary"
               />
-              <select className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 appearance-none font-bold text-on-surface cursor-pointer">
-                <option>All Categories</option>
-                <option>Plumber</option>
-                <option>Electrician</option>
-                <option>Carpenter</option>
-                <option>Painter</option>
-                <option>Cleaner</option>
+              <select
+                value={category}
+                onChange={(event) => setCategory(event.target.value)}
+                className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 appearance-none font-bold text-on-surface cursor-pointer"
+              >
+                <option value="">All Categories</option>
+                <option value="plumbing">Plumbing</option>
+                <option value="electrician">Electrician</option>
+                <option value="carpenter">Carpenter</option>
+                <option value="painter">Painter</option>
+                <option value="cleaning">Cleaning</option>
               </select>
             </div>
             <button
               type="button"
+              onClick={handleSearch}
               className="bg-secondary text-white px-10 py-4 rounded-lg font-bold hover:bg-on-secondary-container transition-all shadow-md active:scale-95"
             >
               Find Experts
@@ -116,15 +159,34 @@ export default function CustomerDashboardPage() {
       </div>
 
       {viewMode === "grid" ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {providers.map((provider) => (
-            <ProviderCard
-              key={provider.id}
-              provider={provider}
-              onBook={handleBook}
-            />
-          ))}
-        </div>
+        <>
+          {loading && (
+            <p className="py-12 text-center text-on-surface-variant">
+              Loading providers...
+            </p>
+          )}
+          {error && (
+            <p className="py-12 text-center text-error" role="alert">
+              {error}
+            </p>
+          )}
+          {!loading && !error && providers.length === 0 && (
+            <p className="py-12 text-center text-on-surface-variant">
+              No approved providers found for this search.
+            </p>
+          )}
+          <div
+            className={`grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ${loading || error ? "hidden" : ""}`}
+          >
+            {providers.map((provider) => (
+              <ProviderCard
+                key={provider.id}
+                provider={provider}
+                onBook={handleBook}
+              />
+            ))}
+          </div>
+        </>
       ) : (
         <div className="h-[600px] w-full rounded-2xl border border-outline-variant relative overflow-hidden">
           <div className="absolute inset-0 bg-surface-container flex items-center justify-center">
@@ -137,10 +199,16 @@ export default function CustomerDashboardPage() {
               />
             </div>
             <div className="relative z-10 text-center p-8 glass-card rounded-2xl shadow-xl max-w-sm">
-              <MaterialIcon name="map" className="text-primary text-[48px] mb-4" />
-              <h3 className="text-headline-sm font-bold mb-2">Interactive Map Active</h3>
+              <MaterialIcon
+                name="map"
+                className="text-primary text-[48px] mb-4"
+              />
+              <h3 className="text-headline-sm font-bold mb-2">
+                Interactive Map Active
+              </h3>
               <p className="text-on-surface-variant mb-6">
-                Find providers literally next door. 14 experts found in your immediate area.
+                Find providers literally next door. 14 experts found in your
+                immediate area.
               </p>
               <button
                 type="button"

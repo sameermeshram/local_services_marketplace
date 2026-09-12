@@ -1,6 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import MaterialIcon from "../ui/MaterialIcon";
-import { NAV_ITEMS } from "../../constants/navigation";
+import { ADMIN_NAV_ITEMS, NAV_ITEMS } from "../../constants/navigation";
 import { authService } from "../../services/authService";
 
 export default function SideNavBar({
@@ -10,8 +10,12 @@ export default function SideNavBar({
 }) {
   const navigate = useNavigate();
   const switchLabel =
-    role === "provider" ? "Switch to Customer" : "Switch to Provider";
-  const switchPath = role === "provider" ? "/" : "/provider/dashboard";
+    role === "provider" || role === "admin"
+      ? "Switch to Customer"
+      : "Switch to Provider";
+  const switchPath =
+    role === "provider" || role === "admin" ? "/" : "/provider/dashboard";
+  const navigationItems = role === "admin" ? ADMIN_NAV_ITEMS : NAV_ITEMS;
 
   const handleLogout = async () => {
     try {
@@ -33,7 +37,7 @@ export default function SideNavBar({
       </div>
 
       <nav className="flex-1 space-y-1">
-        {NAV_ITEMS.map((item) => {
+        {navigationItems.map((item) => {
           const isActive = activeItem === item.id;
           return (
             <NavLink
@@ -56,7 +60,7 @@ export default function SideNavBar({
       </nav>
 
       <div className="px-6 mt-auto pt-8 border-t border-outline-variant space-y-4">
-        {role === "provider" ? (
+        {role === "provider" || role === "admin" ? (
           <button
             type="button"
             onClick={() => navigate(switchPath)}

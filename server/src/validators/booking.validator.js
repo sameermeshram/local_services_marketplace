@@ -1,9 +1,8 @@
 import { body } from "express-validator";
 
 export const createBookingRules = [
-  body("providerId").isString().trim().notEmpty().withMessage("Provider is required"),
-  body("providerName").isString().trim().notEmpty().withMessage("Provider name is required"),
-  body("service").isString().trim().notEmpty().withMessage("Service is required"),
+  body("providerId").isMongoId().withMessage("A valid provider is required"),
+  body("service").optional().isString().trim().notEmpty().withMessage("Service is invalid"),
   body("date").isString().trim().notEmpty().withMessage("Date is required"),
   body("timeSlot")
     .isIn(["morning", "afternoon", "evening"])
@@ -19,7 +18,7 @@ export const createBookingRules = [
 
 export const updateBookingStatusRules = [
   body("status")
-    .isIn(["accepted", "rejected", "completed"])
+    .isIn(["accepted", "rejected", "in_progress", "completed"])
     .withMessage("Booking status is invalid"),
 ];
 

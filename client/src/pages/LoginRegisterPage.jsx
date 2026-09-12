@@ -47,7 +47,11 @@ export default function LoginRegisterPage() {
   const getErrorMessage = (err) => {
     const response = err.response?.data;
     const firstError = response?.errors?.[0];
-    return firstError?.message || response?.message || "Something went wrong. Please try again.";
+    return (
+      firstError?.message ||
+      response?.message ||
+      "Something went wrong. Please try again."
+    );
   };
 
   const handleSubmit = async (e) => {
@@ -73,12 +77,21 @@ export default function LoginRegisterPage() {
               phone: formData.get("phone"),
               pincode: formData.get("pincode"),
               role: userType,
-              serviceType: userType === "provider" ? formData.get("serviceType") : undefined,
+              serviceType:
+                userType === "provider"
+                  ? formData.get("serviceType")
+                  : undefined,
               termsAccepted: formData.get("terms") === "on",
             });
 
       const role = response.data?.user?.role || userType;
-      navigate(role === "provider" ? "/provider/dashboard" : "/");
+      navigate(
+        role === "provider"
+          ? "/provider/dashboard"
+          : role === "admin"
+            ? "/admin/dashboard"
+            : "/",
+      );
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -110,19 +123,24 @@ export default function LoginRegisterPage() {
               Quality service, just a click away.
             </h1>
             <p className="font-body-lg text-body-lg text-on-surface-variant">
-              Connect with verified local professionals for all your home maintenance and repair
-              needs.
+              Connect with verified local professionals for all your home
+              maintenance and repair needs.
             </p>
           </div>
           <div className="absolute bottom-12 left-12 bg-white/90 backdrop-blur p-4 rounded-xl shadow-lg border border-outline-variant flex items-center gap-4 animate-bounce hover:animate-none transition-all duration-300">
             <div className="bg-primary-container p-2 rounded-lg">
-              <MaterialIcon name="verified" className="text-on-primary-container" />
+              <MaterialIcon
+                name="verified"
+                className="text-on-primary-container"
+              />
             </div>
             <div>
               <div className="font-label-md text-label-md text-on-surface-variant uppercase">
                 Verified Providers
               </div>
-              <div className="font-headline-sm text-headline-sm text-primary">2,500+ Local Pros</div>
+              <div className="font-headline-sm text-headline-sm text-primary">
+                2,500+ Local Pros
+              </div>
             </div>
           </div>
         </section>
@@ -166,8 +184,15 @@ export default function LoginRegisterPage() {
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
-              {authMode === "register" && <FloatingInput id="name" name="name" label="Full Name" />}
-              <FloatingInput id="email" name="email" label="Email Address" type="email" />
+              {authMode === "register" && (
+                <FloatingInput id="name" name="name" label="Full Name" />
+              )}
+              <FloatingInput
+                id="email"
+                name="email"
+                label="Email Address"
+                type="email"
+              />
               {authMode === "register" && (
                 <div className="flex gap-4">
                   <FloatingInput
@@ -177,10 +202,19 @@ export default function LoginRegisterPage() {
                     type="tel"
                     className="flex-[2]"
                   />
-                  <FloatingInput id="pincode" name="pincode" label="Pincode" className="flex-1" />
+                  <FloatingInput
+                    id="pincode"
+                    name="pincode"
+                    label="Pincode"
+                    className="flex-1"
+                  />
                 </div>
               )}
-              <PasswordInput id="password" name="password" label="Create Password" />
+              <PasswordInput
+                id="password"
+                name="password"
+                label="Create Password"
+              />
 
               {authMode === "register" && userType === "provider" && (
                 <div className="relative">
@@ -212,29 +246,41 @@ export default function LoginRegisterPage() {
               )}
 
               {authMode === "register" && (
-              <div className="flex items-start gap-3 py-2">
-                <input
-                  id="terms"
-                  name="terms"
-                  type="checkbox"
-                  className="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary"
-                />
-                <label className="text-body-sm text-on-surface-variant" htmlFor="terms">
-                  I agree to the{" "}
-                  <a className="text-primary font-semibold underline underline-offset-2" href="#">
-                    Terms of Service
-                  </a>{" "}
-                  and{" "}
-                  <a className="text-primary font-semibold underline underline-offset-2" href="#">
-                    Privacy Policy
-                  </a>
-                  .
-                </label>
-              </div>
+                <div className="flex items-start gap-3 py-2">
+                  <input
+                    id="terms"
+                    name="terms"
+                    type="checkbox"
+                    className="mt-1 w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary"
+                  />
+                  <label
+                    className="text-body-sm text-on-surface-variant"
+                    htmlFor="terms"
+                  >
+                    I agree to the{" "}
+                    <a
+                      className="text-primary font-semibold underline underline-offset-2"
+                      href="#"
+                    >
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      className="text-primary font-semibold underline underline-offset-2"
+                      href="#"
+                    >
+                      Privacy Policy
+                    </a>
+                    .
+                  </label>
+                </div>
               )}
 
               {error && (
-                <p className="text-error font-body-sm text-body-sm" role="alert">
+                <p
+                  className="text-error font-body-sm text-body-sm"
+                  role="alert"
+                >
                   {error}
                 </p>
               )}
@@ -246,7 +292,10 @@ export default function LoginRegisterPage() {
               >
                 {loading ? (
                   <>
-                    <MaterialIcon name="progress_activity" className="animate-spin" />
+                    <MaterialIcon
+                      name="progress_activity"
+                      className="animate-spin"
+                    />
                     Please wait...
                   </>
                 ) : (
@@ -263,7 +312,9 @@ export default function LoginRegisterPage() {
 
             <div className="mt-8 text-center">
               <p className="text-on-surface-variant font-body-md">
-                {authMode === "login" ? "New to FixIt Local?" : "Already have an account?"}{" "}
+                {authMode === "login"
+                  ? "New to FixIt Local?"
+                  : "Already have an account?"}{" "}
                 <button
                   type="button"
                   className="text-primary font-bold hover:underline"
@@ -298,7 +349,9 @@ export default function LoginRegisterPage() {
                   className="flex-1 flex items-center justify-center gap-3 border-2 border-outline-variant rounded-lg py-3 hover:bg-surface-container transition-colors"
                 >
                   <FacebookIcon />
-                  <span className="text-on-surface font-semibold">Facebook</span>
+                  <span className="text-on-surface font-semibold">
+                    Facebook
+                  </span>
                 </button>
               </div>
             </div>

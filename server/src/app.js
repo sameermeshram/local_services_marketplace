@@ -10,6 +10,9 @@ import authRoutes from "./routes/auth.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import bookingRoutes from "./routes/booking.routes.js";
 import providerRoutes from "./routes/provider.routes.js";
+import adminRoutes from "./routes/admin.routes.js";
+import reviewRoutes from "./routes/review.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 import { errorHandler, notFound } from "./middlewares/error.middleware.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -31,6 +34,9 @@ app.use("/api/auth", authRateLimiter, authRoutes);
 app.use("/api/v1/categories", categoryRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/providers", providerRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/reviews", reviewRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

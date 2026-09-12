@@ -1,4 +1,5 @@
 import { User } from "../models/User.js";
+import { ProviderProfile } from "../models/ProviderProfile.js";
 import { AppError } from "../utils/AppError.js";
 import { signAccessToken, signRefreshToken, verifyRefreshToken } from "../utils/jwt.js";
 
@@ -28,6 +29,10 @@ export async function registerUser(payload) {
     serviceType: payload.role === "provider" ? payload.serviceType : undefined,
     termsAcceptedAt: new Date(),
   });
+
+  if (user.role === "provider") {
+    await ProviderProfile.create({ user: user._id });
+  }
 
   return issueTokens(user);
 }

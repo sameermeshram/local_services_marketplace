@@ -5,7 +5,7 @@ import MaterialIcon from "../components/ui/MaterialIcon";
 import FilterPills from "../components/ui/FilterPills";
 import BookingCard from "../components/booking/BookingCard";
 import { bookingsAvatar } from "../data/mockData";
-import { bookingService } from "../services/api";
+import { bookingService, reviewService } from "../services/api";
 
 const TAB_OPTIONS = [
   { id: "all", label: "All Bookings" },
@@ -18,15 +18,24 @@ export default function MyBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [reviewedBookingIds, setReviewedBookingIds] = useState(new Set());
 
   useEffect(() => {
     let active = true;
 
-    bookingService
-      .getMine()
-      .then((response) => {
+    Promise.all([bookingService.getMine(), reviewService.getMine()])
+      .then(([bookingsResponse, reviewsResponse]) => {
         if (!active) return;
-        setBookings(response.data?.bookings ?? []);
+        setBookings(bookingsResponse.data?.bookings ?? []);
+        setReviewedBookingIds(
+          new Set(
+            (reviewsResponse.data?.reviews ?? [])
+              .map((review) => review.booking)
+              .filter(Boolean)
+              .map((booking) => booking._id || booking),
+          ),
+        );
       })
       .catch((requestError) => {
         if (!active) return;
@@ -46,7 +55,7 @@ export default function MyBookingsPage() {
 
   const visibleBookings = bookings.filter((booking) => {
     if (activeTab === "active")
-      return ["pending", "accepted"].includes(booking.status);
+      return ["pending", "accepted", "in_progress"].includes(booking.status);
     if (activeTab === "past")
       return ["completed", "cancelled"].includes(booking.status);
     return true;
@@ -62,6 +71,7 @@ export default function MyBookingsPage() {
 
   const handleBookingAction = async (booking, action) => {
     setError("");
+    setMessage("");
 
     if (action === "cancel") {
       if (!window.confirm("Cancel this booking request?")) return;
@@ -72,6 +82,26 @@ export default function MyBookingsPage() {
       } catch (requestError) {
         setError(
           requestError.response?.data?.message || "Unable to cancel booking.",
+        );
+      }
+      return;
+    }
+
+    if (action === "review") {
+      const rating = window.prompt("Rate this service from 1 to 5", "5");
+      if (!rating || ![1, 2, 3, 4, 5].includes(Number(rating))) return;
+      const comment = window.prompt("Add a comment", "");
+
+      try {
+        await reviewService.createForBooking(booking._id, {
+          rating: Number(rating),
+          comment: comment || "",
+        });
+        setReviewedBookingIds((current) => new Set(current).add(booking._id));
+        setMessage("Review submitted.");
+      } catch (requestError) {
+        setError(
+          requestError.response?.data?.message || "Unable to submit review.",
         );
       }
       return;
@@ -130,6 +160,11 @@ export default function MyBookingsPage() {
             {error}
           </p>
         )}
+        {message && (
+          <p className="py-4 text-center text-primary" role="status">
+            {message}
+          </p>
+        )}
 
         <div
           className={`space-y-4 ${loading || error || visibleBookings.length === 0 ? "hidden" : ""}`}
@@ -138,16 +173,19 @@ export default function MyBookingsPage() {
             const actions =
               booking.status === "pending"
                 ? ["reschedule", "cancel"]
-                : booking.status === "accepted"
+                : ["accepted", "in_progress"].includes(booking.status)
                   ? ["message"]
                   : booking.status === "completed"
-                    ? ["review"]
+                    ? reviewedBookingIds.has(booking._id)
+                      ? []
+                      : ["review"]
                     : ["details"];
 
             return (
               <BookingCard
                 key={booking._id}
                 onAction={(action) => handleBookingAction(booking, action)}
+                actionDisabled={false}
                 booking={{
                   ...booking,
                   serviceIcon: "build",

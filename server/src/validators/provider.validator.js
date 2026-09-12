@@ -13,4 +13,7 @@ export const updateProfileRules = [
   body("pricePerVisit").optional().isFloat({ min: 0 }).withMessage("Price must be positive"),
   body("yearsExperience").optional().isInt({ min: 0, max: 80 }).withMessage("Experience is invalid"),
   body("serviceAreas").optional().isArray().withMessage("Service areas must be a list"),
+  body("serviceName").optional().isString().trim().isLength({ max: 120 }).withMessage("Service name is too long"),
+  body("serviceDescription").optional().isString().trim().isLength({ max: 500 }).withMessage("Service description is too long"),
+  body("servicePrice").optional().isFloat({ min: 0 }).withMessage("Service price must be positive"),
 ];
