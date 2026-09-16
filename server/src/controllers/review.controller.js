@@ -28,9 +28,11 @@ export const createReview = asyncHandler(async (req, res) => {
 
   const provider = await ProviderProfile.findById(booking.provider);
   if (provider) {
-    provider.ratingAverage =
+    const rawAverage =
       (provider.ratingAverage * provider.reviewCount + review.rating) /
       (provider.reviewCount + 1);
+    const cleanAverage = Math.min(Math.max(Math.round(rawAverage * 10) / 10, 0), 5);
+    provider.ratingAverage = cleanAverage;
     provider.reviewCount += 1;
     await provider.save();
   }

@@ -4,22 +4,23 @@ import StarRating from "../ui/StarRating";
 import { bookingModalProvider } from "../../data/mockData";
 import { bookingService } from "../../services/api";
 
-const CALENDAR_DAYS = [
-  { id: "day1", label: "01", disabled: false },
-  { id: "day2", label: "02", disabled: false },
-  { id: "day3", label: "03", disabled: false },
-  { id: "day4", label: "04", disabled: false },
-  { id: "day5", label: "05", disabled: false },
-  { id: "day6", label: "06", disabled: false },
-  { id: "day7", label: "07", disabled: false },
-  { id: "day8", label: "08", disabled: true },
-  { id: "day9", label: "09", disabled: true },
-  { id: "day10", label: "10", disabled: true },
-  { id: "day11", label: "11", disabled: true },
-  { id: "day12", label: "12", disabled: true },
-  { id: "day13", label: "13", disabled: true },
-  { id: "day14", label: "14", disabled: true },
-];
+function getUpcomingDates(count = 14) {
+  const dates = [];
+  const today = new Date();
+  for (let i = 0; i < count; i++) {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const isoDate = `${year}-${month}-${day}`;
+    dates.push({
+      id: isoDate,
+      label: day,
+      disabled: i >= 7,
+    });
+  }
+  return dates;
+}
 
 const TIME_SLOTS = [
   { id: "morning", label: "Morning", range: "8AM - 12PM", icon: "light_mode" },
@@ -32,7 +33,8 @@ export default function ConfirmBookingModal({
   onClose,
   provider = bookingModalProvider,
 }) {
-  const [selectedDay, setSelectedDay] = useState("day1");
+  const calendarDays = getUpcomingDates();
+  const [selectedDay, setSelectedDay] = useState(() => calendarDays[0].id);
   const [selectedSlot, setSelectedSlot] = useState("morning");
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
@@ -47,12 +49,18 @@ export default function ConfirmBookingModal({
     setSubmitting(true);
     const formData = new FormData(e.currentTarget);
 
+    const targetProviderId = provider.id || provider._id;
+    if (!targetProviderId) {
+      setError("Please select a valid provider before booking.");
+      setSubmitting(false);
+      return;
+    }
+
     try {
       await bookingService.create({
-        providerId:
-          provider.id || provider.name.toLowerCase().replace(/\s+/g, "-"),
+        providerId: targetProviderId,
         providerName: provider.name,
-        service: provider.trade,
+        service: provider.trade || provider.services?.[0]?.name || "Standard Repair",
         date: selectedDay,
         timeSlot: selectedSlot,
         address: formData.get("address"),
@@ -166,7 +174,7 @@ export default function ConfirmBookingModal({
                       {d}
                     </div>
                   ))}
-                  {CALENDAR_DAYS.map((day) =>
+                  {calendarDays.map((day) =>
                     day.disabled ? (
                       <div
                         key={day.id}

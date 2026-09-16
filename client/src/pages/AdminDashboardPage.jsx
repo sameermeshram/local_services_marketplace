@@ -163,12 +163,38 @@ export default function AdminDashboardPage() {
                     .join(", ") || "Not provided"}
                 </div>
               </div>
-              <div className="flex gap-3">
+              <div className="border-t border-outline-variant pt-4 space-y-2">
+                <span className="block text-label-md text-on-surface-variant uppercase font-bold">
+                  Verification Documents ({provider.verificationDocuments?.length || 0})
+                </span>
+                {provider.verificationDocuments && provider.verificationDocuments.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {provider.verificationDocuments.map((docUrl, idx) => (
+                      <a
+                        key={docUrl || idx}
+                        href={docUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-primary text-xs font-bold hover:bg-primary-container/10 transition-colors"
+                      >
+                        <MaterialIcon name="description" className="text-sm" />
+                        Document #{idx + 1}
+                        <MaterialIcon name="open_in_new" className="text-[12px]" />
+                      </a>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-body-sm text-error italic">
+                    No verification documents uploaded by provider.
+                  </p>
+                )}
+              </div>
+              <div className="flex gap-3 pt-2">
                 <button
                   type="button"
                   disabled={updatingId === provider._id}
                   onClick={() => approve(provider._id)}
-                  className="bg-primary text-on-primary px-5 py-2 rounded-lg font-bold disabled:opacity-50"
+                  className="bg-primary text-on-primary px-5 py-2 rounded-lg font-bold disabled:opacity-50 hover:bg-primary/90 transition-colors"
                 >
                   Approve
                 </button>
@@ -176,7 +202,7 @@ export default function AdminDashboardPage() {
                   type="button"
                   disabled={updatingId === provider._id}
                   onClick={() => reject(provider._id)}
-                  className="border border-error text-error px-5 py-2 rounded-lg font-bold disabled:opacity-50"
+                  className="border border-error text-error px-5 py-2 rounded-lg font-bold disabled:opacity-50 hover:bg-error/5 transition-colors"
                 >
                   Reject
                 </button>

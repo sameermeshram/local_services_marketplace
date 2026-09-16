@@ -15,6 +15,7 @@ export default function EditProviderProfilePage() {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadingDocument, setUploadingDocument] = useState(false);
   const photoInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -51,6 +52,40 @@ export default function EditProviderProfilePage() {
     };
   }, []);
 
+  const handleDocumentUpload = async (file) => {
+    if (!file || uploadingDocument) return;
+    const formData = new FormData();
+    formData.append("document", file);
+    setUploadingDocument(true);
+    setError("");
+    setMessage("");
+
+    try {
+      const response = await providerService.uploadVerificationDocument(formData);
+      const updatedDocs = response.data?.verificationDocuments;
+      const nextStatus = response.data?.approvalStatus || "pending";
+
+      setProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              verificationDocuments: updatedDocs || prev.verificationDocuments,
+              approvalStatus: nextStatus,
+              isApproved: nextStatus === "approved",
+            }
+          : prev
+      );
+      setMessage("Verification document uploaded and submitted for review.");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to upload verification document.",
+      );
+    } finally {
+      setUploadingDocument(false);
+    }
+  };
+
   const handlePhotoChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -80,7 +115,7 @@ export default function EditProviderProfilePage() {
   const handleDrop = (e) => {
     e.preventDefault();
     const file = e.dataTransfer.files?.[0];
-    if (file) alert(`File "${file.name}" staged for upload.`);
+    if (file) handleDocumentUpload(file);
   };
 
   const removePincode = (pin) => {
@@ -367,33 +402,89 @@ export default function EditProviderProfilePage() {
               <h3 className="font-headline-sm text-headline-sm text-on-surface">
                 Verification
               </h3>
-              <span className="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
-                Unverified
-              </span>
+              {profile?.approvalStatus === "approved" || profile?.isApproved ? (
+                <span className="bg-success/10 text-success px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                  Verified
+                </span>
+              ) : profile?.approvalStatus === "pending" ? (
+                <span className="bg-warning/10 text-warning px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                  Pending Approval
+                </span>
+              ) : profile?.approvalStatus === "rejected" ? (
+                <span className="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                  Rejected
+                </span>
+              ) : (
+                <span className="bg-error/10 text-error px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider">
+                  Unverified
+                </span>
+              )}
             </div>
             <div
               role="button"
               tabIndex={0}
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => !uploadingDocument && fileInputRef.current?.click()}
               onKeyDown={(e) =>
-                e.key === "Enter" && fileInputRef.current?.click()
+                e.key === "Enter" && !uploadingDocument && fileInputRef.current?.click()
               }
               onDragOver={(e) => e.preventDefault()}
               onDragLeave={(e) => e.preventDefault()}
               onDrop={handleDrop}
-              className="border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-primary/5 hover:border-primary transition-all cursor-pointer group"
+              className={`border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center transition-all group ${
+                uploadingDocument ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/5 hover:border-primary cursor-pointer"
+              }`}
             >
               <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-container/20 group-hover:text-primary transition-colors">
-                <MaterialIcon name="upload_file" className="text-3xl" />
+                <MaterialIcon name={uploadingDocument ? "sync" : "upload_file"} className={`text-3xl ${uploadingDocument ? "animate-spin" : ""}`} />
               </div>
               <p className="font-headline-sm text-headline-sm text-on-surface mb-1">
-                ID or Business License
+                {uploadingDocument ? "Uploading Document..." : "ID or Business License"}
               </p>
               <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Drag and drop your document here, or click to browse files.
+                Drag &amp; drop PDF or Image (JPEG, PNG, WEBP, max 5MB) here, or click to browse.
               </p>
-              <input ref={fileInputRef} type="file" className="hidden" />
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept="image/jpeg,image/png,image/webp,application/pdf"
+                disabled={uploadingDocument}
+                onChange={(e) => {
+                  const selected = e.target.files?.[0];
+                  if (selected) handleDocumentUpload(selected);
+                }}
+              />
             </div>
+            {profile?.verificationDocuments && profile.verificationDocuments.length > 0 && (
+              <div className="space-y-2">
+                <p className="font-label-md text-label-md text-on-surface-variant">
+                  Uploaded Documents ({profile.verificationDocuments.length}/5):
+                </p>
+                <div className="space-y-2">
+                  {profile.verificationDocuments.map((docUrl, idx) => (
+                    <div
+                      key={docUrl || idx}
+                      className="flex items-center justify-between p-3 bg-surface border border-outline-variant rounded-lg text-body-sm"
+                    >
+                      <div className="flex items-center gap-2 truncate">
+                        <MaterialIcon name="description" className="text-primary text-xl flex-shrink-0" />
+                        <span className="truncate font-mono text-xs">
+                          Verification Document {idx + 1}
+                        </span>
+                      </div>
+                      <a
+                        href={docUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary hover:underline font-bold text-xs flex items-center gap-1"
+                      >
+                        View <MaterialIcon name="open_in_new" className="text-sm" />
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div className="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
               <MaterialIcon name="info" className="text-primary-container" />
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-tight">

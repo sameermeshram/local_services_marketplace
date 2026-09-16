@@ -48,11 +48,18 @@ export const getProviders = asyncHandler(async (req, res) => {
     filter.categories = category._id || category;
   }
 
+  let sortOption = { ratingAverage: -1, createdAt: -1 };
+  if (req.query.sort === "rating") {
+    sortOption = { ratingAverage: -1, reviewCount: -1 };
+  } else if (req.query.sort === "newest") {
+    sortOption = { createdAt: -1 };
+  }
+
   const [profiles, total] = await Promise.all([
     ProviderProfile.find(filter)
       .populate("user", "name serviceType")
       .populate("categories", "name slug")
-      .sort({ ratingAverage: -1, createdAt: -1 })
+      .sort(sortOption)
       .skip((page - 1) * limit)
       .limit(limit),
     ProviderProfile.countDocuments(filter),

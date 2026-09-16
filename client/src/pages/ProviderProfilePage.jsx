@@ -6,7 +6,7 @@ import StatsCard from "../components/provider/StatsCard";
 import ReviewCard from "../components/provider/ReviewCard";
 import BookingWidget from "../components/provider/BookingWidget";
 import BookingConfirmedModal from "../components/booking/BookingConfirmedModal";
-import { providerService, reviewService } from "../services/api";
+import { providerService, reviewService, bookingService } from "../services/api";
 import { featuredProvider, profileClientAvatar } from "../data/mockData";
 
 export default function ProviderProfilePage() {
@@ -16,6 +16,24 @@ export default function ProviderProfilePage() {
   const [profileReviews, setProfileReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+
+  const handleBookingSubmit = async (payload) => {
+    setBookingLoading(true);
+    setBookingError("");
+    try {
+      await bookingService.create(payload);
+      setConfirmedOpen(true);
+    } catch (requestError) {
+      setBookingError(
+        requestError.response?.data?.message ||
+          "Unable to create booking request. Please log in as a customer.",
+      );
+    } finally {
+      setBookingLoading(false);
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -246,7 +264,9 @@ export default function ProviderProfilePage() {
         <div className="col-span-12 lg:col-span-4 hidden lg:block">
           <BookingWidget
             provider={provider}
-            onBook={() => setConfirmedOpen(true)}
+            onBook={handleBookingSubmit}
+            bookingLoading={bookingLoading}
+            bookingError={bookingError}
           />
         </div>
       </div>

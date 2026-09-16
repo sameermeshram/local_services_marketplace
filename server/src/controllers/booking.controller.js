@@ -17,6 +17,10 @@ export const createBooking = asyncHandler(async (req, res) => {
     throw new AppError("Provider is not approved or available", 400);
   }
 
+  if (provider.user._id.toString() === req.user.id) {
+    throw new AppError("You cannot book your own service profile", 400);
+  }
+
   const requestedService = req.body.service?.trim();
   const matchingService = provider.services.find(
     (service) => service.name.toLowerCase() === requestedService?.toLowerCase(),
@@ -26,16 +30,35 @@ export const createBooking = asyncHandler(async (req, res) => {
     throw new AppError("Selected service is not offered by this provider", 400);
   }
 
-  const booking = await Booking.create({
-    customer: req.user.id,
+  const slotConflict = await Booking.findOne({
     provider: provider._id,
-    providerName: provider.user.name,
-    service: matchingService?.name || requestedService || provider.user.serviceType,
     date: req.body.date,
     timeSlot: req.body.timeSlot,
-    address: req.body.address,
-    details: req.body.details,
+    status: { $in: ["pending", "accepted", "in_progress"] },
   });
+
+  if (slotConflict) {
+    throw new AppError("The provider already has a booking reserved for this date and time slot", 409);
+  }
+
+  let booking;
+  try {
+    booking = await Booking.create({
+      customer: req.user.id,
+      provider: provider._id,
+      providerName: provider.user.name,
+      service: matchingService?.name || requestedService || provider.user.serviceType,
+      date: req.body.date,
+      timeSlot: req.body.timeSlot,
+      address: req.body.address,
+      details: req.body.details,
+    });
+  } catch (err) {
+    if (err.code === 11000) {
+      throw new AppError("The provider already has a booking reserved for this date and time slot", 409);
+    }
+    throw err;
+  }
 
   await createNotification({
     recipient: provider.user._id,
@@ -65,7 +88,7 @@ export const cancelBooking = asyncHandler(async (req, res) => {
   });
 
   if (!booking) {
-    return res.status(404).json({ success: false, message: "Booking cannot be cancelled", data: null, errors: [] });
+    throw new AppError("Booking cannot be cancelled", 404);
   }
 
   booking.status = "cancelled";
@@ -91,12 +114,33 @@ export const rescheduleBooking = asyncHandler(async (req, res) => {
   });
 
   if (!booking) {
-    return res.status(404).json({ success: false, message: "Booking cannot be rescheduled", data: null, errors: [] });
+    throw new AppError("Booking cannot be rescheduled", 404);
+  }
+
+  const slotConflict = await Booking.findOne({
+    _id: { $ne: booking._id },
+    provider: booking.provider,
+    date: req.body.date,
+    timeSlot: req.body.timeSlot,
+    status: { $in: ["pending", "accepted", "in_progress"] },
+  });
+
+  if (slotConflict) {
+    throw new AppError("The provider already has an appointment reserved for the requested date and time slot", 409);
   }
 
   booking.date = req.body.date;
   booking.timeSlot = req.body.timeSlot;
-  await booking.save();
+
+  try {
+    await booking.save();
+  } catch (err) {
+    if (err.code === 11000) {
+      throw new AppError("The provider already has an appointment reserved for the requested date and time slot", 409);
+    }
+    throw err;
+  }
+
   const provider = await ProviderProfile.findById(booking.provider).populate("user", "_id");
   if (provider) {
     await createNotification({
@@ -129,31 +173,57 @@ export const updateBookingStatus = asyncHandler(async (req, res) => {
   req.providerProfile = await ProviderProfile.findOne({ user: req.user.id });
   if (!req.providerProfile) throw new AppError("Provider profile not found", 404);
 
+  if (req.body.status === "completed") {
+    const updatedBooking = await Booking.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        ...providerBookingFilter(req),
+        status: "in_progress",
+      },
+      { $set: { status: "completed" } },
+      { new: true },
+    );
+
+    if (!updatedBooking) {
+      throw new AppError("Booking is not in progress or has already been completed", 400);
+    }
+
+    await ProviderProfile.findByIdAndUpdate(updatedBooking.provider, {
+      $inc: { completedJobs: 1 },
+    });
+
+    await createNotification({
+      recipient: updatedBooking.customer,
+      type: "booking_status",
+      title: "Booking status updated",
+      message: `Your ${updatedBooking.service} booking is now completed.`,
+      booking: updatedBooking._id,
+    });
+
+    return sendSuccess(res, { data: { booking: updatedBooking }, message: "Booking status updated" });
+  }
+
   const booking = await Booking.findOne({
     _id: req.params.id,
     ...providerBookingFilter(req),
   });
 
   if (!booking) {
-    return res.status(404).json({
-      success: false,
-      message: "Booking not found",
-      data: null,
-      errors: [],
-    });
+    throw new AppError("Booking not found", 404);
   }
 
   const allowedTransitions = {
     pending: ["accepted", "rejected"],
     accepted: ["in_progress"],
-    in_progress: ["completed"],
   };
+
   if (!allowedTransitions[booking.status]?.includes(req.body.status)) {
     throw new AppError(`Cannot change booking from ${booking.status} to ${req.body.status}`, 400);
   }
 
   booking.status = req.body.status;
   await booking.save();
+
   await createNotification({
     recipient: booking.customer,
     type: "booking_status",

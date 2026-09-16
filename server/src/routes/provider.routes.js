@@ -20,6 +20,11 @@ router.get("/:id", providerController.getProviderById);
 router.use(protect, authorize("provider"));
 router.get("/me/profile", providerController.getMyProfile);
 router.post("/me/photos", upload.single("photo"), mediaController.uploadProviderPhoto);
+router.post(
+  "/me/verification-documents",
+  upload.single("document"),
+  mediaController.uploadVerificationDocument
+);
 router.patch("/me/availability", validate(updateAvailabilityRules), providerController.updateAvailability);
 router.patch("/me/profile", validate(updateProfileRules), providerController.updateProfile);
 

@@ -24,11 +24,17 @@ export default function CustomerDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadProviders = async (filters = {}) => {
+  const loadProviders = async (filterId = activeFilter) => {
     setLoading(true);
     setError("");
     try {
-      const response = await providerService.getAll(filters);
+      const queryParams = {
+        pincode: pincode.trim() || undefined,
+        category: category || undefined,
+        available: filterId === "nearby" ? true : undefined,
+        sort: filterId === "top-rated" ? "rating" : undefined,
+      };
+      const response = await providerService.getAll(queryParams);
       setProviders(response.data?.providers ?? []);
     } catch (requestError) {
       setError(
@@ -40,8 +46,13 @@ export default function CustomerDashboardPage() {
   };
 
   useEffect(() => {
-    loadProviders();
+    loadProviders(activeFilter);
   }, []);
+
+  const handleFilterPillChange = (filterId) => {
+    setActiveFilter(filterId);
+    loadProviders(filterId);
+  };
 
   const handleBook = (provider) => {
     setSelectedProvider({
@@ -53,11 +64,7 @@ export default function CustomerDashboardPage() {
   };
 
   const handleSearch = () => {
-    loadProviders({
-      pincode: pincode.trim() || undefined,
-      category: category || undefined,
-      available: activeFilter === "nearby" ? true : undefined,
-    });
+    loadProviders(activeFilter);
   };
 
   return (
@@ -128,7 +135,7 @@ export default function CustomerDashboardPage() {
         <FilterPills
           options={FILTER_OPTIONS}
           active={activeFilter}
-          onChange={setActiveFilter}
+          onChange={handleFilterPillChange}
         />
         <div className="flex items-center gap-3 bg-surface-container-high p-1 rounded-full">
           <button
