@@ -14,7 +14,7 @@ import { createReviewRules } from "../validators/review.validator.js";
 const router = Router();
 
 router.use(protect);
-router.post("/", validate(createBookingRules), bookingController.createBooking);
+router.post("/", authorize("customer"), validate(createBookingRules), bookingController.createBooking);
 router.get("/me", bookingController.getMyBookings);
 router.get("/provider", authorize("provider"), bookingController.getProviderBookings);
 router.patch("/:id/cancel", authorize("customer"), bookingController.cancelBooking);

@@ -4,13 +4,25 @@ import { sendSuccess } from "../utils/response.js";
 import { User } from "../models/User.js";
 import { ProviderProfile } from "../models/ProviderProfile.js";
 import { Category } from "../models/Category.js";
+import { Booking } from "../models/Booking.js";
 import mongoose from "mongoose";
 
 const approvedFilter = {
   $or: [{ approvalStatus: "approved" }, { approvalStatus: { $exists: false }, isApproved: true }],
 };
 
-function serializeProvider(profile) {
+async function getCompletedJobCounts(providerIds) {
+  if (providerIds.length === 0) return new Map();
+
+  const counts = await Booking.aggregate([
+    { $match: { provider: { $in: providerIds }, status: "completed" } },
+    { $group: { _id: "$provider", completedJobs: { $sum: 1 } } },
+  ]);
+
+  return new Map(counts.map((count) => [count._id.toString(), count.completedJobs]));
+}
+
+function serializeProvider(profile, completedJobs = 0) {
   return {
     id: profile._id,
     userId: profile.user?._id,
@@ -20,7 +32,7 @@ function serializeProvider(profile) {
     price: profile.pricePerVisit,
     rating: profile.ratingAverage,
     reviewCount: profile.reviewCount,
-    completedJobs: profile.completedJobs,
+    completedJobs,
     available: profile.isAvailable,
     image: profile.profileImage,
     imageAlt: profile.user?.name ? `${profile.user.name} provider profile` : "Provider profile",
@@ -64,10 +76,13 @@ export const getProviders = asyncHandler(async (req, res) => {
       .limit(limit),
     ProviderProfile.countDocuments(filter),
   ]);
+  const completedJobCounts = await getCompletedJobCounts(profiles.map((profile) => profile._id));
 
   sendSuccess(res, {
     data: {
-      providers: profiles.map(serializeProvider),
+      providers: profiles.map((profile) =>
+        serializeProvider(profile, completedJobCounts.get(profile._id.toString()) || 0),
+      ),
       pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     },
   });
@@ -83,7 +98,12 @@ export const getProviderById = asyncHandler(async (req, res) => {
     .populate("categories", "name slug");
 
   if (!profile) throw new AppError("Provider not found", 404);
-  sendSuccess(res, { data: { provider: serializeProvider(profile) } });
+  const completedJobCounts = await getCompletedJobCounts([profile._id]);
+  sendSuccess(res, {
+    data: {
+      provider: serializeProvider(profile, completedJobCounts.get(profile._id.toString()) || 0),
+    },
+  });
 });
 
 export const getMyProfile = asyncHandler(async (req, res) => {
@@ -92,7 +112,15 @@ export const getMyProfile = asyncHandler(async (req, res) => {
     .populate("categories", "name slug");
 
   if (!profile) throw new AppError("Provider profile not found", 404);
-  sendSuccess(res, { data: { profile } });
+  const completedJobCounts = await getCompletedJobCounts([profile._id]);
+  sendSuccess(res, {
+    data: {
+      profile: {
+        ...profile.toObject(),
+        completedJobs: completedJobCounts.get(profile._id.toString()) || 0,
+      },
+    },
+  });
 });
 
 export const updateAvailability = asyncHandler(async (req, res) => {

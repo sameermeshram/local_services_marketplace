@@ -52,6 +52,11 @@ const providerProfileSchema = new mongoose.Schema(
     isAvailable: { type: Boolean, default: true, index: true },
     ratingAverage: { type: Number, min: 0, max: 5, default: 0 },
     reviewCount: { type: Number, min: 0, default: 0 },
+    // Retains the unrounded numerator so concurrent atomic review updates do
+    // not accumulate rounding error in ratingAverage.
+    ratingTotal: { type: Number, min: 0, default: 0, select: false },
+    // Completed work is derived from Booking records; this legacy cache is not
+    // written by booking completion and must not be treated as authoritative.
     completedJobs: { type: Number, min: 0, default: 0 },
   },
   { timestamps: true },

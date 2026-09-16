@@ -20,15 +20,17 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-bookingSchema.index({ customer: 1, createdAt: -1 });
+bookingSchema.index({ customer: 1, createdAt: -1 }, { name: "customer_createdAt" });
 bookingSchema.index(
   { provider: 1, date: 1, timeSlot: 1 },
   {
+    name: "unique_active_provider_slot",
     unique: true,
     partialFilterExpression: {
       status: { $in: ["pending", "accepted", "in_progress"] },
     },
   },
 );
+bookingSchema.index({ provider: 1, status: 1 }, { name: "provider_status" });
 
 export const Booking = mongoose.model("Booking", bookingSchema);

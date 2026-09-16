@@ -15,27 +15,52 @@ export const createReview = asyncHandler(async (req, res) => {
 
   if (!booking) throw new AppError("Only completed bookings can be reviewed", 400);
 
-  const existingReview = await Review.findOne({ booking: booking._id });
-  if (existingReview) throw new AppError("This booking has already been reviewed", 409);
-
-  const review = await Review.create({
-    booking: booking._id,
-    customer: req.user.id,
-    provider: booking.provider,
-    rating: req.body.rating,
-    comment: req.body.comment || "",
-  });
-
-  const provider = await ProviderProfile.findById(booking.provider);
-  if (provider) {
-    const rawAverage =
-      (provider.ratingAverage * provider.reviewCount + review.rating) /
-      (provider.reviewCount + 1);
-    const cleanAverage = Math.min(Math.max(Math.round(rawAverage * 10) / 10, 0), 5);
-    provider.ratingAverage = cleanAverage;
-    provider.reviewCount += 1;
-    await provider.save();
+  let review;
+  try {
+    review = await Review.create({
+      booking: booking._id,
+      customer: req.user.id,
+      provider: booking.provider,
+      rating: req.body.rating,
+      comment: req.body.comment || "",
+    });
+  } catch (error) {
+    if (error?.code === 11000) {
+      throw new AppError("This booking has already been reviewed", 409);
+    }
+    throw error;
   }
+
+  // An aggregation-pipeline update is atomic per provider document, so
+  // simultaneous reviews cannot lose a count or overwrite each other's rating.
+  await ProviderProfile.findByIdAndUpdate(
+    booking.provider,
+    [
+      {
+        $set: {
+          reviewCount: { $add: [{ $ifNull: ["$reviewCount", 0] }, 1] },
+          ratingTotal: { $add: [{ $ifNull: ["$ratingTotal", 0] }, review.rating] },
+          ratingAverage: {
+            $round: [
+              {
+                $divide: [
+                  {
+                    $add: [
+                      { $ifNull: ["$ratingTotal", 0] },
+                      review.rating,
+                    ],
+                  },
+                  { $add: [{ $ifNull: ["$reviewCount", 0] }, 1] },
+                ],
+              },
+              1,
+            ],
+          },
+        },
+      },
+    ],
+    { new: true },
+  );
 
   sendSuccess(res, { statusCode: 201, data: { review }, message: "Review submitted" });
 });

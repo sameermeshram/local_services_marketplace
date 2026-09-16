@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
+    "test": "node --test test/booking.concurrency.test.js",
+    "indexes:bookings": "node src/scripts/sync-booking-indexes.js",
     "seed:categories": "node src/seeders/category.seeder.js",
     "seed:admin": "node src/seeders/admin.seeder.js"
   },
@@ -24,5 +26,13 @@
     "mongoose": "^8.9.3",
     "morgan": "^1.11.0",
     "multer": "^2.2.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0",
+    "supertest": "^7.2.2"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0",
+    "supertest": "^7.2.2"
   }
 }
