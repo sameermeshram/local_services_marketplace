@@ -60,3 +60,23 @@ export const getMe = asyncHandler(async (req, res) => {
     data: { user: user.toAuthJSON() },
   });
 });
+
+export const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  const user = await authService.verifyEmail(token);
+
+  sendSuccess(res, {
+    message: "Email verified successfully",
+    data: { user: user.toAuthJSON() },
+  });
+});
+
+export const resendVerification = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const result = await authService.resendVerificationEmail(email);
+
+  sendSuccess(res, {
+    message: result.message,
+    data: null,
+  });
+});

@@ -6,6 +6,11 @@ import { ProviderProfile } from "../models/ProviderProfile.js";
 import { Category } from "../models/Category.js";
 import { Booking } from "../models/Booking.js";
 import mongoose from "mongoose";
+import { verificationDocumentMetadata } from "../utils/verificationDocument.js";
+
+function escapeRegex(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 const approvedFilter = {
   $or: [{ approvalStatus: "approved" }, { approvalStatus: { $exists: false }, isApproved: true }],
@@ -49,7 +54,10 @@ export const getProviders = asyncHandler(async (req, res) => {
 
   if (req.query.available === "true") filter.isAvailable = true;
   if (req.query.pincode) filter["serviceAreas.pincode"] = String(req.query.pincode).trim();
-  if (req.query.city) filter["serviceAreas.city"] = new RegExp(String(req.query.city).trim(), "i");
+  if (req.query.city) {
+    const sanitizedCity = escapeRegex(String(req.query.city).trim());
+    filter["serviceAreas.city"] = new RegExp(sanitizedCity, "i");
+  }
 
   if (req.query.category) {
     const category = mongoose.Types.ObjectId.isValid(req.query.category)
@@ -113,10 +121,14 @@ export const getMyProfile = asyncHandler(async (req, res) => {
 
   if (!profile) throw new AppError("Provider profile not found", 404);
   const completedJobCounts = await getCompletedJobCounts([profile._id]);
+  const profileData = profile.toObject();
+  profileData.verificationDocuments = (profile.verificationDocuments || []).map(
+    verificationDocumentMetadata,
+  );
   sendSuccess(res, {
     data: {
       profile: {
-        ...profile.toObject(),
+        ...profileData,
         completedJobs: completedJobCounts.get(profile._id.toString()) || 0,
       },
     },
@@ -124,19 +136,14 @@ export const getMyProfile = asyncHandler(async (req, res) => {
 });
 
 export const updateAvailability = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    { isAvailable: req.body.isAvailable },
-    { new: true, runValidators: true }
-  );
-
-  if (!user) throw new AppError("Provider not found", 404);
-
+  // Use ProviderProfile.isAvailable as the single source of truth
   const profile = await ProviderProfile.findOneAndUpdate(
     { user: req.user.id },
-    { isAvailable: user.isAvailable },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { isAvailable: req.body.isAvailable },
+    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true },
   );
+
+  if (!profile) throw new AppError("Provider profile not found", 404);
 
   sendSuccess(res, {
     data: { isAvailable: profile.isAvailable },

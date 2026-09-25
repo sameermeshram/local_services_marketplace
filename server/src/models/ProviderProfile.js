@@ -40,7 +40,7 @@ const providerProfileSchema = new mongoose.Schema(
     serviceAreas: { type: [serviceAreaSchema], default: [] },
     profileImage: { type: String, default: null },
     photos: { type: [String], default: [] },
-    verificationDocuments: { type: [String], default: [] },
+    verificationDocuments: { type: [mongoose.Schema.Types.Mixed], default: [] },
     isApproved: { type: Boolean, default: false, index: true },
     approvalStatus: {
       type: String,

@@ -4,6 +4,7 @@ import compression from "compression";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import { env } from "./config/env.js";
 import { corsOptions } from "./config/cors.js";
 import { authRateLimiter } from "./config/rateLimiter.js";
 import authRoutes from "./routes/auth.routes.js";
@@ -17,6 +18,10 @@ import { errorHandler, notFound } from "./middlewares/error.middleware.js";
 import { sendSuccess } from "./utils/response.js";
 
 const app = express();
+
+if (env.nodeEnv === "production") {
+  app.set("trust proxy", 1);
+}
 
 app.use(helmet());
 app.use(compression());

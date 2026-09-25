@@ -165,21 +165,29 @@ export default function AdminDashboardPage() {
               </div>
               <div className="border-t border-outline-variant pt-4 space-y-2">
                 <span className="block text-label-md text-on-surface-variant uppercase font-bold">
-                  Verification Documents ({provider.verificationDocuments?.length || 0})
+                  Verification Documents (
+                  {provider.verificationDocuments?.length || 0})
                 </span>
-                {provider.verificationDocuments && provider.verificationDocuments.length > 0 ? (
+                {provider.verificationDocuments &&
+                provider.verificationDocuments.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {provider.verificationDocuments.map((docUrl, idx) => (
+                    {provider.verificationDocuments.map((document, idx) => (
                       <a
-                        key={docUrl || idx}
-                        href={docUrl}
+                        key={document.id || idx}
+                        href={adminService.getVerificationDocumentUrl(
+                          provider._id,
+                          idx,
+                        )}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant text-primary text-xs font-bold hover:bg-primary-container/10 transition-colors"
                       >
                         <MaterialIcon name="description" className="text-sm" />
                         Document #{idx + 1}
-                        <MaterialIcon name="open_in_new" className="text-[12px]" />
+                        <MaterialIcon
+                          name="open_in_new"
+                          className="text-[12px]"
+                        />
                       </a>
                     ))}
                   </div>

@@ -43,6 +43,9 @@ export default function LoginRegisterPage() {
   const [authMode, setAuthMode] = useState("register");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const [registeredEmail, setRegisteredEmail] = useState("");
+  const [resendingVerification, setResendingVerification] = useState(false);
 
   const getErrorMessage = (err) => {
     const response = err.response?.data;
@@ -84,18 +87,40 @@ export default function LoginRegisterPage() {
               termsAccepted: formData.get("terms") === "on",
             });
 
-      const role = response.data?.user?.role || userType;
-      navigate(
-        role === "provider"
-          ? "/provider/dashboard"
-          : role === "admin"
-            ? "/admin/dashboard"
-            : "/",
-      );
+      if (authMode === "register") {
+        // Show verification message instead of auto-redirect
+        setRegistrationSuccess(true);
+        setRegisteredEmail(payload.email);
+      } else {
+        // Login: redirect to dashboard
+        const role = response.data?.user?.role || userType;
+        navigate(
+          role === "provider"
+            ? "/provider/dashboard"
+            : role === "admin"
+              ? "/admin/dashboard"
+              : "/",
+        );
+      }
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    setResendingVerification(true);
+    setError("");
+
+    try {
+      await authService.resendVerification(registeredEmail);
+      setError(""); // Clear any previous errors
+      alert("Verification email sent! Please check your inbox.");
+    } catch (err) {
+      setError(getErrorMessage(err));
+    } finally {
+      setResendingVerification(false);
     }
   };
 
@@ -147,6 +172,72 @@ export default function LoginRegisterPage() {
 
         <section className="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center">
           <div className="max-w-md mx-auto w-full">
+            {registrationSuccess ? (
+              // Registration success message
+              <div className="text-center py-8">
+                <div className="flex justify-center mb-6">
+                  <div className="bg-green-100 rounded-full p-6">
+                    <MaterialIcon
+                      name="mark_email_read"
+                      filled
+                      className="text-6xl text-green-600"
+                    />
+                  </div>
+                </div>
+                <h2 className="font-headline-lg text-headline-lg mb-4">
+                  Registration Successful!
+                </h2>
+                <p className="text-on-surface-variant font-body-md mb-6">
+                  We've sent a verification email to{" "}
+                  <strong className="text-primary">{registeredEmail}</strong>
+                </p>
+                <div className="bg-surface-container-high p-6 rounded-lg mb-6 text-left">
+                  <h3 className="font-headline-sm text-headline-sm mb-3 flex items-center gap-2">
+                    <MaterialIcon name="info" className="text-primary" />
+                    Next Steps
+                  </h3>
+                  <ol className="space-y-2 text-body-md text-on-surface-variant ml-6 list-decimal">
+                    <li>Check your email inbox</li>
+                    <li>Click the verification link in the email</li>
+                    <li>Return here to log in</li>
+                  </ol>
+                </div>
+                <div className="space-y-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegistrationSuccess(false);
+                      setAuthMode("login");
+                    }}
+                    className="w-full bg-secondary-container hover:bg-secondary text-white font-headline-sm py-4 rounded-xl shadow-lg transition-all duration-200 transform active:scale-[0.98] flex items-center justify-center gap-2 group"
+                  >
+                    Go to Login
+                    <MaterialIcon
+                      name="arrow_forward"
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
+                  </button>
+                  <p className="text-on-surface-variant font-body-sm">
+                    Didn't receive the email?{" "}
+                    <button
+                      type="button"
+                      onClick={handleResendVerification}
+                      disabled={resendingVerification}
+                      className="text-primary font-semibold hover:underline disabled:opacity-50"
+                    >
+                      {resendingVerification ? "Sending..." : "Resend verification email"}
+                    </button>
+                  </p>
+                  {error && (
+                    <p className="text-error font-body-sm" role="alert">
+                      {error}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              // Regular login/register form
+              <>
             <div className="mb-10">
               <h2 className="font-headline-lg text-headline-lg mb-2">
                 {authMode === "login" ? "Log In" : "Create an Account"}
@@ -355,9 +446,11 @@ export default function LoginRegisterPage() {
                 </button>
               </div>
             </div>
-          </div>
-        </section>
-      </main>
-    </AuthLayout>
+          </>
+        )}
+        </div>
+      </section>
+    </main>
+  </AuthLayout>
   );
 }

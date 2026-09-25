@@ -16,6 +16,7 @@ export default function EditProviderProfilePage() {
   const [error, setError] = useState("");
   const [uploadingPhoto, setUploadingPhoto] = useState(false);
   const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [deletingDocument, setDeletingDocument] = useState(null);
   const photoInputRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -61,7 +62,8 @@ export default function EditProviderProfilePage() {
     setMessage("");
 
     try {
-      const response = await providerService.uploadVerificationDocument(formData);
+      const response =
+        await providerService.uploadVerificationDocument(formData);
       const updatedDocs = response.data?.verificationDocuments;
       const nextStatus = response.data?.approvalStatus || "pending";
 
@@ -73,7 +75,7 @@ export default function EditProviderProfilePage() {
               approvalStatus: nextStatus,
               isApproved: nextStatus === "approved",
             }
-          : prev
+          : prev,
       );
       setMessage("Verification document uploaded and submitted for review.");
     } catch (requestError) {
@@ -109,6 +111,37 @@ export default function EditProviderProfilePage() {
       );
     } finally {
       setUploadingPhoto(false);
+    }
+  };
+
+  const handleDocumentDelete = async (index) => {
+    if (
+      deletingDocument !== null ||
+      !window.confirm("Delete this verification document?")
+    )
+      return;
+
+    setDeletingDocument(index);
+    setError("");
+    setMessage("");
+    try {
+      const response = await providerService.deleteVerificationDocument(index);
+      setProfile((prev) =>
+        prev
+          ? {
+              ...prev,
+              verificationDocuments: response.data?.verificationDocuments || [],
+            }
+          : prev,
+      );
+      setMessage("Verification document deleted.");
+    } catch (requestError) {
+      setError(
+        requestError.response?.data?.message ||
+          "Unable to delete verification document.",
+      );
+    } finally {
+      setDeletingDocument(null);
     }
   };
 
@@ -423,25 +456,37 @@ export default function EditProviderProfilePage() {
             <div
               role="button"
               tabIndex={0}
-              onClick={() => !uploadingDocument && fileInputRef.current?.click()}
+              onClick={() =>
+                !uploadingDocument && fileInputRef.current?.click()
+              }
               onKeyDown={(e) =>
-                e.key === "Enter" && !uploadingDocument && fileInputRef.current?.click()
+                e.key === "Enter" &&
+                !uploadingDocument &&
+                fileInputRef.current?.click()
               }
               onDragOver={(e) => e.preventDefault()}
               onDragLeave={(e) => e.preventDefault()}
               onDrop={handleDrop}
               className={`border-2 border-dashed border-outline-variant rounded-xl p-8 flex flex-col items-center justify-center text-center transition-all group ${
-                uploadingDocument ? "opacity-50 cursor-not-allowed" : "hover:bg-primary/5 hover:border-primary cursor-pointer"
+                uploadingDocument
+                  ? "opacity-50 cursor-not-allowed"
+                  : "hover:bg-primary/5 hover:border-primary cursor-pointer"
               }`}
             >
               <div className="w-16 h-16 bg-surface-container-high rounded-full flex items-center justify-center mb-4 group-hover:bg-primary-container/20 group-hover:text-primary transition-colors">
-                <MaterialIcon name={uploadingDocument ? "sync" : "upload_file"} className={`text-3xl ${uploadingDocument ? "animate-spin" : ""}`} />
+                <MaterialIcon
+                  name={uploadingDocument ? "sync" : "upload_file"}
+                  className={`text-3xl ${uploadingDocument ? "animate-spin" : ""}`}
+                />
               </div>
               <p className="font-headline-sm text-headline-sm text-on-surface mb-1">
-                {uploadingDocument ? "Uploading Document..." : "ID or Business License"}
+                {uploadingDocument
+                  ? "Uploading Document..."
+                  : "ID or Business License"}
               </p>
               <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Drag &amp; drop PDF or Image (JPEG, PNG, WEBP, max 5MB) here, or click to browse.
+                Drag &amp; drop PDF or Image (JPEG, PNG, WEBP, max 5MB) here, or
+                click to browse.
               </p>
               <input
                 ref={fileInputRef}
@@ -455,36 +500,53 @@ export default function EditProviderProfilePage() {
                 }}
               />
             </div>
-            {profile?.verificationDocuments && profile.verificationDocuments.length > 0 && (
-              <div className="space-y-2">
-                <p className="font-label-md text-label-md text-on-surface-variant">
-                  Uploaded Documents ({profile.verificationDocuments.length}/5):
-                </p>
+            {profile?.verificationDocuments &&
+              profile.verificationDocuments.length > 0 && (
                 <div className="space-y-2">
-                  {profile.verificationDocuments.map((docUrl, idx) => (
-                    <div
-                      key={docUrl || idx}
-                      className="flex items-center justify-between p-3 bg-surface border border-outline-variant rounded-lg text-body-sm"
-                    >
-                      <div className="flex items-center gap-2 truncate">
-                        <MaterialIcon name="description" className="text-primary text-xl flex-shrink-0" />
-                        <span className="truncate font-mono text-xs">
-                          Verification Document {idx + 1}
-                        </span>
-                      </div>
-                      <a
-                        href={docUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline font-bold text-xs flex items-center gap-1"
+                  <p className="font-label-md text-label-md text-on-surface-variant">
+                    Uploaded Documents ({profile.verificationDocuments.length}
+                    /5):
+                  </p>
+                  <div className="space-y-2">
+                    {profile.verificationDocuments.map((document, idx) => (
+                      <div
+                        key={document.id || idx}
+                        className="flex items-center justify-between p-3 bg-surface border border-outline-variant rounded-lg text-body-sm"
                       >
-                        View <MaterialIcon name="open_in_new" className="text-sm" />
-                      </a>
-                    </div>
-                  ))}
+                        <div className="flex items-center gap-2 truncate">
+                          <MaterialIcon
+                            name="description"
+                            className="text-primary text-xl flex-shrink-0"
+                          />
+                          <span className="truncate font-mono text-xs">
+                            Verification Document {idx + 1}
+                          </span>
+                        </div>
+                        <a
+                          href={providerService.getVerificationDocumentUrl(idx)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline font-bold text-xs flex items-center gap-1"
+                        >
+                          View{" "}
+                          <MaterialIcon
+                            name="open_in_new"
+                            className="text-sm"
+                          />
+                        </a>
+                        <button
+                          type="button"
+                          disabled={deletingDocument === idx}
+                          onClick={() => handleDocumentDelete(idx)}
+                          className="text-error hover:underline font-bold text-xs disabled:opacity-50"
+                        >
+                          {deletingDocument === idx ? "Deleting..." : "Delete"}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
             <div className="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
               <MaterialIcon name="info" className="text-primary-container" />
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-tight">

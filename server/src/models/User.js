@@ -16,7 +16,6 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String, default: null },
     isVerified: { type: Boolean, default: false },
     isActive: { type: Boolean, default: true },
-    isAvailable: { type: Boolean, default: true },
     bio: { type: String, default: "", trim: true, maxlength: 2000 },
     pricePerVisit: { type: Number, default: 0, min: 0 },
     yearsExperience: { type: Number, default: 0, min: 0, max: 80 },
@@ -30,6 +29,17 @@ const userSchema = new mongoose.Schema(
     },
     termsAcceptedAt: { type: Date, required: true },
     refreshTokenHash: { type: String, select: false, default: null },
+    // Email verification
+    verificationToken: { type: String, select: false },
+    verificationExpires: { type: Date, select: false },
+    // Password reset
+    passwordResetToken: { type: String, select: false },
+    passwordResetExpires: { type: Date, select: false },
+    // Security tracking
+    failedLoginAttempts: { type: Number, default: 0 },
+    accountLockedUntil: { type: Date },
+    lastLoginAt: { type: Date },
+    passwordChangedAt: { type: Date },
   },
   { timestamps: true }
 );
@@ -56,6 +66,50 @@ userSchema.methods.compareRefreshToken = function compareRefreshToken(refreshTok
   if (!this.refreshTokenHash) return false;
   const hash = crypto.createHash("sha256").update(refreshToken).digest("hex");
   return this.refreshTokenHash === hash;
+};
+
+// Email verification methods
+userSchema.methods.generateVerificationToken = function generateVerificationToken() {
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  this.verificationToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+  this.verificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+  return rawToken;
+};
+
+userSchema.methods.verifyEmail = function verifyEmail() {
+  this.isVerified = true;
+  this.verificationToken = undefined;
+  this.verificationExpires = undefined;
+};
+
+// Password reset methods
+userSchema.methods.generatePasswordResetToken = function generatePasswordResetToken() {
+  const rawToken = crypto.randomBytes(32).toString("hex");
+  this.passwordResetToken = crypto.createHash("sha256").update(rawToken).digest("hex");
+  this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+  return rawToken;
+};
+
+userSchema.methods.resetPassword = function resetPassword(newPassword) {
+  this.password = newPassword;
+  this.passwordResetToken = undefined;
+  this.passwordResetExpires = undefined;
+  this.passwordChangedAt = new Date();
+};
+
+// Failed login tracking methods
+userSchema.methods.incrementFailedLogins = function incrementFailedLogins() {
+  this.failedLoginAttempts = (this.failedLoginAttempts || 0) + 1;
+};
+
+userSchema.methods.resetFailedLogins = function resetFailedLogins() {
+  this.failedLoginAttempts = 0;
+  this.accountLockedUntil = undefined;
+};
+
+userSchema.methods.isAccountLocked = function isAccountLocked() {
+  if (!this.accountLockedUntil) return false;
+  return this.accountLockedUntil > new Date();
 };
 
 userSchema.methods.toAuthJSON = function toAuthJSON() {

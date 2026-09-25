@@ -32,6 +32,16 @@ export function errorHandler(err, req, res, _next) {
     return sendError(res, { statusCode: 400, message: "Invalid JSON body" });
   }
 
+  if (err.name === "MulterError") {
+    return sendError(res, {
+      statusCode: err.code === "LIMIT_FILE_SIZE" ? 413 : 400,
+      message:
+        err.code === "LIMIT_FILE_SIZE"
+          ? "Uploaded file exceeds the maximum allowed size"
+          : "Invalid file upload",
+    });
+  }
+
   console.error(err);
   sendError(res, { statusCode: 500, message: "Internal server error" });
 }

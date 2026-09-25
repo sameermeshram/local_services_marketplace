@@ -10,15 +10,18 @@ import {
 import * as reviewController from "../controllers/review.controller.js";
 import * as mediaController from "../controllers/media.controller.js";
 import { upload } from "../config/multer.js";
+import { providerRateLimiter } from "../config/rateLimiter.js";
 
 const router = Router();
 
-router.get("/", providerController.getProviders);
+router.get("/", providerRateLimiter, providerController.getProviders);
 router.get("/:id/reviews", reviewController.getProviderReviews);
 router.get("/:id", providerController.getProviderById);
 
 router.use(protect, authorize("provider"));
 router.get("/me/profile", providerController.getMyProfile);
+router.get("/me/verification-documents/:index", mediaController.getMyVerificationDocument);
+router.delete("/me/verification-documents/:index", mediaController.deleteVerificationDocument);
 router.post("/me/photos", upload.single("photo"), mediaController.uploadProviderPhoto);
 router.post(
   "/me/verification-documents",

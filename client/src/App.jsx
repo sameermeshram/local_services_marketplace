@@ -1,5 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginRegisterPage from "./pages/LoginRegisterPage";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 import CustomerDashboardPage from "./pages/CustomerDashboardPage";
 import ProviderDashboardPage from "./pages/ProviderDashboardPage";
 import ProviderProfilePage from "./pages/ProviderProfilePage";
@@ -17,6 +18,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<LoginRegisterPage />} />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/" element={protectedPage(<CustomerDashboardPage />)} />
       <Route path="/bookings" element={protectedPage(<MyBookingsPage />)} />
       <Route

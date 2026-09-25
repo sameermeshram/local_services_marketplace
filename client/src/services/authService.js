@@ -33,6 +33,14 @@ export const authService = {
   me() {
     return unwrap(api.get("/auth/me"));
   },
+
+  async verifyEmail(token) {
+    return await unwrap(api.post("/auth/verify-email", { token }));
+  },
+
+  async resendVerification(email) {
+    return await unwrap(api.post("/auth/resend-verification", { email }));
+  },
 };
 
 export default authService;

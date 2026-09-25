@@ -22,7 +22,8 @@ export const registerRules = [
   body("name")
     .trim()
     .isLength({ min: 2, max: 80 })
-    .withMessage("Name must be between 2 and 80 characters"),
+    .withMessage("Name must be between 2 and 80 characters")
+    .escape(),
   body("email")
     .trim()
     .isEmail()
@@ -49,4 +50,19 @@ export const registerRules = [
 export const loginRules = [
   body("email").trim().isEmail().withMessage("Valid email is required").normalizeEmail(),
   body("password").notEmpty().withMessage("Password is required"),
+];
+
+export const verifyEmailRules = [
+  body("token")
+    .trim()
+    .notEmpty()
+    .withMessage("Verification token is required")
+    .isString()
+    .withMessage("Token must be a string")
+    .isLength({ min: 64, max: 64 })
+    .withMessage("Invalid token format"),
+];
+
+export const resendVerificationRules = [
+  body("email").trim().isEmail().withMessage("Valid email is required").normalizeEmail(),
 ];

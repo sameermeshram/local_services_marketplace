@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { AppError } from "../utils/AppError.js";
 import { sendSuccess } from "../utils/response.js";
 import { ProviderProfile } from "../models/ProviderProfile.js";
+import { verificationDocumentMetadata } from "../utils/verificationDocument.js";
 
 const pendingFilter = {
   $or: [
@@ -16,7 +17,15 @@ export const getPendingProviders = asyncHandler(async (_req, res) => {
     .populate("categories", "name slug")
     .sort({ createdAt: 1 });
 
-  sendSuccess(res, { data: { providers } });
+  const safeProviders = providers.map((provider) => {
+    const data = provider.toObject();
+    data.verificationDocuments = (provider.verificationDocuments || []).map(
+      verificationDocumentMetadata,
+    );
+    return data;
+  });
+
+  sendSuccess(res, { data: { providers: safeProviders } });
 });
 
 export const approveProvider = asyncHandler(async (req, res) => {

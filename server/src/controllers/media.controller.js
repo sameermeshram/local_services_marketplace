@@ -3,6 +3,57 @@ import { AppError } from "../utils/AppError.js";
 import { sendSuccess } from "../utils/response.js";
 import { ProviderProfile } from "../models/ProviderProfile.js";
 import { cloudinary } from "../config/cloudinary.js";
+import {
+  destroyPrivateDocument,
+  getPrivateDocumentUrl,
+  parseDocumentIndex,
+  verificationDocumentMetadata,
+} from "../utils/verificationDocument.js";
+import https from "https";
+import http from "http";
+
+function streamDocumentFromUrl(document, res) {
+  const documentUrl = getPrivateDocumentUrl(document);
+  const client = documentUrl.startsWith("https") ? https : http;
+
+  return new Promise((resolve) => {
+    client
+      .get(documentUrl, (cloudinaryRes) => {
+        if (cloudinaryRes.statusCode >= 400) {
+          res.status(cloudinaryRes.statusCode >= 500 ? 502 : 404).json({
+            success: false,
+            message: "Unable to retrieve verification document from storage",
+            data: null,
+            errors: [],
+          });
+          return resolve();
+        }
+
+        const contentType =
+          cloudinaryRes.headers["content-type"] || "application/octet-stream";
+        res.setHeader("Content-Type", contentType);
+        res.setHeader("Content-Disposition", "inline");
+        res.setHeader("Cache-Control", "private, no-store");
+
+        if (cloudinaryRes.headers["content-length"]) {
+          res.setHeader("Content-Length", cloudinaryRes.headers["content-length"]);
+        }
+
+        cloudinaryRes.pipe(res);
+        cloudinaryRes.on("end", resolve);
+      })
+      .on("error", (err) => {
+        console.error("Error streaming document:", err.message);
+        res.status(502).json({
+          success: false,
+          message: "Failed to connect to media storage",
+          data: null,
+          errors: [],
+        });
+        resolve();
+      });
+  });
+}
 
 function uploadImage(buffer) {
   return new Promise((resolve, reject) => {
@@ -69,7 +120,7 @@ export const uploadProviderPhoto = asyncHandler(async (req, res) => {
   const profile = await ProviderProfile.findOneAndUpdate(
     { user: req.user.id },
     { profileImage: result.secure_url },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { new: true },
   );
 
   sendSuccess(res, {
@@ -116,23 +167,120 @@ export const uploadVerificationDocument = asyncHandler(async (req, res) => {
     throw new AppError("Verification document upload failed", 502);
   }
 
+  const documentRecord = {
+    publicId: uploadResult.public_id,
+    resourceType: uploadResult.resource_type,
+    format: uploadResult.format,
+    originalFilename: file.originalname,
+    uploadedAt: new Date(),
+  };
+
   const updatedProfile = await ProviderProfile.findOneAndUpdate(
-    { user: req.user.id },
     {
-      $push: { verificationDocuments: uploadResult.secure_url },
+      user: req.user.id,
+      $expr: {
+        $lt: [{ $size: { $ifNull: ["$verificationDocuments", []] } }, MAX_DOCUMENTS],
+      },
+    },
+    {
+      $push: { verificationDocuments: documentRecord },
       approvalStatus: "pending",
       isApproved: false,
     },
     { new: true, upsert: true, setDefaultsOnInsert: true },
   );
 
+  if (!updatedProfile) {
+    try {
+      await destroyPrivateDocument(documentRecord);
+    } catch {
+      // The unreferenced upload is handled by storage reconciliation.
+    }
+    throw new AppError("Maximum limit of 5 verification documents reached", 400);
+  }
+
   sendSuccess(res, {
     data: {
-      documentUrl: uploadResult.secure_url,
-      verificationDocuments: updatedProfile.verificationDocuments,
+      document: verificationDocumentMetadata(
+        updatedProfile.verificationDocuments.at(-1),
+        updatedProfile.verificationDocuments.length - 1,
+      ),
+      verificationDocuments: updatedProfile.verificationDocuments.map(
+        verificationDocumentMetadata,
+      ),
       approvalStatus: updatedProfile.approvalStatus,
     },
     message: "Verification document uploaded successfully and submitted for review.",
   });
 });
+
+export const getMyVerificationDocument = asyncHandler(async (req, res) => {
+  const profile = await ProviderProfile.findOne({ user: req.user.id });
+  if (!profile) {
+    throw new AppError("Provider profile not found", 404);
+  }
+
+  const index = parseDocumentIndex(req.params.index);
+  if (!profile.verificationDocuments || index >= profile.verificationDocuments.length) {
+    throw new AppError("Verification document not found", 404);
+  }
+
+  return streamDocumentFromUrl(profile.verificationDocuments[index], res);
+});
+
+export const getAdminVerificationDocument = asyncHandler(async (req, res) => {
+  const profile = await ProviderProfile.findById(req.params.id);
+  if (!profile) {
+    throw new AppError("Provider profile not found", 404);
+  }
+
+  const index = parseDocumentIndex(req.params.index);
+  if (!profile.verificationDocuments || index >= profile.verificationDocuments.length) {
+    throw new AppError("Verification document not found", 404);
+  }
+
+  return streamDocumentFromUrl(profile.verificationDocuments[index], res);
+});
+
+export const deleteVerificationDocument = asyncHandler(async (req, res) => {
+  const profile = await ProviderProfile.findOne({ user: req.user.id });
+  if (!profile) throw new AppError("Provider profile not found", 404);
+
+  const index = parseDocumentIndex(req.params.index);
+  if (!profile.verificationDocuments || index >= profile.verificationDocuments.length) {
+    throw new AppError("Verification document not found", 404);
+  }
+
+  const document = profile.verificationDocuments[index];
+  let deletionResult;
+  try {
+    deletionResult = await destroyPrivateDocument(document);
+  } catch {
+    throw new AppError("Unable to delete verification document from storage", 502);
+  }
+
+  if (deletionResult?.result && !["ok", "not found"].includes(deletionResult.result)) {
+    throw new AppError("Unable to delete verification document from storage", 502);
+  }
+
+  const updatedProfile = await ProviderProfile.findOneAndUpdate(
+    { user: req.user.id, verificationDocuments: document },
+    { $pull: { verificationDocuments: document } },
+    { new: true },
+  );
+
+  if (!updatedProfile) {
+    throw new AppError("Verification document reference could not be removed", 502);
+  }
+
+  sendSuccess(res, {
+    data: {
+      verificationDocuments: updatedProfile.verificationDocuments.map(
+        verificationDocumentMetadata,
+      ),
+    },
+    message: "Verification document deleted",
+  });
+});
+
 

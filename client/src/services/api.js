@@ -91,6 +91,7 @@ export const adminService = {
   getPendingProviders: () => unwrap(api.get("/admin/providers/pending")),
   approveProvider: (id) => unwrap(api.patch(`/admin/providers/${id}/approve`)),
   rejectProvider: (id, reason) => unwrap(api.patch(`/admin/providers/${id}/reject`, { reason })),
+  getVerificationDocumentUrl: (id, index) => `${API_BASE_URL}/admin/providers/${id}/verification-documents/${index}`,
 };
 
 export const providerService = {
@@ -99,6 +100,9 @@ export const providerService = {
   getProfile: () => unwrap(api.get("/providers/me/profile")),
   updateProfile: (payload) => unwrap(api.patch("/providers/me/profile", payload)),
   updateAvailability: (payload) => unwrap(api.patch("/providers/me/availability", payload)),
+  getVerificationDocumentUrl: (index) => `${API_BASE_URL}/providers/me/verification-documents/${index}`,
+  deleteVerificationDocument: (index) =>
+    unwrap(api.delete(`/providers/me/verification-documents/${index}`)),
   uploadPhoto: (formData) =>
     unwrap(
       api.post("/providers/me/photos", formData, {
