@@ -5,19 +5,20 @@ import StarRating from "../ui/StarRating";
 
 export default function ProviderCard({ provider, onBook }) {
   return (
-    <div className="group bg-white rounded-2xl border border-outline-variant p-6 hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col">
-      <div className="flex justify-between items-start mb-6">
+    <article className="group flex h-full flex-col rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/20 hover:shadow-xl sm:p-6">
+      <div className="mb-6 flex items-start justify-between gap-4">
         <div className="relative">
-          <div className="w-20 h-20 rounded-full overflow-hidden border-4 border-surface-container">
-            <img src={provider.image} alt={provider.imageAlt} className="w-full h-full object-cover" />
+          <div className="h-20 w-20 overflow-hidden rounded-full border-4 border-surface-container">
+            <img src={provider.image} alt={provider.imageAlt || `${provider.name} profile`} className="h-full w-full object-cover" />
           </div>
           <div
-            className={`absolute bottom-0 right-0 w-6 h-6 border-4 border-white rounded-full ${
-              provider.available ? "bg-green-500" : "bg-slate-400"
+            className={`absolute bottom-0 right-0 h-6 w-6 rounded-full border-4 border-white ${
+              provider.available ? "bg-primary" : "bg-outline"
             }`}
+            aria-label={provider.available ? "Available" : "Currently busy"}
           />
         </div>
-        <div className="flex flex-col items-end">
+        <div className="flex min-w-0 flex-col items-end">
           <StatusPill status={provider.available ? "available" : "busy"} />
           <div className="mt-2">
             <StarRating rating={provider.rating} reviewCount={provider.reviewCount} />
@@ -26,34 +27,45 @@ export default function ProviderCard({ provider, onBook }) {
       </div>
 
       <div className="mb-4">
-        <Link to={`/providers/${provider.id}`}>
-          <h3 className="text-headline-sm font-headline-sm text-on-surface group-hover:text-primary transition-colors">
+        <Link to={`/providers/${provider.id}`} className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
+          <h3 className="text-headline-sm font-headline-sm text-on-surface transition-colors group-hover:text-primary">
             {provider.name}
           </h3>
         </Link>
-        <span className="inline-block bg-primary/10 text-primary font-bold text-[11px] px-2 py-0.5 rounded mt-1 uppercase tracking-widest">
+        <span className="mt-1 inline-block rounded bg-primary/10 px-2 py-0.5 text-[11px] font-bold uppercase tracking-widest text-primary">
           {provider.trade}
         </span>
       </div>
 
-      <p className="text-on-surface-variant text-body-sm mb-6 line-clamp-2">{provider.bio}</p>
+      {provider.bio && <p className="mb-6 line-clamp-2 text-body-sm text-on-surface-variant">{provider.bio}</p>}
 
-      <div className="mt-auto pt-6 border-t border-outline-variant flex items-center justify-between">
+      {(provider.completedJobs != null || provider.experience) && (
+        <div className="mb-6 flex flex-wrap gap-x-4 gap-y-2 text-label-md text-on-surface-variant">
+          {provider.experience && <span>{provider.experience} experience</span>}
+          {provider.completedJobs != null && <span>{provider.completedJobs} jobs completed</span>}
+        </div>
+      )}
+
+      <div className="mt-auto flex items-center justify-between gap-4 border-t border-outline-variant pt-6">
         <div>
-          <p className="text-on-surface-variant text-label-md">Starts from</p>
-          <p className="text-headline-sm font-bold text-on-surface">
-            ${provider.price}
-            <span className="text-body-sm font-normal text-on-surface-variant">/visit</span>
-          </p>
+          {provider.price != null && (
+            <>
+              <p className="text-label-md text-on-surface-variant">Starts from</p>
+              <p className="text-headline-sm font-bold text-on-surface">
+                ${provider.price}
+                <span className="text-body-sm font-normal text-on-surface-variant">/visit</span>
+              </p>
+            </>
+          )}
         </div>
         <button
           type="button"
           onClick={() => onBook?.(provider)}
-          className="bg-secondary text-white px-6 py-2.5 rounded-lg font-bold hover:bg-on-secondary-container transition-all active:scale-95 shadow-md"
+          className="min-h-11 shrink-0 rounded-lg bg-secondary px-5 py-2.5 font-bold text-white shadow-md transition-all hover:bg-on-secondary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 active:scale-95"
         >
           Book Now
         </button>
       </div>
-    </div>
+    </article>
   );
 }

@@ -5,36 +5,16 @@ import MaterialIcon from "../components/ui/MaterialIcon";
 import StatsCard from "../components/provider/StatsCard";
 import ReviewCard from "../components/provider/ReviewCard";
 import BookingWidget from "../components/provider/BookingWidget";
-import BookingConfirmedModal from "../components/booking/BookingConfirmedModal";
-import { providerService, reviewService, bookingService } from "../services/api";
-import { featuredProvider, profileClientAvatar } from "../data/mockData";
+import ConfirmBookingModal from "../components/booking/ConfirmBookingModal";
+import { providerService, reviewService } from "../services/api";
 
 export default function ProviderProfilePage() {
   const { id } = useParams();
-  const [confirmedOpen, setConfirmedOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
   const [provider, setProvider] = useState(null);
   const [profileReviews, setProfileReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [bookingLoading, setBookingLoading] = useState(false);
-  const [bookingError, setBookingError] = useState("");
-
-  const handleBookingSubmit = async (payload) => {
-    setBookingLoading(true);
-    setBookingError("");
-    try {
-      await bookingService.create(payload);
-      setConfirmedOpen(true);
-    } catch (requestError) {
-      setBookingError(
-        requestError.response?.data?.message ||
-          "Unable to create booking request. Please log in as a customer.",
-      );
-    } finally {
-      setBookingLoading(false);
-    }
-  };
-
   useEffect(() => {
     let active = true;
 
@@ -63,22 +43,11 @@ export default function ProviderProfilePage() {
         );
         setProvider({
           ...profile,
-          trade: profile.trade?.toUpperCase(),
+          trade: profile.trade,
           location: profile.serviceAreas?.[0]
             ? `${profile.serviceAreas[0].city}, ${profile.serviceAreas[0].pincode}`
-            : "Local service area",
-          hourlyRate: profile.price,
-          serviceFee: 15,
+            : "",
           availableToday: profile.available,
-          yearsExperience: `${profile.yearsExperience}+`,
-          jobsCompleted: profile.completedJobs,
-          responseMinutes: "~60",
-          skills: profile.services?.map((service) => service.name) || [
-            profile.trade,
-          ],
-          coverImage: profile.image || featuredProvider.coverImage,
-          avatar: profile.image || featuredProvider.avatar,
-          avatarAlt: profile.imageAlt,
         });
       })
       .catch((requestError) => {
@@ -96,12 +65,21 @@ export default function ProviderProfilePage() {
     };
   }, [id]);
 
-  if (loading)
-    return <div className="min-h-screen bg-surface" aria-busy="true" />;
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-surface" role="status">
+        <MaterialIcon name="progress_activity" className="animate-spin text-[32px] text-primary" />
+        <span className="sr-only">Loading provider profile</span>
+      </div>
+    );
+  }
   if (error || !provider) {
     return (
-      <div className="min-h-screen bg-surface p-8 text-center text-error">
-        {error || "Provider not found."}
+      <div className="flex min-h-screen items-center justify-center bg-surface p-6 text-center">
+        <div role="alert">
+          <MaterialIcon name="error_outline" className="mb-3 text-[36px] text-error" />
+          <p className="font-semibold text-error">{error || "Provider not found."}</p>
+        </div>
       </div>
     );
   }
@@ -114,140 +92,119 @@ export default function ProviderProfilePage() {
         <TopAppBar
           showSearch
           searchPlaceholder="Search services..."
-          avatarSrc={profileClientAvatar}
-          userName="Alex Johnson"
-          userSubtitle="Verified Client"
         />
       }
     >
-      <section className="relative rounded-3xl overflow-hidden mb-10 shadow-lg group">
-        <div className="h-64 md:h-80 w-full relative">
-          <img
-            src={provider.coverImage}
-            alt="Professional residential contractor working in a modern kitchen"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-        </div>
-        <div className="absolute bottom-0 left-0 p-8 w-full flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div className="flex gap-6 items-center">
-            <div className="relative">
-              <img
-                src={provider.avatar}
-                alt={provider.avatarAlt}
-                className="w-24 h-24 md:w-32 md:h-32 rounded-2xl object-cover border-4 border-surface shadow-xl"
-              />
-              <div className="absolute -bottom-2 -right-2 bg-secondary-container text-on-secondary-container p-1 rounded-lg shadow-md flex items-center">
-                <MaterialIcon name="verified" filled className="text-[18px]" />
-              </div>
+      <section className="mb-10 rounded-3xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm sm:p-8">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          {provider.image ? (
+            <img
+              src={provider.image}
+              alt={provider.imageAlt || `${provider.name} provider profile`}
+              className="h-28 w-28 rounded-2xl object-cover ring-4 ring-primary/10"
+            />
+          ) : (
+            <div className="flex h-28 w-28 items-center justify-center rounded-2xl bg-primary/10 text-primary">
+              <MaterialIcon name="person" className="text-[48px]" />
             </div>
-            <div className="text-white">
-              <span className="bg-primary text-on-primary-container px-3 py-1 rounded-full text-label-md font-bold tracking-wider mb-2 inline-block">
-                {provider.trade}
-              </span>
-              <h2 className="font-display text-headline-lg leading-tight">
-                {provider.name}
-              </h2>
-              <div className="flex items-center gap-4 mt-1">
-                <div className="flex items-center gap-1 text-secondary-fixed">
-                  <MaterialIcon name="star" filled className="text-[20px]" />
-                  <span className="font-bold text-body-lg">
-                    {provider.rating}
-                  </span>
-                  <span className="text-white/70 text-body-sm">
-                    ({provider.reviewCount} reviews)
-                  </span>
-                </div>
-                <span className="w-1 h-1 bg-white/50 rounded-full" />
-                <div className="flex items-center gap-1 text-white/90">
-                  <MaterialIcon name="location_on" className="text-[18px]" />
-                  <span className="text-body-sm">{provider.location}</span>
-                </div>
-              </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <span className="mb-2 inline-block rounded-full bg-primary/10 px-3 py-1 text-label-md font-bold uppercase tracking-wider text-primary">
+              {provider.trade}
+            </span>
+            <h2 className="font-headline-lg text-headline-lg text-on-surface">{provider.name}</h2>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-body-sm text-on-surface-variant">
+              {provider.rating != null && (
+                <span className="flex items-center gap-1 font-bold text-on-surface">
+                  <MaterialIcon name="star" filled className="text-[20px] text-secondary" />
+                  {provider.rating}
+                  {provider.reviewCount != null && (
+                    <span className="font-normal text-on-surface-variant">({provider.reviewCount} reviews)</span>
+                  )}
+                </span>
+              )}
+              {provider.location && (
+                <span className="flex items-center gap-1">
+                  <MaterialIcon name="location_on" className="text-[18px] text-primary" />
+                  {provider.location}
+                </span>
+              )}
             </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              className="bg-surface/20 backdrop-blur-md border border-white/30 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-surface/30 transition-all active:scale-95"
-            >
-              <MaterialIcon name="share" />
-              Share
-            </button>
-            <button
-              type="button"
-              className="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-bold flex items-center gap-2 hover:bg-secondary-fixed-dim transition-all shadow-lg shadow-secondary/20 active:scale-95"
-            >
-              <MaterialIcon name="favorite" />
-              Save
-            </button>
           </div>
         </div>
       </section>
 
       <div className="grid grid-cols-12 gap-8">
         <div className="col-span-12 lg:col-span-8 space-y-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatsCard
-              icon="history"
-              badge="TOP RATED"
-              value={`${provider.yearsExperience}`}
-              label="Years Experience"
-              color="primary"
-            />
-            <StatsCard
-              icon="check_circle"
-              badge="CERTIFIED"
-              value={provider.jobsCompleted}
-              label="Jobs Completed"
-              color="secondary"
-            />
-            <StatsCard
-              icon="timer"
-              badge="FAST"
-              value={provider.responseMinutes}
-              label="Min Response Time"
-              color="tertiary"
-            />
-          </div>
+          {(provider.completedJobs != null || provider.yearsExperience != null) && (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              {provider.yearsExperience != null && (
+                <StatsCard
+                  icon="history"
+                  badge="EXPERIENCE"
+                  value={provider.yearsExperience}
+                  label="Years Experience"
+                  color="primary"
+                />
+              )}
+              {provider.completedJobs != null && (
+                <StatsCard
+                  icon="check_circle"
+                  badge="COMPLETED"
+                  value={provider.completedJobs}
+                  label="Jobs Completed"
+                  color="secondary"
+                />
+              )}
+            </div>
+          )}
 
           <article className="space-y-4">
-            <h3 className="font-headline-sm text-on-surface border-l-4 border-primary pl-4">
-              About {provider.name.split(" ")[0]}
+            <h3 className="border-l-4 border-primary pl-4 font-headline-sm text-on-surface">
+              About {provider.name?.split(" ")[0] || "this provider"}
             </h3>
-            {provider.bio.split("\n\n").map((paragraph) => (
+            {(provider.bio || "This provider has not added an introduction yet.")
+              .split("\n\n")
+              .map((paragraph) => (
               <p
                 key={paragraph.slice(0, 24)}
                 className="text-body-lg text-on-surface-variant leading-relaxed"
               >
                 {paragraph}
               </p>
-            ))}
-            <div className="flex flex-wrap gap-2 pt-4">
-              {provider.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="px-4 py-2 bg-surface-container-high rounded-full text-body-sm font-medium text-on-surface"
-                >
-                  {skill}
-                </span>
               ))}
-            </div>
+            {provider.services?.length > 0 && (
+              <div className="grid gap-3 pt-4 sm:grid-cols-2">
+                {provider.services.map((service, index) => {
+                  const serviceName = typeof service === "string" ? service : service.name;
+                  if (!serviceName) return null;
+                  return (
+                    <div
+                      key={service._id || `${serviceName}-${index}`}
+                      className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <h4 className="font-semibold text-on-surface">{serviceName}</h4>
+                        {typeof service !== "string" && service.price != null && (
+                          <span className="shrink-0 text-sm font-bold text-primary">
+                            ₹{Number(service.price).toLocaleString("en-IN")}
+                          </span>
+                        )}
+                      </div>
+                      {typeof service !== "string" && service.description && (
+                        <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                          {service.description}
+                        </p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </article>
 
           <section className="space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="font-headline-sm text-on-surface">
-                Verified Reviews
-              </h3>
-              <button
-                type="button"
-                className="text-primary font-bold text-label-md flex items-center gap-1 hover:underline"
-              >
-                See all reviews
-                <MaterialIcon name="chevron_right" />
-              </button>
-            </div>
+            <h3 className="font-headline-sm text-on-surface">Reviews</h3>
             <div className="space-y-4">
               {profileReviews.map((review) => (
                 <ReviewCard key={review._id} review={review} />
@@ -262,37 +219,36 @@ export default function ProviderProfilePage() {
         </div>
 
         <div className="col-span-12 lg:col-span-4 hidden lg:block">
-          <BookingWidget
-            provider={provider}
-            onBook={handleBookingSubmit}
-            bookingLoading={bookingLoading}
-            bookingError={bookingError}
-          />
+          <BookingWidget provider={provider} onBook={() => setBookingOpen(true)} />
         </div>
       </div>
 
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-surface border-t border-outline-variant px-6 py-4 flex items-center justify-between z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
+      <div className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-between gap-4 border-t border-outline-variant bg-surface px-4 py-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] shadow-[0_-10px_20px_rgba(0,0,0,0.05)] md:hidden">
         <div className="flex flex-col">
-          <span className="text-headline-sm font-black">
-            ${provider.hourlyRate}/hr
-          </span>
-          <span className="text-label-md text-primary font-bold">
-            Top Rated Provider
+          {(provider.hourlyRate ?? provider.price) != null && (
+            <span className="text-headline-sm font-black">
+              ₹{Number(provider.hourlyRate ?? provider.price).toLocaleString("en-IN")}
+            </span>
+          )}
+          <span className="text-label-md font-bold text-primary">
+            {provider.availableToday ? "Accepting requests" : "Currently unavailable"}
           </span>
         </div>
         <button
           type="button"
-          onClick={() => setConfirmedOpen(true)}
-          className="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-bold shadow-lg"
+          onClick={() => setBookingOpen(true)}
+          disabled={!provider.availableToday}
+          className="min-h-11 rounded-xl bg-secondary px-5 py-3 font-bold text-on-secondary shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Book Now
+          Request service
         </button>
       </div>
 
-      <BookingConfirmedModal
-        open={confirmedOpen}
-        onClose={() => setConfirmedOpen(false)}
-        providerName={provider.name}
+      <ConfirmBookingModal
+        key={`${provider.id || provider._id}-${bookingOpen}`}
+        open={bookingOpen}
+        onClose={() => setBookingOpen(false)}
+        provider={provider}
       />
     </AppLayout>
   );

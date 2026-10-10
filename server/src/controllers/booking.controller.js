@@ -4,6 +4,7 @@ import { Booking } from "../models/Booking.js";
 import { ProviderProfile } from "../models/ProviderProfile.js";
 import { AppError } from "../utils/AppError.js";
 import { createNotification } from "../services/notification.service.js";
+import { getPagination, getPaginationMetadata } from "../utils/pagination.js";
 
 const CUSTOMER_MUTABLE_STATUSES = ["pending", "accepted"];
 const PROVIDER_TRANSITION_SOURCES = {
@@ -77,8 +78,30 @@ export const createBooking = asyncHandler(async (req, res) => {
 });
 
 export const getMyBookings = asyncHandler(async (req, res) => {
-  const bookings = await Booking.find({ customer: req.user.id }).sort({ createdAt: -1 });
-  sendSuccess(res, { data: { bookings } });
+  const pagination = getPagination(req.query);
+  const statusGroups = {
+    active: ["pending", "accepted", "in_progress"],
+    past: ["completed", "cancelled"],
+  };
+  const filter = {
+    customer: req.user.id,
+    ...(statusGroups[req.query.statusGroup]
+      ? { status: { $in: statusGroups[req.query.statusGroup] } }
+      : {}),
+  };
+  const total = await Booking.countDocuments(filter);
+  const metadata = getPaginationMetadata(total, pagination);
+  const query = Booking.find(filter).sort({ createdAt: -1, _id: -1 });
+  if (pagination.requested) {
+    query.skip((metadata.page - 1) * pagination.limit).limit(pagination.limit);
+  }
+  const bookings = await query;
+  sendSuccess(res, {
+    data: {
+      bookings,
+      pagination: metadata,
+    },
+  });
 });
 
 export const cancelBooking = asyncHandler(async (req, res) => {
@@ -153,11 +176,24 @@ export const getProviderBookings = asyncHandler(async (req, res) => {
   req.providerProfile = await ProviderProfile.findOne({ user: req.user.id });
   if (!req.providerProfile) throw new AppError("Provider profile not found", 404);
 
-  const bookings = await Booking.find(providerBookingFilter(req))
+  const filter = providerBookingFilter(req);
+  const pagination = getPagination(req.query);
+  const total = await Booking.countDocuments(filter);
+  const metadata = getPaginationMetadata(total, pagination);
+  const query = Booking.find(filter)
     .populate("customer", "name email phone")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1, _id: -1 });
+  if (pagination.requested) {
+    query.skip((metadata.page - 1) * pagination.limit).limit(pagination.limit);
+  }
+  const bookings = await query;
 
-  sendSuccess(res, { data: { bookings } });
+  sendSuccess(res, {
+    data: {
+      bookings,
+      pagination: metadata,
+    },
+  });
 });
 
 export const updateBookingStatus = asyncHandler(async (req, res) => {

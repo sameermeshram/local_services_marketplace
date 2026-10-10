@@ -28,7 +28,7 @@ export default function SideNavBar({
   return (
     <aside className="hidden md:flex fixed left-0 top-0 h-full w-[280px] bg-surface border-r border-outline-variant shadow-sm flex-col py-8 z-50">
       <div className="px-6 mb-10">
-        <h1 className="text-headline-md font-headline-md font-bold text-primary">
+        <h1 className="text-headline-md font-headline-md font-bold tracking-tight text-primary">
           FixIt Local
         </h1>
         <p className="font-label-md text-label-md text-on-surface-variant">
@@ -43,16 +43,24 @@ export default function SideNavBar({
             <NavLink
               key={item.id}
               to={item.path}
-              className={`relative flex items-center gap-3 px-6 py-4 transition-colors duration-200 ${
+              aria-label={item.label}
+              className={`relative flex min-h-12 items-center gap-3 px-6 py-3 transition-colors duration-200 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary ${
                 isActive
                   ? "bg-primary-container/10 text-primary border-l-4 border-primary font-bold"
-                  : "text-on-surface-variant hover:bg-surface-container-high hover:text-primary"
+                  : "border-l-4 border-transparent text-on-surface-variant hover:bg-surface-container-high hover:text-primary"
               }`}
             >
-              <MaterialIcon name={item.icon} filled={isActive} />
+              <MaterialIcon
+                name={item.icon}
+                filled={isActive}
+                className="text-[22px]"
+              />
               <span className="font-label-md text-label-md">{item.label}</span>
               {item.id === "notifications" && notificationDot && (
-                <span className="absolute right-6 top-1/2 -translate-y-1/2 w-2 h-2 bg-secondary rounded-full" />
+                <span
+                  className="absolute right-6 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-secondary"
+                  aria-label="Unread notifications"
+                />
               )}
             </NavLink>
           );
@@ -64,7 +72,7 @@ export default function SideNavBar({
           <button
             type="button"
             onClick={() => navigate(switchPath)}
-            className="w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform"
+            className="flex min-h-11 w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-bold text-on-primary transition-colors hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-[0.98]"
           >
             <MaterialIcon name="swap_horiz" style={{ fontSize: "20px" }} />
             {switchLabel}
@@ -73,7 +81,7 @@ export default function SideNavBar({
           <button
             type="button"
             onClick={() => navigate(switchPath)}
-            className="w-full bg-primary/5 text-primary border border-primary/20 py-3 rounded-lg font-bold hover:bg-primary/10 transition-colors"
+            className="min-h-11 w-full rounded-lg border border-primary/20 bg-primary/5 py-3 font-bold text-primary transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
             {switchLabel}
           </button>
@@ -81,9 +89,9 @@ export default function SideNavBar({
         <button
           type="button"
           onClick={handleLogout}
-          className="flex items-center gap-3 text-on-surface-variant px-0 py-2 hover:text-error transition-colors duration-200 w-full"
+          className="flex min-h-11 w-full items-center gap-3 px-0 py-2 text-on-surface-variant transition-colors duration-200 hover:text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
         >
-          <MaterialIcon name="logout" />
+        <MaterialIcon name="logout" className="text-[22px]" />
           <span className="font-label-md text-label-md">Logout</span>
         </button>
       </div>

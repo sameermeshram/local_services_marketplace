@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply font-body-md text-on-surface antialiased;
+    @apply bg-background font-body-md text-on-surface antialiased;
   }
 }
 
@@ -20,7 +20,7 @@
 .floating-input:focus-within label,
 .floating-input input:not(:placeholder-shown) + label {
   transform: translateY(-1.5rem) scale(0.85);
-  color: #005c55;
+  color: #00514a;
   background-color: #ffffff;
   padding: 0 4px;
 }
@@ -48,15 +48,15 @@
 }
 
 .slot-chip:checked + label {
-  background-color: #0f766e;
+  background-color: #006b62;
   color: #a3faef;
-  border-color: #0f766e;
+  border-color: #006b62;
 }
 
 .day-chip:checked + label {
-  background-color: #005c55;
+  background-color: #00514a;
   color: #ffffff;
-  border-color: #005c55;
+  border-color: #00514a;
 }
 
 .status-pulse {
@@ -76,7 +76,7 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f1f0;
+  background: #e8f3f0;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -85,7 +85,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #005c55;
+  background: #00514a;
 }
 
 textarea::-webkit-scrollbar {

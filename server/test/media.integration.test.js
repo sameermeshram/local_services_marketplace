@@ -144,6 +144,23 @@ test("provider can upload a valid PDF without receiving a Cloudinary URL", async
   assert.equal("publicId" in response.body.data.verificationDocuments[0], false);
 });
 
+test("uploading after rejection resets the provider to pending and unapproved", async () => {
+  const provider = await createProvider();
+  await ProviderProfile.findByIdAndUpdate(provider.profile._id, {
+    approvalStatus: "rejected",
+    isApproved: false,
+    approvalReason: "Please upload a clearer document.",
+  });
+
+  const response = await uploadDocument(provider.user);
+
+  assert.equal(response.status, 200);
+  assert.equal(response.body.data.approvalStatus, "pending");
+  const updatedProfile = await ProviderProfile.findById(provider.profile._id);
+  assert.equal(updatedProfile.approvalStatus, "pending");
+  assert.equal(updatedProfile.isApproved, false);
+});
+
 test("provider can upload a valid image", async () => {
   const provider = await createProvider();
   const response = await uploadDocument(provider.user, jpegBuffer, "image/jpeg");
@@ -215,7 +232,7 @@ test("provider can access only their own document through signed private deliver
   );
   assert.equal(ownResponse.status, 200);
   assert.equal(ownResponse.headers["content-type"], "application/pdf");
-  assert.equal(ownResponse.text, pdfBuffer.toString());
+  assert.deepEqual(ownResponse.body, pdfBuffer);
   assert.equal(signedUrl().publicId, "own-document");
   assert.equal(signedUrl().options.type, "private");
 

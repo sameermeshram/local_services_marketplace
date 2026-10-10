@@ -20,6 +20,20 @@ const { Notification } = await import("../src/models/Notification.js");
 
 let mongoServer;
 
+// Booking dates are derived from the runtime clock. The booking validator rejects
+// any date in the past, so a hardcoded fixture silently breaks these tests once
+// its day arrives. Deriving them keeps the suite correct at any point in time.
+function futureDate(daysFromNow) {
+  const date = new Date();
+  date.setDate(date.getDate() + daysFromNow);
+  return date.toISOString().slice(0, 10);
+}
+
+const BOOKING_DATE = futureDate(1);
+const SECOND_BOOKING_DATE = futureDate(2);
+const THIRD_BOOKING_DATE = futureDate(3);
+const FOURTH_BOOKING_DATE = futureDate(4);
+
 function tokenFor(user) {
   return signAccessToken(user._id.toString());
 }
@@ -57,7 +71,7 @@ function bookingPayload(providerId, overrides = {}) {
   return {
     providerId: providerId.toString(),
     service: "Plumbing",
-    date: "2026-10-01",
+    date: BOOKING_DATE,
     timeSlot: "morning",
     address: "1 Test Street",
     details: "Fix the kitchen tap",
@@ -71,7 +85,7 @@ async function createBooking({ customer, provider, status = "pending", ...overri
     provider: provider.profile._id,
     providerName: provider.user.name,
     service: "Plumbing",
-    date: "2026-10-01",
+    date: BOOKING_DATE,
     timeSlot: "morning",
     address: "1 Test Street",
     details: "Fix the kitchen tap",
@@ -126,7 +140,7 @@ test("simultaneous slot bookings yield one creation and duplicate-key conflicts"
   assert.equal(
     await Booking.countDocuments({
       provider: provider.profile._id,
-      date: "2026-10-01",
+      date: BOOKING_DATE,
       timeSlot: "morning",
       status: { $in: ["pending", "accepted", "in_progress"] },
     }),
@@ -197,12 +211,12 @@ test("customer cancellation and rescheduling remain ownership- and state-conditi
   const unauthorized = await authenticated(
     request(app).patch(`/api/bookings/${booking._id}/reschedule`),
     otherCustomer,
-  ).send({ date: "2026-10-02", timeSlot: "afternoon" });
+  ).send({ date: SECOND_BOOKING_DATE, timeSlot: "afternoon" });
   assert.equal(unauthorized.status, 409);
 
   const [reschedule, cancel] = await Promise.all([
     authenticated(request(app).patch(`/api/bookings/${booking._id}/reschedule`), customer).send({
-      date: "2026-10-02",
+      date: SECOND_BOOKING_DATE,
       timeSlot: "afternoon",
     }),
     authenticated(request(app).patch(`/api/bookings/${booking._id}/cancel`), customer),
@@ -228,13 +242,13 @@ test("cancel, reschedule, and start races only apply valid conditional mutations
   const rescheduleRaceBooking = await createBooking({
     customer,
     provider,
-    date: "2026-10-03",
+    date: THIRD_BOOKING_DATE,
     timeSlot: "evening",
     status: "accepted",
   });
   const [reschedule, start] = await Promise.all([
     authenticated(request(app).patch(`/api/bookings/${rescheduleRaceBooking._id}/reschedule`), customer).send({
-      date: "2026-10-04",
+      date: FOURTH_BOOKING_DATE,
       timeSlot: "morning",
     }),
     authenticated(request(app).patch(`/api/bookings/${rescheduleRaceBooking._id}/status`), provider.user).send({ status: "in_progress" }),
@@ -253,7 +267,7 @@ test("concurrent reviews use atomic provider aggregate updates", async () => {
     customer,
     provider,
     status: "completed",
-    date: "2026-10-02",
+    date: SECOND_BOOKING_DATE,
     timeSlot: "afternoon",
   });
 

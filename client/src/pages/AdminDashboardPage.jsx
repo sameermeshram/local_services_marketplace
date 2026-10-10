@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import AppLayout from "../layouts/AppLayout";
+import { useEffect, useRef, useState } from "react";
+import AppLayout, { MobileBottomNav } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import StatusPill from "../components/ui/StatusPill";
 import { adminService } from "../services/api";
@@ -9,6 +9,9 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
+  const [rejectionProvider, setRejectionProvider] = useState(null);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const rejectionDialogRef = useRef(null);
 
   const loadProviders = async () => {
     setLoading(true);
@@ -30,6 +33,20 @@ export default function AdminDashboardPage() {
     loadProviders();
   }, []);
 
+  useEffect(() => {
+    if (!rejectionProvider) return;
+    const dialog = rejectionDialogRef.current;
+    dialog?.querySelector("textarea")?.focus();
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape" && !updatingId) {
+        setRejectionProvider(null);
+        setRejectionReason("");
+      }
+    };
+    dialog?.addEventListener("keydown", handleKeyDown);
+    return () => dialog?.removeEventListener("keydown", handleKeyDown);
+  }, [rejectionProvider, updatingId]);
+
   const approve = async (id) => {
     setUpdatingId(id);
     setError("");
@@ -47,20 +64,18 @@ export default function AdminDashboardPage() {
     }
   };
 
-  const reject = async (id) => {
-    const reason = window.prompt(
-      "Reason for rejection",
-      "Please provide more verification details.",
-    );
-    if (reason === null) return;
-
-    setUpdatingId(id);
+  const reject = async () => {
+    if (!rejectionProvider || updatingId) return;
+    const reason = rejectionReason.trim();
+    setUpdatingId(rejectionProvider._id);
     setError("");
     try {
-      await adminService.rejectProvider(id, reason);
+      await adminService.rejectProvider(rejectionProvider._id, reason);
       setProviders((current) =>
-        current.filter((provider) => provider._id !== id),
+        current.filter((provider) => provider._id !== rejectionProvider._id),
       );
+      setRejectionProvider(null);
+      setRejectionReason("");
     } catch (requestError) {
       setError(
         requestError.response?.data?.message || "Unable to reject provider.",
@@ -75,6 +90,7 @@ export default function AdminDashboardPage() {
       activeItem="admin"
       role="admin"
       mainClassName="md:ml-[280px] min-h-screen"
+      mobileNav={<MobileBottomNav activeItem="admin" role="admin" />}
       topBar={
         <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 md:ml-[280px] md:max-w-[calc(100%-280px)]">
           <h2 className="font-headline-sm text-headline-sm text-primary font-bold">
@@ -100,9 +116,17 @@ export default function AdminDashboardPage() {
           </p>
         )}
         {error && (
-          <p className="py-4 text-error" role="alert">
-            {error}
-          </p>
+          <div className="flex flex-col gap-3 py-4 text-error sm:flex-row sm:items-center sm:justify-between" role="alert">
+            <p>{error}</p>
+            <button
+              type="button"
+              onClick={loadProviders}
+              disabled={loading}
+              className="min-h-11 rounded-lg border border-error px-4 py-2 font-bold transition-colors hover:bg-error/5 disabled:opacity-50"
+            >
+              Retry
+            </button>
+          </div>
         )}
         {!loading && !error && providers.length === 0 && (
           <div className="py-16 text-center border border-dashed border-outline-variant rounded-xl">
@@ -209,7 +233,11 @@ export default function AdminDashboardPage() {
                 <button
                   type="button"
                   disabled={updatingId === provider._id}
-                  onClick={() => reject(provider._id)}
+                  onClick={() => {
+                    setRejectionProvider(provider);
+                    setRejectionReason("");
+                    setError("");
+                  }}
                   className="border border-error text-error px-5 py-2 rounded-lg font-bold disabled:opacity-50 hover:bg-error/5 transition-colors"
                 >
                   Reject
@@ -219,6 +247,71 @@ export default function AdminDashboardPage() {
           ))}
         </div>
       </section>
+      {rejectionProvider && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-on-surface/40 p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget && !updatingId) {
+              setRejectionProvider(null);
+              setRejectionReason("");
+            }
+          }}
+        >
+          <div
+            ref={rejectionDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rejection-dialog-title"
+            className="w-full max-w-lg rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-xl"
+          >
+            <h2 id="rejection-dialog-title" className="font-headline-sm text-headline-sm text-on-surface">
+              Reject provider
+            </h2>
+            <p className="mt-2 text-body-sm text-on-surface-variant">
+              Record an optional reason for rejecting{" "}
+              {rejectionProvider.user?.name || "this provider"}.
+            </p>
+            <label htmlFor="rejection-reason" className="mt-5 block text-label-md font-bold text-on-surface">
+              Reason <span className="font-normal text-on-surface-variant">(optional)</span>
+            </label>
+            <textarea
+              id="rejection-reason"
+              value={rejectionReason}
+              maxLength={500}
+              onChange={(event) => setRejectionReason(event.target.value)}
+              rows={5}
+              aria-describedby="rejection-reason-help rejection-reason-count"
+              className="mt-2 w-full rounded-xl border border-outline-variant bg-surface p-3 text-body-md text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+            />
+            <div className="mt-1 flex justify-between gap-4 text-label-md text-on-surface-variant">
+              <span id="rejection-reason-help">Leave blank to use the default rejection message.</span>
+              <span id="rejection-reason-count">{rejectionReason.length}/500</span>
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                type="button"
+                disabled={Boolean(updatingId)}
+                onClick={() => {
+                  setRejectionProvider(null);
+                  setRejectionReason("");
+                }}
+                className="min-h-11 rounded-lg border border-outline px-4 py-2 font-bold text-on-surface transition-colors hover:bg-surface-container-high disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={Boolean(updatingId)}
+                onClick={reject}
+                className="min-h-11 rounded-lg bg-error px-4 py-2 font-bold text-on-error transition-colors hover:bg-error/90 disabled:opacity-50"
+              >
+                {updatingId ? "Rejecting..." : "Reject provider"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppLayout>
   );
 }

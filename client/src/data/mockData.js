@@ -106,17 +106,6 @@ Whether it's a critical midnight leak or a full bathroom redesign, I treat every
     "A close-up portrait of Marcus Chen, a professional service provider in his late 30s.",
 };
 
-export const bookingModalProvider = {
-  name: "Marcus Thompson",
-  trade: "Certified Electrician",
-  rating: 4.9,
-  reviewCount: 128,
-  hourlyRate: 65,
-  image:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBGg4Rdl_iXW52rPbjmxm7dd1w-8IFijPNtjyNxMsJKlsq6iKh6rukbTf8JirnV2eb7zlO74yKrvhnin2i02k0VVmljGlrsgQhwANd7pj4KNRzcbjFkfbu-wpK_SumyAdgdXHEV3jkOZ0eycX0-8YOzP32FfMl2RvBY5BXTKRL9TIcTKdWOFzawwAuddyi9n-qrl7zLP1ESVAqYdoI3HP-30HlavNvnfG0QLRiaEQxnHLYstk7CsiUNLwdqUSxP5DmDNmrzfyCvJX6E",
-  imageAlt: "A professional local service provider portrait wearing a clean teal polo shirt.",
-};
-
 export const reviews = [
   {
     id: 1,

@@ -1,32 +1,40 @@
+import MaterialIcon from "./MaterialIcon";
+import { getBookingStatusLabel, normalizeBookingStatus } from "../booking/bookingStatus";
+
 const STATUS_STYLES = {
   pending: {
-    wrapper: "bg-[#fef9c3] text-[#854d0e] border-[#fde047]",
-    dot: "status-pulse w-2 h-2 rounded-full bg-[#854d0e]",
+    wrapper: "border-secondary/30 bg-secondary/10 text-on-secondary-container",
+    dot: "status-pulse h-2 w-2 rounded-full bg-secondary",
     icon: null,
   },
   accepted: {
-    wrapper: "bg-[#dbeafe] text-[#1e40af] border-[#bfdbfe]",
-    dot: "w-2 h-2 rounded-full bg-[#1e40af]",
+    wrapper: "border-primary/30 bg-primary/10 text-primary",
+    dot: "h-2 w-2 rounded-full bg-primary",
     icon: null,
   },
   in_progress: {
-    wrapper: "bg-[#ffedd5] text-[#9a3412] border-[#fed7aa]",
-    dot: "w-2 h-2 rounded-full bg-[#c2410c]",
+    wrapper: "border-secondary/30 bg-secondary/10 text-on-secondary-container",
+    dot: "h-2 w-2 rounded-full bg-secondary",
+    icon: null,
+  },
+  rejected: {
+    wrapper: "border-error/30 bg-error/10 text-error",
+    dot: "h-2 w-2 rounded-full bg-error",
     icon: null,
   },
   completed: {
-    wrapper: "bg-[#dcfce7] text-[#166534] border-[#bbf7d0]",
+    wrapper: "border-primary/30 bg-primary/10 text-primary",
     dot: null,
     icon: "check_circle",
   },
   cancelled: {
-    wrapper: "bg-[#fee2e2] text-[#991b1b] border-[#fecaca]",
+    wrapper: "border-error/30 bg-error/10 text-error",
     dot: null,
     icon: "cancel",
   },
   available: {
-    wrapper: "bg-green-100 text-green-700 border-transparent",
-    dot: "w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse",
+    wrapper: "border-primary/20 bg-primary/10 text-primary",
+    dot: "h-1.5 w-1.5 animate-pulse rounded-full bg-primary",
     icon: null,
     label: "Available Now",
   },
@@ -40,19 +48,17 @@ const STATUS_STYLES = {
 };
 
 export default function StatusPill({ status, label, className = "" }) {
-  const config = STATUS_STYLES[status] || STATUS_STYLES.pending;
-  const text =
-    label || config.label || status.charAt(0).toUpperCase() + status.slice(1);
+  const normalizedStatus = normalizeBookingStatus(status);
+  const config = STATUS_STYLES[normalizedStatus] || STATUS_STYLES.pending;
+  const text = label || config.label || getBookingStatusLabel(normalizedStatus);
 
   return (
     <span
-      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${config.wrapper} ${className}`}
+      className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider ${config.wrapper} ${className}`}
     >
       {config.dot && <span className={config.dot} />}
       {config.icon && (
-        <span className="material-symbols-outlined text-[16px]">
-          {config.icon}
-        </span>
+        <MaterialIcon name={config.icon} className="text-[16px]" />
       )}
       <span className="font-label-md text-label-md">{text}</span>
     </span>

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface": "#f3fbf9", "on-primary-fixed-variant": "#005049", "surface-dim": "#d3dcda", "surface-container-lowest": "#ffffff", "inverse-primary": "#83d5ca", "secondary-fixed-dim": "#ffb691", "surface-container-low": "#edf5f3", "on-secondary": "#ffffff", "tertiary-fixed-dim": "#93d2ca", "primary-fixed": "#9ff2e6", "surface-variant": "#dce4e2", "on-tertiary-container": "#a7e6dd", "outline-variant": "#bec9c6", "on-primary": "#ffffff", "on-primary-container": "#96e8dd", "inverse-surface": "#2a3231", "secondary": "#9e4200", "surface-tint": "#006a61", "primary-fixed-dim": "#83d5ca", "tertiary": "#05514b", "on-secondary-container": "#6a2a00", "secondary-fixed": "#ffdbcb", "tertiary-container": "#296962", "on-secondary-fixed-variant": "#793100", "on-primary-fixed": "#00201d", "background": "#f3fbf9", "tertiary-fixed": "#afefe6", "primary-container": "#006b62", "primary": "#00514a", "inverse-on-surface": "#eaf2f0", "on-error-container": "#93000a", "surface-container-high": "#e1eae8", "outline": "#6e7977", "on-error": "#ffffff", "secondary-container": "#ff8845", "surface-container": "#e7f0ee", "on-background": "#151d1c", "on-tertiary-fixed-variant": "#04504a", "on-tertiary-fixed": "#00201d", "surface-container-highest": "#dce4e2", "on-tertiary": "#ffffff", "on-secondary-fixed": "#341100", "error": "#ba1a1a", "on-surface": "#151d1c", "on-surface-variant": "#3e4947", "surface-bright": "#f3fbf9", "error-container": "#ffdad6" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-tablet": "2rem", "space-xl": "2rem", "margin": "1rem", "space-md": "1rem", "gutter": "1rem", "margin-desktop": "3rem", "space-xxs": "0.25rem", "space-sm": "0.75rem", "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "space-xs": "0.5rem", "space-2xl": "3rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "label-md": ["Inter"], "display-mobile": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "display": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-md": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, "fontSize": { "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[250px] bg-surface-container-lowest border-r border-surface-variant z-50 flex flex-col justify-between"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-[68px] px-space-md border-b border-surface-variant flex items-center space-x-space-xs"><img alt="FixIt Local Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XNtKBL8eRA2_Tl8B3eFoHXvtE_RJbbm1fUfzBJeXScmFxU_1VzIRtyvkgoazu1pyPHjifpQ6nffRAg3nHg25ys6REVbgAKk76BXfLUnCtjYU6vekfUCyBQQYHBO0Uwn4jdkFkEQG-ULGFVONoQxiVxjwRFRqV1MNOpEuhtNsOzSsXhzYStt3hb-MeKs95NUkeRKG2P0iWY68Jk33o4GNcjLkWFDGt2Ukfuj1WbbB6ooYJ86llYqvqmEg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface leading-tight font-bold">FixIt Local</span><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Local Services</span></div></div><nav class="py-space-sm px-space-xs flex flex-col space-y-space-xxs" data-active-classes="bg-surface-container-low text-primary-container font-semibold border-l-[3px] border-primary-container"><a aria-current="page" class="flex items-center px-space-sm py-space-xs rounded-lg transition-colors bg-surface-container-low text-primary-container font-semibold border-l-[3px] border-primary-container" data-path="home" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">home</span><span>Home</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="search-services" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">search</span><span>Search Services</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="my-bookings" href="#"><div class="flex items-center"><span class="material-symbols-outlined mr-space-sm text-[20px]">calendar_today</span><span>My Bookings</span></div><span class="bg-surface-container text-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded-full">2</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="favorites" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">favorite</span><span>Favorites</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">person</span><span>Profile &amp; Settings</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="notifications" href="#"><div class="flex items-center"><span class="material-symbols-outlined mr-space-sm text-[20px]">notifications</span><span>Notifications</span></div><span class="w-2 h-2 rounded-full bg-secondary-container"></span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="help-support" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">help</span><span>Help &amp; Support</span></a></nav></div><div class="p-space-sm border-t border-surface-variant flex flex-col space-y-space-sm bg-surface-container-lowest"><button class="w-full border border-surface-variant hover:bg-surface rounded-lg p-space-xs font-label-sm text-label-sm text-primary-container flex items-center justify-between transition-colors" type="button"><span class="flex items-center space-x-space-xxs"><span class="material-symbols-outlined text-[16px]">engineering</span><span>Switch to Provider</span></span><span class="material-symbols-outlined text-[16px]">sync_alt</span></button><div class="flex items-center space-x-space-xs p-space-xs rounded-lg bg-surface-container-low"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WyE4Rw5eFimnGq4x59BC6y9hVTk37Jk1AxB--b4BQQUQO0L9nNymNpaZJnHZVjhck4rPZAI_RbyziXyXaXhg8D0KUlywz7m1LgCNyk6EWCKvKpVPzTZHEkaFPSMq35ng5NfYBQPfhlXKDZnwrxAIVO3Mv5MEMFPj0vMblG5yli-cZJJmsfof2UF8cBkuCNYvoncuhym26Pd-TdCb12WQTBHQETBTHdcY91ZQqSe_nPlVhGsRR4NF-Uu_o"/><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate font-semibold">Priya Sharma</span><span class="font-label-sm text-label-sm text-outline truncate">Koramangala, BLR</span></div><a class="text-outline hover:text-error transition-colors p-space-xxs flex items-center" data-path="login" href="#" title="Logout"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></aside><div class="pl-[250px]"><header class="fixed top-0 left-[250px] right-0 h-[68px] bg-surface-container-lowest/95 backdrop-blur-md border-b border-surface-variant px-space-xl z-40 flex items-center justify-between"><div class="flex items-center space-x-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="material-symbols-outlined text-primary text-[20px]">location_on</span><span>Current Area: <strong class="text-on-surface font-semibold">Indiranagar &amp; Koramangala (560038)</strong></span><button class="text-primary hover:underline font-label-md text-label-md ml-space-xs font-semibold" type="button">Change</button></div><div class="w-80 relative"><span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-12 py-space-xs bg-surface-container-low border border-surface-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search services, experts..." type="text"/><kbd class="absolute right-space-sm top-1/2 -translate-y-1/2 border border-outline-variant bg-surface-container-lowest text-outline font-label-sm text-label-sm px-1.5 py-0.5 rounded">⌘K</kbd></div><div class="flex items-center space-x-space-md"><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary-container"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help_outline</span></button><button class="bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary px-space-md py-space-xs rounded-lg font-label-lg text-label-lg flex items-center space-x-space-xxs transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>Book Service</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ml-space-xs" src="https://lh3.googleusercontent.com/aida/AEtjO1WyE4Rw5eFimnGq4x59BC6y9hVTk37Jk1AxB--b4BQQUQO0L9nNymNpaZJnHZVjhck4rPZAI_RbyziXyXaXhg8D0KUlywz7m1LgCNyk6EWCKvKpVPzTZHEkaFPSMq35ng5NfYBQPfhlXKDZnwrxAIVO3Mv5MEMFPj0vMblG5yli-cZJJmsfof2UF8cBkuCNYvoncuhym26Pd-TdCb12WQTBHQETBTHdcY91ZQqSe_nPlVhGsRR4NF-Uu_o"/></div></header><main class="relative pt-[68px] min-h-screen bg-surface"><div class="p-space-xl max-w-[1400px] mx-auto"><div class="flex flex-col w-full pb-space-2xl space-y-space-xl">
+<!-- 1. Hero / Intro Welcome Banner (No secondary H1, streamlined & confident) -->
+<section class="relative overflow-hidden rounded-2xl bg-surface-container-low p-space-lg lg:p-space-xl">
+<div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-primary-fixed/30 blur-3xl pointer-events-none"></div>
+<div class="absolute right-40 bottom-0 w-64 h-64 rounded-full bg-secondary-fixed/40 blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-lg">
+<div class="max-w-2xl">
+<div class="inline-flex items-center space-x-space-xs bg-surface-container-lowest px-space-sm py-1 rounded-full shadow-sm mb-space-sm">
+<span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-primary-container font-semibold uppercase tracking-wider">Fast Response • Bengaluru East</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Find trusted professionals near you
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-xxs max-w-xl">
+          Book reliable local experts for your home maintenance and repair needs. Fast dispatch, verified backgrounds, and upfront pricing.
+        </p>
+<!-- Trust Pill -->
+<div class="inline-flex flex-wrap items-center gap-x-3 gap-y-1 mt-space-md bg-surface-container-highest/70 px-space-md py-space-xs rounded-xl text-on-surface-variant font-label-md text-label-md">
+<span class="flex items-center text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 1;">verified</span>
+            100% Background-Checked
+          </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] mr-1">payments</span>
+            Upfront Fixed Pricing
+          </span>
+<span class="text-outline-variant">•</span>
+<span class="flex items-center text-on-surface font-medium">
+<span class="material-symbols-outlined text-[16px] mr-1">task_alt</span>
+            Zero Advance Fees
+          </span>
+</div>
+</div>
+<!-- Quick Operational Metric Badge -->
+<div class="hidden lg:flex items-center gap-space-md bg-surface-container-lowest p-space-md rounded-2xl shadow-sm self-start">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-primary-container">
+<span class="material-symbols-outlined text-[28px]">electric_bolt</span>
+</div>
+<div>
+<div class="flex items-baseline space-x-1">
+<span class="font-headline-md text-headline-md text-on-surface font-bold">14 min</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold">Avg SLA</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Median arrival in Indiranagar</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. Horizontal Search Panel -->
+<section class="bg-surface-container-lowest rounded-2xl p-space-md lg:p-space-lg shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-sm items-center">
+<!-- Field 1: Location -->
+<div class="lg:col-span-4 flex items-center bg-surface-container-low px-space-sm py-2 rounded-xl focus-within:ring-2 focus-within:ring-primary-container transition-all">
+<span class="material-symbols-outlined text-primary text-[22px] mr-space-xs">location_on</span>
+<div class="flex flex-col flex-1 min-w-0 pr-space-xs">
+<label class="font-label-sm text-label-sm text-outline">Service Location</label>
+<input class="bg-transparent font-title-md text-title-md text-on-surface outline-none truncate font-medium" placeholder="Select locality" type="text" value="Indiranagar, Bengaluru (560038)"/>
+</div>
+<button class="shrink-0 bg-surface-container-lowest hover:bg-surface-container px-2.5 py-1 rounded-lg text-primary text-label-sm font-label-sm flex items-center space-x-1 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[14px]">my_location</span>
+<span>GPS</span>
+</button>
+</div>
+<!-- Field 2: Category Dropdown -->
+<div class="lg:col-span-3 flex items-center bg-surface-container-low px-space-sm py-2 rounded-xl focus-within:ring-2 focus-within:ring-primary-container transition-all">
+<span class="material-symbols-outlined text-outline text-[22px] mr-space-xs">category</span>
+<div class="flex flex-col flex-1 min-w-0">
+<label class="font-label-sm text-label-sm text-outline">Category</label>
+<select class="bg-transparent font-title-md text-title-md text-on-surface outline-none truncate font-medium cursor-pointer">
+<option>All Categories</option>
+<option>Plumbing &amp; Sanitary</option>
+<option>Electrical &amp; Fixtures</option>
+<option>Deep Home Cleaning</option>
+<option>Carpentry &amp; Assembly</option>
+<option>Appliance &amp; HVAC Repair</option>
+</select>
+</div>
+</div>
+<!-- Field 3: Problem/Keyword Search -->
+<div class="lg:col-span-3 flex items-center bg-surface-container-low px-space-sm py-2 rounded-xl focus-within:ring-2 focus-within:ring-primary-container transition-all">
+<span class="material-symbols-outlined text-outline text-[22px] mr-space-xs">build</span>
+<div class="flex flex-col flex-1 min-w-0">
+<label class="font-label-sm text-label-sm text-outline">Issue / Keyword</label>
+<input class="bg-transparent font-title-md text-title-md text-on-surface outline-none placeholder:text-outline truncate font-medium" placeholder="e.g. leaking tap, AC gas..." type="text"/>
+</div>
+</div>
+<!-- Field 4: CTA Button -->
+<div class="lg:col-span-2">
+<button class="w-full h-12 bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary font-label-lg text-label-lg rounded-xl flex items-center justify-center space-x-space-xs shadow-sm transition-transform active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span>Find Experts</span>
+</button>
+</div>
+</div>
+<!-- Quick filter tags below -->
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mr-space-xs">Instant Filters:</span>
+<button class="inline-flex items-center space-x-1 px-space-sm py-1 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">bolt</span>
+<span>Instant 30-Min Arrival</span>
+</button>
+<button class="inline-flex items-center space-x-1 px-space-sm py-1 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-amber-500" style="font-variation-settings: 'FILL' 1;">star</span>
+<span>Top Rated 4.8+ ★</span>
+</button>
+<button class="inline-flex items-center space-x-1 px-space-sm py-1 rounded-full bg-surface-container-low hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-primary">sell</span>
+<span>Under ₹499</span>
+</button>
+<button class="inline-flex items-center space-x-1 px-space-sm py-1 rounded-full bg-surface-container-low hover:bg-surface-container-high text-error font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">emergency</span>
+<span>Emergency Service</span>
+</button>
+</div>
+</section>
+<!-- 3. Popular Services Category Discovery -->
+<section class="flex flex-col space-y-space-md">
+<div class="flex items-end justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">Categories</span>
+<h3 class="font-headline-md text-headline-md text-on-surface tracking-tight">Popular Services</h3>
+</div>
+<a class="inline-flex items-center text-primary-container hover:text-primary font-label-lg text-label-lg font-semibold space-x-1 group" href="#">
+<span>Browse all 18 categories</span>
+<span class="material-symbols-outlined text-[18px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-space-md">
+<!-- Plumbing -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">plumbing</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹199</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Plumbing</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Taps, pipes, leakage &amp; heaters</p>
+</div>
+</a>
+<!-- Electrical -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">electrical_services</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹149</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Electrical</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Wiring, MCBs, fixtures &amp; fans</p>
+</div>
+</a>
+<!-- Home Cleaning -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">sanitizer</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹499</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Home Cleaning</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Deep cleaning, kitchen &amp; sofas</p>
+</div>
+</a>
+<!-- Carpentry -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">carpenter</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹249</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Carpentry</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Furniture repair, doors &amp; locks</p>
+</div>
+</a>
+<!-- Painting & Waterproofing -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">format_paint</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹799</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Painting &amp; Polish</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Interiors, touch-ups &amp; damp cure</p>
+</div>
+</a>
+<!-- Appliance Repair -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">kitchen</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹299</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Appliance Repair</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">AC, washing machine, fridge &amp; RO</p>
+</div>
+</a>
+<!-- Pest Control -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">pest_control</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹649</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Pest Control</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Termite, cockroach herbal sprays</p>
+</div>
+</a>
+<!-- Handyman & Assembly -->
+<a class="group bg-surface-container-lowest hover:bg-surface-container-low p-space-md rounded-2xl shadow-sm transition-all flex flex-col justify-between" href="#">
+<div class="flex items-start justify-between">
+<div class="w-12 h-12 rounded-xl bg-surface-container-low group-hover:bg-primary group-hover:text-on-primary text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[26px]">handyman</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant font-medium">From ₹199</span>
+</div>
+<div class="mt-space-md">
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Handyman Assembly</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Drilling, TV mounting, hangings</p>
+</div>
+</a>
+</div>
+</section>
+<!-- 4. Filter & View Controls Bar -->
+<section class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium mr-space-xs">
+        Showing <strong class="text-on-surface font-semibold">4 recommended</strong> verified professionals nearby
+      </span>
+<div class="flex items-center space-x-1.5 overflow-x-auto py-1">
+<button class="px-3.5 py-1.5 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-sm" type="button">
+          All (18)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-md text-label-md transition-colors shadow-sm" type="button">
+          Recommended
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-md text-label-md transition-colors shadow-sm" type="button">
+          Top Rated (4.8+)
+        </button>
+<button class="px-3.5 py-1.5 rounded-full bg-surface-container-lowest hover:bg-surface-container-low text-on-surface font-label-md text-label-md transition-colors shadow-sm" type="button">
+          Nearby (&lt; 3 km)
+        </button>
+</div>
+</div>
+<!-- Grid / Map Switcher -->
+<div class="flex items-center space-x-1 self-start md:self-auto bg-surface-container-lowest p-1 rounded-xl shadow-sm">
+<button class="flex items-center space-x-1 px-3 py-1 rounded-lg bg-surface-container-high text-primary-container font-label-sm text-label-sm font-semibold transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">grid_view</span>
+<span>Grid View</span>
+</button>
+<button class="flex items-center space-x-1 px-3 py-1 rounded-lg hover:bg-surface-container-low text-outline font-label-sm text-label-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">map</span>
+<span>Map View</span>
+</button>
+</div>
+</section>
+<!-- 5. Recommended Professionals Cards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-lg">
+<!-- Card 1: Sunil Sharma -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-space-sm">
+<div class="relative">
+<img alt="Sunil Sharma Profile" class="w-16 h-16 rounded-2xl object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Vc_Ev3Z0mw79aJSW3GwIZauA0fo6Ewjd_VdghehM0TqbvhUrZUOeW2gIarprdDcMt0Gd7IR9GmPJtOI8KrhNXSAGY3Lsf6YgcDbx7NAMDUecBuLCYLNSZQs-CavWQeMCD2uUeCEG23bHs0t5O1kJwsbqAnen_IEr9TCHJY9LCwWECyNKDTZtEFS0pKixXbQzesJ7hMclC5vY9c3fPRsS1SeMlyy3C8CiwOi3S_NwIfbktwxZgdnZH9ahk"/>
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-0.5 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Sunil Sharma</h4>
+<p class="font-body-sm text-body-sm text-outline">Master Electrician • 9 yrs exp</p>
+<div class="flex items-center space-x-1.5 mt-1">
+<span class="flex items-center text-amber-500 font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[16px] mr-0.5" style="font-variation-settings: 'FILL' 1;">star</span>
+                  4.9
+                </span>
+<span class="font-label-sm text-label-sm text-outline">(2,140 jobs)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Badges & Verification -->
+<div class="mt-space-md flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">shield</span>
+            Aadhaar &amp; Court Cleared
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">timer</span>
+            12 mins away (Indiranagar)
+          </span>
+</div>
+<!-- Service Specs / Highlights -->
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Specialty</span>
+<span class="font-medium text-on-surface">Digital Load Meter Check</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Guarantee</span>
+<span class="font-medium text-on-surface">15-day service warranty</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Arrival SLA</span>
+<span class="font-semibold text-primary">30-min guaranteed slot</span>
+</div>
+</div>
+</div>
+<!-- Pricing & CTAs -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-outline block">Inspection from</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">₹199</span>
+</div>
+<div class="flex items-center space-x-space-xs">
+<button class="px-space-sm py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors" type="button">
+            Profile
+          </button>
+<button class="px-space-md py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-semibold shadow-sm transition-transform active:scale-95" type="button">
+            Book Service
+          </button>
+</div>
+</div>
+</div>
+<!-- Card 2: Pooja Verma -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-space-sm">
+<div class="relative">
+<img alt="Pooja Verma Profile" class="w-16 h-16 rounded-2xl object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U5w1fhiKO8VHsCvBOpze1Zl5Qe7jG1IgIbLk8QLYfFrtTzho_nSMYb--PaqSZ7zokX-sL8xa-PGZBgBglzvX45gnkSn9Jo4aQAvC6xlWFoEm2UDjU0OhEBfqP56qzBFEGLrzOo5hOMPJi4diaE8Mg-azZoLKA8ZeXvLri5RcZY4bOF3RcDVotHQGjjaA6UDJlubNzGc3ve_vk9OjSfWaVgH3vYffdI60xVRVYSZcjw3WFpz6nYfctJw84"/>
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-0.5 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Pooja Verma</h4>
+<p class="font-body-sm text-body-sm text-outline">Hygiene &amp; Deep Cleaning Lead</p>
+<div class="flex items-center space-x-1.5 mt-1">
+<span class="flex items-center text-amber-500 font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[16px] mr-0.5" style="font-variation-settings: 'FILL' 1;">star</span>
+                  4.95
+                </span>
+<span class="font-label-sm text-label-sm text-outline">(1,890 jobs)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Badges & Verification -->
+<div class="mt-space-md flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">diamond</span>
+            Diamond Pro Specialist
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">timer</span>
+            20 mins away (Koramangala)
+          </span>
+</div>
+<!-- Service Specs / Highlights -->
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Consumables</span>
+<span class="font-medium text-on-surface">Eco-safe chemicals included</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Team Capability</span>
+<span class="font-medium text-on-surface">1-3 trained crew options</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Specialty</span>
+<span class="font-semibold text-primary">Kitchen grease &amp; tile grout</span>
+</div>
+</div>
+</div>
+<!-- Pricing & CTAs -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-outline block">Starts at</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">₹499</span>
+</div>
+<div class="flex items-center space-x-space-xs">
+<button class="px-space-sm py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors" type="button">
+            Profile
+          </button>
+<button class="px-space-md py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-semibold shadow-sm transition-transform active:scale-95" type="button">
+            Book Service
+          </button>
+</div>
+</div>
+</div>
+<!-- Card 3: Rajesh Kumar -->
+<div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-all flex flex-col justify-between group">
+<div>
+<div class="flex items-start justify-between">
+<div class="flex items-center space-x-space-sm">
+<div class="relative">
+<img alt="Rajesh Kumar Profile" class="w-16 h-16 rounded-2xl object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1Xe8egooWNVAEfedKIVoqDIw-cf4KxUU3VeGkjEdluqjdru_MF5yE6qu8iHJSxqpfNWKknaoc0yz0Zbic9L-15Zxzg47nNxfY-7EqbTiI6sZzJnaVfXt_dYpysNMJYyplbvKSdny_3krrWiIl5l0ZrS1bcFOwEaMvALUR27IBA2bq1l-4xtx_RRddNa9xcdvFNu6q86HROZTrZyMPHohmOsxBL8iKOCGDQXiN6QrKpsiPFVW7PoBoU-nDQ"/>
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-0.5 shadow-sm flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold group-hover:text-primary-container transition-colors">Rajesh Kumar</h4>
+<p class="font-body-sm text-body-sm text-outline">AC Repair &amp; HVAC Technician</p>
+<div class="flex items-center space-x-1.5 mt-1">
+<span class="flex items-center text-amber-500 font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[16px] mr-0.5" style="font-variation-settings: 'FILL' 1;">star</span>
+                  4.88
+                </span>
+<span class="font-label-sm text-label-sm text-outline">(1,410 jobs)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Badges & Verification -->
+<div class="mt-space-md flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-surface-container text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">ac_unit</span>
+            30-Day Cooling SLA
+          </span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-md bg-secondary-fixed/40 text-on-secondary-container font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">timer</span>
+            18 mins away (Domlur)
+          </span>
+</div>
+<!-- Service Specs / Highlights -->
+<div class="mt-space-md p-space-sm rounded-xl bg-surface-container-low space-y-1.5">
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Equipment</span>
+<span class="font-medium text-on-surface">Jet wash equipment ready</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Gas Refill</span>
+<span class="font-medium text-on-surface">Pure R32/R410 certified</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<span>Warranty</span>
+<span class="font-semibold text-primary">Free diagnostic review</span>
+</div>
+</div>
+</div>
+<!-- Pricing & CTAs -->
+<div class="mt-space-lg pt-space-sm flex items-center justify-between">
+<div>
+<span class="font-label-sm text-label-sm text-outline block">Starts at</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold">₹549</span>
+</div>
+<div class="flex items-center space-x-space-xs">
+<button class="px-space-sm py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors" type="button">
+            Profile
+          </button>
+<button class="px-space-md py-2 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-md text-label-md font-semibold shadow-sm transition-transform active:scale-95" type="button">
+            Book Service
+          </button>
+</div>
+</div>
+</div>
+</section>
+<!-- 6. Trust & Reassurance Banner -->
+<section class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-lg">
+<div class="flex items-start space-x-space-sm">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed text-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">security</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold">₹10,000 Cover</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Complimentary property damage protection for all bookings.</p>
+</div>
+</div>
+<div class="flex items-start space-x-space-sm">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed text-on-secondary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">payments</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold">Zero Upfront</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Pay via UPI or card only after job completion &amp; inspection.</p>
+</div>
+</div>
+<div class="flex items-start space-x-space-sm">
+<div class="w-12 h-12 rounded-xl bg-tertiary-fixed text-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">policy</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold">Police Checked</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Every professional undergoes dual-layer Aadhaar &amp; court screening.</p>
+</div>
+</div>
+<div class="flex items-start space-x-space-sm">
+<div class="w-12 h-12 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[26px]">replay</span>
+</div>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface font-bold">7-Day Free Re-work</h4>
+<p class="font-body-sm text-body-sm text-outline mt-0.5">Not satisfied? We will re-service your home completely free.</p>
+</div>
+</div>
+</div>
+</section>
+</div></div></main></div></body></html>

@@ -108,7 +108,13 @@ export const uploadProviderPhoto = asyncHandler(async (req, res) => {
     throw new AppError("Image storage is not configured", 503);
   }
   if (!req.file) throw new AppError("An image file is required", 400);
-  if (!req.file.mimetype.startsWith("image/")) throw new AppError("Only image files are allowed", 400);
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  if (!allowedTypes.includes(req.file.mimetype)) {
+    throw new AppError("Only JPEG, PNG, and WEBP images are allowed", 400);
+  }
+  if (!validateMagicBytes(req.file.buffer, req.file.mimetype)) {
+    throw new AppError("File content does not match the allowed image signature", 400);
+  }
 
   let result;
   try {
@@ -187,7 +193,7 @@ export const uploadVerificationDocument = asyncHandler(async (req, res) => {
       approvalStatus: "pending",
       isApproved: false,
     },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { new: true },
   );
 
   if (!updatedProfile) {

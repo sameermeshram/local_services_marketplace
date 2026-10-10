@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface": "#f3fbf9", "on-primary-fixed-variant": "#005049", "surface-dim": "#d3dcda", "surface-container-lowest": "#ffffff", "inverse-primary": "#83d5ca", "secondary-fixed-dim": "#ffb691", "surface-container-low": "#edf5f3", "on-secondary": "#ffffff", "tertiary-fixed-dim": "#93d2ca", "primary-fixed": "#9ff2e6", "surface-variant": "#dce4e2", "on-tertiary-container": "#a7e6dd", "outline-variant": "#bec9c6", "on-primary": "#ffffff", "on-primary-container": "#96e8dd", "inverse-surface": "#2a3231", "secondary": "#9e4200", "surface-tint": "#006a61", "primary-fixed-dim": "#83d5ca", "tertiary": "#05514b", "on-secondary-container": "#6a2a00", "secondary-fixed": "#ffdbcb", "tertiary-container": "#296962", "on-secondary-fixed-variant": "#793100", "on-primary-fixed": "#00201d", "background": "#f3fbf9", "tertiary-fixed": "#afefe6", "primary-container": "#006b62", "primary": "#00514a", "inverse-on-surface": "#eaf2f0", "on-error-container": "#93000a", "surface-container-high": "#e1eae8", "outline": "#6e7977", "on-error": "#ffffff", "secondary-container": "#ff8845", "surface-container": "#e7f0ee", "on-background": "#151d1c", "on-tertiary-fixed-variant": "#04504a", "on-tertiary-fixed": "#00201d", "surface-container-highest": "#dce4e2", "on-tertiary": "#ffffff", "on-secondary-fixed": "#341100", "error": "#ba1a1a", "on-surface": "#151d1c", "on-surface-variant": "#3e4947", "surface-bright": "#f3fbf9", "error-container": "#ffdad6" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "margin-tablet": "2rem", "space-xl": "2rem", "margin": "1rem", "space-md": "1rem", "gutter": "1rem", "margin-desktop": "3rem", "space-xxs": "0.25rem", "space-sm": "0.75rem", "space-lg": "1.5rem", "gutter-desktop": "1.5rem", "space-xs": "0.5rem", "space-2xl": "3rem" }, "fontFamily": { "body-sm": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "label-sm": ["Inter"], "label-md": ["Inter"], "display-mobile": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Inter"], "display": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "headline-lg-mobile": ["Plus Jakarta Sans"], "body-md": ["Inter"], "headline-sm": ["Plus Jakarta Sans"] }, "fontSize": { "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }], "display-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "title-md": ["16px", { "lineHeight": "24px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "display": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "body-md": ["15px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.005em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[250px] bg-surface-container-lowest border-r border-surface-variant z-50 flex flex-col justify-between"><div class="flex flex-col flex-1 overflow-y-auto"><div class="h-[68px] px-space-md border-b border-surface-variant flex items-center space-x-space-xs"><img alt="FixIt Local Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XNtKBL8eRA2_Tl8B3eFoHXvtE_RJbbm1fUfzBJeXScmFxU_1VzIRtyvkgoazu1pyPHjifpQ6nffRAg3nHg25ys6REVbgAKk76BXfLUnCtjYU6vekfUCyBQQYHBO0Uwn4jdkFkEQG-ULGFVONoQxiVxjwRFRqV1MNOpEuhtNsOzSsXhzYStt3hb-MeKs95NUkeRKG2P0iWY68Jk33o4GNcjLkWFDGt2Ukfuj1WbbB6ooYJ86llYqvqmEg"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface leading-tight font-bold">FixIt Local</span><span class="font-label-sm text-label-sm text-outline uppercase tracking-wider">Local Services</span></div></div><nav class="py-space-sm px-space-xs flex flex-col space-y-space-xxs" data-active-classes="bg-surface-container-low text-primary-container font-semibold border-l-[3px] border-primary-container"><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="home" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">home</span><span>Home</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="search-services" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">search</span><span>Search Services</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="my-bookings" href="#"><div class="flex items-center"><span class="material-symbols-outlined mr-space-sm text-[20px]">calendar_today</span><span>My Bookings</span></div><span class="bg-surface-container text-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded-full">2</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="favorites" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">favorite</span><span>Favorites</span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="profile-settings" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">person</span><span>Profile &amp; Settings</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="notifications" href="#"><div class="flex items-center"><span class="material-symbols-outlined mr-space-sm text-[20px]">notifications</span><span>Notifications</span></div><span class="w-2 h-2 rounded-full bg-secondary-container"></span></a><a class="flex items-center px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-lg text-label-lg" data-path="help-support" href="#"><span class="material-symbols-outlined mr-space-sm text-[20px]">help</span><span>Help &amp; Support</span></a></nav></div><div class="p-space-sm border-t border-surface-variant flex flex-col space-y-space-sm bg-surface-container-lowest"><button class="w-full border border-surface-variant hover:bg-surface rounded-lg p-space-xs font-label-sm text-label-sm text-primary-container flex items-center justify-between transition-colors" type="button"><span class="flex items-center space-x-space-xxs"><span class="material-symbols-outlined text-[16px]">engineering</span><span>Switch to Provider</span></span><span class="material-symbols-outlined text-[16px]">sync_alt</span></button><div class="flex items-center space-x-space-xs p-space-xs rounded-lg bg-surface-container-low"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WyE4Rw5eFimnGq4x59BC6y9hVTk37Jk1AxB--b4BQQUQO0L9nNymNpaZJnHZVjhck4rPZAI_RbyziXyXaXhg8D0KUlywz7m1LgCNyk6EWCKvKpVPzTZHEkaFPSMq35ng5NfYBQPfhlXKDZnwrxAIVO3Mv5MEMFPj0vMblG5yli-cZJJmsfof2UF8cBkuCNYvoncuhym26Pd-TdCb12WQTBHQETBTHdcY91ZQqSe_nPlVhGsRR4NF-Uu_o"/><div class="flex flex-col min-w-0 flex-1"><span class="font-label-md text-label-md text-on-surface truncate font-semibold">Priya Sharma</span><span class="font-label-sm text-label-sm text-outline truncate">Koramangala, BLR</span></div><a class="text-outline hover:text-error transition-colors p-space-xxs flex items-center" data-path="login" href="#" title="Logout"><span class="material-symbols-outlined text-[18px]">logout</span></a></div></div></aside><div class="pl-[250px]"><header class="fixed top-0 left-[250px] right-0 h-[68px] bg-surface-container-lowest/95 backdrop-blur-md border-b border-surface-variant px-space-xl z-40 flex items-center justify-between"><div class="flex items-center space-x-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="material-symbols-outlined text-primary text-[20px]">location_on</span><span>Current Area: <strong class="text-on-surface font-semibold">Indiranagar &amp; Koramangala (560038)</strong></span><button class="text-primary hover:underline font-label-md text-label-md ml-space-xs font-semibold" type="button">Change</button></div><div class="w-80 relative"><span class="material-symbols-outlined absolute left-space-sm top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span><input class="w-full pl-9 pr-12 py-space-xs bg-surface-container-low border border-surface-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder-outline focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search services, experts..." type="text"/><kbd class="absolute right-space-sm top-1/2 -translate-y-1/2 border border-outline-variant bg-surface-container-lowest text-outline font-label-sm text-label-sm px-1.5 py-0.5 rounded">⌘K</kbd></div><div class="flex items-center space-x-space-md"><button class="relative p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-secondary-container"></span></button><button class="p-space-xs text-on-surface-variant hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[22px]">help_outline</span></button><button class="bg-secondary hover:bg-on-secondary-fixed-variant text-on-secondary px-space-md py-space-xs rounded-lg font-label-lg text-label-lg flex items-center space-x-space-xxs transition-colors shadow-sm" type="button"><span class="material-symbols-outlined text-[18px]">add</span><span>Book Service</span></button><img alt="Profile" class="w-8 h-8 rounded-full object-cover ml-space-xs" src="https://lh3.googleusercontent.com/aida/AEtjO1WyE4Rw5eFimnGq4x59BC6y9hVTk37Jk1AxB--b4BQQUQO0L9nNymNpaZJnHZVjhck4rPZAI_RbyziXyXaXhg8D0KUlywz7m1LgCNyk6EWCKvKpVPzTZHEkaFPSMq35ng5NfYBQPfhlXKDZnwrxAIVO3Mv5MEMFPj0vMblG5yli-cZJJmsfof2UF8cBkuCNYvoncuhym26Pd-TdCb12WQTBHQETBTHdcY91ZQqSe_nPlVhGsRR4NF-Uu_o"/></div></header><main class="relative pt-[68px] min-h-screen bg-surface"><div class="flex flex-col w-full">
+<!-- Top Command Strip & Context Navigation -->
+<section class="w-full px-space-xl py-space-lg flex flex-col space-y-space-md bg-surface-container-low/60 backdrop-blur-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<!-- Title + Live Tracker Badge -->
+<div class="flex items-center space-x-space-md">
+<div class="flex items-center space-x-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface tracking-tight">My Bookings</span>
+<span class="bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm px-space-xs py-0.5 rounded-full flex items-center space-x-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+<span>1 Active Live</span>
+</span>
+</div>
+<span class="text-outline-variant">/</span>
+<div class="flex items-center space-x-space-xxs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">verified_user</span>
+<span>FixIt Guarantee Protection Active</span>
+</div>
+</div>
+<!-- Emergency Support & Quick Search -->
+<div class="flex items-center space-x-space-md">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container shadow-sm transition-all" placeholder="Search bookings, pros..." type="text"/>
+</div>
+<a class="flex items-center space-x-space-xxs bg-surface-container-lowest hover:bg-surface-container px-space-sm py-1.5 rounded-lg shadow-sm font-label-md text-label-md text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px] text-secondary">support_agent</span>
+<span>Priority Helpline: <strong class="font-semibold text-on-surface">1800-419-FIXIT</strong></span>
+</a>
+</div>
+</div>
+<!-- Navigation Tabs & Segment Filters -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-sm">
+<!-- Primary Status Tabs -->
+<div class="flex items-center space-x-1 bg-surface-container p-1 rounded-xl">
+<button class="flex items-center space-x-1.5 px-space-md py-1.5 rounded-lg font-label-md text-label-md bg-surface-container-lowest text-primary-container shadow-sm transition-all" type="button">
+<span>Upcoming</span>
+<span class="bg-primary text-on-primary font-label-sm text-label-sm px-1.5 py-0.2 rounded-full">2</span>
+</button>
+<button class="flex items-center space-x-1.5 px-space-md py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<span>Pending Confirmation</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.2 rounded-full">1</span>
+</button>
+<button class="flex items-center space-x-1.5 px-space-md py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<span>Completed</span>
+<span class="bg-surface-variant text-on-surface-variant font-label-sm text-label-sm px-1.5 py-0.2 rounded-full">14</span>
+</button>
+<button class="flex items-center space-x-1.5 px-space-md py-1.5 rounded-lg font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" type="button">
+<span>Cancelled</span>
+<span class="text-outline font-label-sm text-label-sm">0</span>
+</button>
+</div>
+<!-- Quick Filter Chips -->
+<div class="flex items-center space-x-space-xs overflow-x-auto py-1">
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider mr-1">Filter:</span>
+<button class="px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-primary-container text-on-primary shadow-sm" type="button">All States</button>
+<button class="px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high shadow-sm flex items-center space-x-1 transition-colors" type="button">
+<span class="w-2 h-2 rounded-full bg-secondary-container"></span>
+<span>In-Transit / Live</span>
+</button>
+<button class="px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high shadow-sm transition-colors" type="button">Scheduled</button>
+<button class="px-space-sm py-1 rounded-full font-label-sm text-label-sm bg-surface-container-lowest text-on-surface-variant hover:bg-surface-container-high shadow-sm transition-colors" type="button">Emergency Only</button>
+</div>
+</div>
+</section>
+<!-- Main Split Architecture -->
+<section class="w-full px-space-xl py-space-xl">
+<div class="grid grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN (42% on desktop: 5 cols): Bookings Feed -->
+<div class="col-span-12 lg:col-span-5 flex flex-col space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-space-xs">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Active &amp; Recent Jobs</span>
+<span class="font-label-sm text-label-sm text-outline">(Showing 3)</span>
+</div>
+<button class="font-label-sm text-label-sm text-primary hover:underline flex items-center space-x-0.5" type="button">
+<span class="material-symbols-outlined text-[14px]">tune</span>
+<span>Sort by Date</span>
+</button>
+</div>
+<!-- CARD 1: Selected & Active Job (FL-8831) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-md relative overflow-hidden transition-all ring-2 ring-primary">
+<div class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-primary via-primary-container to-secondary-container"></div>
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center space-x-space-xs">
+<span class="font-label-sm text-label-sm font-semibold tracking-wider text-outline uppercase">#FL-8831</span>
+<span class="inline-flex items-center px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-primary-fixed text-on-primary-fixed font-bold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mr-1 animate-pulse"></span>
+                ON THE WAY • ARRIVING SOON
+              </span>
+</div>
+<div class="font-label-md text-label-md text-secondary font-bold flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>ETA 12 Mins</span>
+</div>
+</div>
+<!-- Service Category & Details -->
+<div class="flex flex-col space-y-1 mb-space-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Master Electrician Diagnostic &amp; MCB Tripping Fix</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px] text-outline">schedule</span>
+<span>Scheduled Today, 03:00 PM (Direct Express Slot)</span>
+</p>
+</div>
+<!-- Provider Snip -->
+<div class="flex items-center justify-between p-space-xs rounded-lg bg-surface-container-low mb-space-sm">
+<div class="flex items-center space-x-space-xs">
+<div class="relative">
+<img alt="Rajesh Kumar - Master Electrician" class="w-11 h-11 rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1Vc_Ev3Z0mw79aJSW3GwIZauA0fo6Ewjd_VdghehM0TqbvhUrZUOeW2gIarprdDcMt0Gd7IR9GmPJtOI8KrhNXSAGY3Lsf6YgcDbx7NAMDUecBuLCYLNSZQs-CavWQeMCD2uUeCEG23bHs0t5O1kJwsbqAnen_IEr9TCHJY9LCwWECyNKDTZtEFS0pKixXbQzesJ7hMclC5vY9c3fPRsS1SeMlyy3C8CiwOi3S_NwIfbktwxZgdnZH9ahk"/>
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full w-4 h-4 flex items-center justify-center text-[10px]" title="FixIt Verified">
+<span class="material-symbols-outlined text-[12px]">verified</span>
+</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center space-x-1">
+<span class="font-title-md text-title-md text-on-surface font-bold leading-snug">Rajesh Kumar</span>
+<span class="bg-surface-variant font-label-sm text-label-sm text-on-surface-variant px-1.5 rounded font-medium">Pro</span>
+</div>
+<div class="flex items-center space-x-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary">star</span>
+<span class="font-semibold text-on-surface">4.92</span>
+<span class="text-outline">(412 reviews) • 8 yrs exp</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="font-headline-sm text-headline-sm text-on-surface font-extrabold leading-none">₹369</span>
+<span class="block font-label-sm text-label-sm text-outline">Pay on finish</span>
+</div>
+</div>
+<!-- Quick Actions Ribbon -->
+<div class="flex items-center justify-between pt-space-xs gap-space-xs">
+<button class="flex-1 bg-primary text-on-primary hover:bg-primary-container px-space-sm py-2 rounded-lg font-label-md text-label-md font-semibold flex items-center justify-center space-x-1 shadow-sm transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<span>Live Tracking View</span>
+</button>
+<a class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary flex items-center justify-center transition-colors" href="tel:+919876543210" title="Call Provider">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</a>
+<button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-outline hover:text-error flex items-center justify-center transition-colors" title="Cancel Booking" type="button">
+<span class="material-symbols-outlined text-[20px]">cancel</span>
+</button>
+</div>
+</article>
+<!-- CARD 2: Pending Confirmation (FL-9024) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center space-x-space-xs">
+<span class="font-label-sm text-label-sm font-semibold tracking-wider text-outline uppercase">#FL-9024</span>
+<span class="inline-flex items-center px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-secondary-fixed text-on-secondary-fixed font-semibold">
+<span class="material-symbols-outlined text-[13px] mr-1">pending</span>
+                PENDING CONFIRMATION
+              </span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Created 45m ago</span>
+</div>
+<div class="flex flex-col space-y-1 mb-space-sm">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">AC Power Socket &amp; 16A Modular Box Installation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px] text-outline">calendar_month</span>
+<span>Tomorrow, 10:30 AM (Morning Slot)</span>
+</p>
+</div>
+<div class="flex items-center justify-between p-space-xs rounded-lg bg-surface-container-low mb-space-sm">
+<div class="flex items-center space-x-space-xs">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary-container font-headline-sm">
+                SS
+              </div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold leading-tight">Sunil Sharma</span>
+<span class="font-label-sm text-label-sm text-outline">Assigned Master Electrician</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md text-on-surface font-bold">₹499</span>
+<span class="block font-label-sm text-label-sm text-outline">Estimate</span>
+</div>
+</div>
+<div class="flex items-center justify-end space-x-space-xs pt-space-xxs">
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors" type="button">
+              Modify Slot
+            </button>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container-low text-primary hover:bg-surface-container font-label-md text-label-md font-semibold transition-colors" type="button">
+              View Request Details
+            </button>
+</div>
+</article>
+<!-- CARD 3: Completed Job (FL-7612) -->
+<article class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm opacity-95 hover:opacity-100 transition-opacity">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center space-x-space-xs">
+<span class="font-label-sm text-label-sm font-semibold tracking-wider text-outline uppercase">#FL-7612</span>
+<span class="inline-flex items-center px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-primary-fixed-dim/30 text-primary-container font-bold">
+<span class="material-symbols-outlined text-[14px] mr-1 text-primary">check_circle</span>
+                COMPLETED &amp; CLOSED
+              </span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Yesterday, 4:30 PM</span>
+</div>
+<div class="flex flex-col space-y-1 mb-space-sm">
+<h3 class="font-title-md text-title-md text-on-surface font-semibold">Deep Kitchen Degreasing &amp; Sanitization</h3>
+<div class="flex items-center space-x-space-sm font-body-sm text-body-sm text-on-surface-variant">
+<span class="flex items-center text-primary-container font-semibold">
+<span class="material-symbols-outlined text-[16px] mr-1">task_alt</span>
+                Paid ₹499 via UPI
+              </span>
+<span class="text-outline">•</span>
+<span class="flex items-center text-secondary font-semibold">
+<span class="material-symbols-outlined text-[16px] mr-0.5">star</span>
+                Rated 5.0 ★
+              </span>
+</div>
+</div>
+<div class="flex items-center justify-between p-space-xs rounded-lg bg-surface-container-low mb-space-sm">
+<div class="flex items-center space-x-space-xs">
+<img alt="Pooja Verma - Cleaning Specialist" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1U5w1fhiKO8VHsCvBOpze1Zl5Qe7jG1IgIbLk8QLYfFrtTzho_nSMYb--PaqSZ7zokX-sL8xa-PGZBgBglzvX45gnkSn9Jo4aQAvC6xlWFoEm2UDjU0OhEBfqP56qzBFEGLrzOo5hOMPJi4diaE8Mg-azZoLKA8ZeXvLri5RcZY4bOF3RcDVotHQGjjaA6UDJlubNzGc3ve_vk9OjSfWaVgH3vYffdI60xVRVYSZcjw3WFpz6nYfctJw84"/>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold leading-tight">Pooja Verma</span>
+<span class="font-label-sm text-label-sm text-outline">Deep Cleaning Specialist</span>
+</div>
+</div>
+<div class="flex items-center space-x-space-xxs">
+<span class="bg-surface-container font-label-sm text-label-sm text-on-surface-variant px-space-xs py-1 rounded">3.5 hrs session</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-space-xxs">
+<button class="text-primary hover:underline font-label-md text-label-md flex items-center space-x-1" type="button">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+<span>Download Tax Invoice</span>
+</button>
+<button class="px-space-md py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-colors" type="button">
+              Book Again
+            </button>
+</div>
+</article>
+<!-- Safe Service Assurance Card -->
+<div class="bg-surface-container-low rounded-xl p-space-md flex items-start space-x-space-sm">
+<div class="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">shield</span>
+</div>
+<div class="flex flex-col space-y-0.5">
+<h4 class="font-title-md text-title-md text-on-surface font-bold">FixIt Local Happiness Shield</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Every job is protected by a ₹10,000 damage coverage guarantee and 30-day rework warranty. Never pay cash before work finishes.
+            </p>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (58% on desktop: 7 cols): Live Job Tracking & Deep Dive -->
+<div class="col-span-12 lg:col-span-7 flex flex-col space-y-space-md">
+<!-- Live Workspace Panel Wrapper -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden flex flex-col">
+<!-- State Simulator Toolbar (Interactive Customer Preview) -->
+<div class="bg-surface-container-high px-space-md py-2 flex flex-wrap items-center justify-between gap-space-xs">
+<div class="flex items-center space-x-space-xxs text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">developer_mode</span>
+<span class="font-semibold text-on-surface">Live Lifecycle State:</span>
+</div>
+<div class="inline-flex bg-surface-container-lowest rounded-lg p-0.5 shadow-xs space-x-1" id="state-simulator">
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" onclick="setDemoState('REQUESTED')" type="button">1. Pending</button>
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" onclick="setDemoState('ACCEPTED')" type="button">2. Accepted</button>
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary text-on-primary font-bold shadow-xs" onclick="setDemoState('ON_THE_WAY')" type="button">3. On Way</button>
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" onclick="setDemoState('ARRIVED')" type="button">4. Arrived</button>
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" onclick="setDemoState('IN_PROGRESS')" type="button">5. In Progress</button>
+<button class="px-2 py-0.5 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" onclick="setDemoState('COMPLETED')" type="button">6. Completed</button>
+</div>
+</div>
+<!-- Deep-Dive Header -->
+<div class="p-space-lg bg-surface-container-lowest flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<div class="flex items-center space-x-space-xs mb-1">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold text-outline">Order Reference</span>
+<span class="font-label-lg text-label-lg font-bold text-primary">#FL-8831</span>
+<span class="text-outline">•</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Scheduled for Indiranagar 12th Main</span>
+</div>
+<h2 class="font-headline-md text-headline-md text-on-surface font-extrabold" id="state-headline">
+                Technician Rajesh Kumar is on the way!
+              </h2>
+</div>
+<div class="flex items-center space-x-space-xs bg-surface-container-low px-space-md py-space-xs rounded-xl shadow-xs shrink-0">
+<span class="w-3 h-3 rounded-full bg-secondary animate-ping"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-outline uppercase font-semibold">Live Transit ETA</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight" id="state-eta">12 Mins (2.4 km)</span>
+</div>
+</div>
+</div>
+<!-- 6-Stage Customer Lifecycle Stepper -->
+<div class="px-space-lg py-space-md bg-surface-container-low">
+<div class="w-full">
+<!-- Stepper Header Labels Grid -->
+<div class="grid grid-cols-6 text-center gap-1">
+<!-- Step 1 -->
+<div class="flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold shadow-sm mb-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Requested</span>
+<span class="text-[10px] text-outline">02:15 PM</span>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center font-label-sm text-label-sm font-bold shadow-sm mb-1">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-on-surface">Accepted</span>
+<span class="text-[10px] text-outline">02:18 PM</span>
+</div>
+<!-- Step 3 (ACTIVE) -->
+<div class="flex flex-col items-center">
+<div class="w-7 h-7 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-label-sm text-label-sm font-bold shadow-md ring-4 ring-secondary-fixed mb-1 animate-pulse">
+<span class="material-symbols-outlined text-[14px]">near_me</span>
+</div>
+<span class="font-label-sm text-label-sm font-bold text-secondary">On The Way</span>
+<span class="text-[10px] text-secondary font-semibold">Live GPS</span>
+</div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-label-sm text-label-sm font-semibold mb-1">
+                    4
+                  </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Arrived</span>
+<span class="text-[10px] text-outline">OTP Verify</span>
+</div>
+<!-- Step 5 -->
+<div class="flex flex-col items-center opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-label-sm text-label-sm font-semibold mb-1">
+                    5
+                  </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">In Progress</span>
+<span class="text-[10px] text-outline">Inspection</span>
+</div>
+<!-- Step 6 -->
+<div class="flex flex-col items-center opacity-60">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center font-label-sm text-label-sm font-semibold mb-1">
+                    6
+                  </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">Completed</span>
+<span class="text-[10px] text-outline">UPI / Cash</span>
+</div>
+</div>
+<!-- Stepper Progress Track -->
+<div class="relative w-full h-1.5 bg-surface-variant rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-full w-[45%]" id="stepper-progress-bar"></div>
+</div>
+</div>
+</div>
+<!-- Interactive Live Map Section with OTP Float Card -->
+<div class="relative w-full h-80 bg-surface-container overflow-hidden">
+<!-- Bengaluru Live GPS Route Visual Asset -->
+<img alt="Bengaluru GPS Live Tracking Route" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WNGw509t1Q4EhqTYwbqazspq7eM7WvcWQT0AFWC3N84ooOWvF80_tZakPQTeMsPHl409zVkM1Nrs3-gBgjuXR7r5vjoMB5iw7f0D8nVyGuq1XDkipSc51aVwd4zZsHqAXHiQVMEglVpSMTMoqUJAfGq8jozvUGactUo_gouyPkZJzP8VCTE1hz3wqzqrRWQRia2GmJUzy_o6aPj-NJDooAuPHuVt45Zo5RFQmz37bS4WJYckIjH0x9gw"/>
+<!-- Top Left Floating Live Traffic Pill -->
+<div class="absolute top-4 left-4 bg-surface-container-lowest/90 backdrop-blur-md px-space-sm py-1.5 rounded-lg shadow-md flex items-center space-x-2">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm font-semibold text-on-surface">Realtime GPS: Koramangala Hub → 100ft Road</span>
+</div>
+<!-- Doorstep OTP Protection Floating Box -->
+<div class="absolute bottom-4 left-4 bg-surface-container-lowest/95 backdrop-blur-md p-space-sm rounded-xl shadow-xl flex items-center space-x-space-md max-w-sm">
+<div class="bg-primary-fixed text-on-primary-fixed p-2.5 rounded-lg">
+<span class="material-symbols-outlined text-[24px]">key</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-outline font-bold">Secure Start OTP</span>
+<div class="flex items-center space-x-1 my-0.5">
+<span class="bg-surface-container px-2 py-0.5 rounded font-headline-sm text-headline-sm font-mono font-bold text-on-surface tracking-wider">5</span>
+<span class="bg-surface-container px-2 py-0.5 rounded font-headline-sm text-headline-sm font-mono font-bold text-on-surface tracking-wider">8</span>
+<span class="bg-surface-container px-2 py-0.5 rounded font-headline-sm text-headline-sm font-mono font-bold text-on-surface tracking-wider">2</span>
+<span class="bg-surface-container px-2 py-0.5 rounded font-headline-sm text-headline-sm font-mono font-bold text-on-surface tracking-wider">1</span>
+</div>
+<span class="text-[11px] text-on-surface-variant font-medium">Share only when pro arrives at doorstep</span>
+</div>
+</div>
+<!-- Floating Quick Call Tech CTA -->
+<div class="absolute bottom-4 right-4 flex space-x-space-xs">
+<a class="bg-secondary text-on-secondary px-space-md py-2.5 rounded-lg font-label-md text-label-md font-bold shadow-lg flex items-center space-x-1 hover:bg-on-secondary-fixed-variant transition-colors" href="tel:+919876543210">
+<span class="material-symbols-outlined text-[18px]">call</span>
+<span>Call Rajesh</span>
+</a>
+<button class="bg-surface-container-lowest text-on-surface px-space-md py-2.5 rounded-lg font-label-md text-label-md font-bold shadow-lg flex items-center space-x-1 hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-primary">chat</span>
+<span>Chat</span>
+</button>
+</div>
+</div>
+<!-- Technician Verified Profile Card & Security Badges -->
+<div class="p-space-lg bg-surface-container-lowest flex flex-col md:flex-row items-start md:items-center justify-between gap-space-md">
+<div class="flex items-center space-x-space-md">
+<div class="relative">
+<img alt="Technician Rajesh Portrait" class="w-16 h-16 rounded-full object-cover shadow-md" src="https://lh3.googleusercontent.com/aida/AEtjO1Vc_Ev3Z0mw79aJSW3GwIZauA0fo6Ewjd_VdghehM0TqbvhUrZUOeW2gIarprdDcMt0Gd7IR9GmPJtOI8KrhNXSAGY3Lsf6YgcDbx7NAMDUecBuLCYLNSZQs-CavWQeMCD2uUeCEG23bHs0t5O1kJwsbqAnen_IEr9TCHJY9LCwWECyNKDTZtEFS0pKixXbQzesJ7hMclC5vY9c3fPRsS1SeMlyy3C8CiwOi3S_NwIfbktwxZgdnZH9ahk"/>
+<span class="absolute bottom-0 right-0 bg-primary text-on-primary w-5 h-5 rounded-full flex items-center justify-center text-[12px] shadow-sm">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center space-x-space-xs">
+<h3 class="font-headline-sm text-headline-sm font-bold text-on-surface">Rajesh Kumar</h3>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm px-2 py-0.5 rounded-full font-bold">FixIt Gold Pro</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Vehicle: Honda Activa (KA-03-HA-8821) • Helmet Compliant</p>
+<div class="flex items-center space-x-space-sm mt-1">
+<span class="inline-flex items-center text-label-sm font-label-sm font-semibold text-secondary">
+<span class="material-symbols-outlined text-[16px] mr-0.5">star</span> 4.92 (412 jobs)
+                  </span>
+<span class="text-outline">•</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Speaks: English, Hindi, Kannada</span>
+</div>
+</div>
+</div>
+<!-- Vetting Security Pills Grid -->
+<div class="grid grid-cols-2 gap-2 bg-surface-container-low p-space-sm rounded-xl shrink-0">
+<div class="flex items-center space-x-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">badge</span>
+<span>Police &amp; Aadhaar Verified</span>
+</div>
+<div class="flex items-center space-x-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">health_and_safety</span>
+<span>Vaccinated &amp; Masked</span>
+</div>
+<div class="flex items-center space-x-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">school</span>
+<span>Govt. ITI Certified Electrician</span>
+</div>
+<div class="flex items-center space-x-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">security</span>
+<span>₹10,000 Damage Insurance</span>
+</div>
+</div>
+</div>
+<!-- Bottom Split: Job Summary, Diagnostic Notes & Itemized Breakdown -->
+<div class="p-space-lg bg-surface-container-low grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<!-- Service Specification & Notes -->
+<div class="flex flex-col space-y-space-sm">
+<h4 class="font-title-md text-title-md text-on-surface font-bold flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">handyman</span>
+<span>Job Instructions &amp; Diagnostic Scope</span>
+</h4>
+<div class="bg-surface-container-lowest p-space-md rounded-xl space-y-space-xs shadow-xs">
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-outline">Issue Reported:</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold text-right">Main MCB repeatedly tripping when 1.5T AC turns ON</span>
+</div>
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-outline">Location:</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold text-right">Flat 402, Green View Apts, 12th Main, Indiranagar</span>
+</div>
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-outline">Customer Instructions:</span>
+<span class="font-label-md text-label-md text-on-surface-variant text-right">"Call before ringing bell, baby sleeping."</span>
+</div>
+<div class="flex items-start justify-between">
+<span class="font-label-md text-label-md text-outline">Warranty:</span>
+<span class="font-label-md text-label-md text-primary font-bold text-right">30 Days FixIt Protection</span>
+</div>
+</div>
+<!-- Safety Help Note -->
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm bg-surface-container px-space-sm py-2 rounded-lg">
+<span class="flex items-center space-x-1">
+<span class="material-symbols-outlined text-[16px] text-outline">lock</span>
+<span>Payments are held until job verification</span>
+</span>
+<a class="text-primary hover:underline font-semibold" href="#">Report Issue</a>
+</div>
+</div>
+<!-- Itemized Pricing Breakdown & Pay Method -->
+<div class="flex flex-col space-y-space-sm">
+<h4 class="font-title-md text-title-md text-on-surface font-bold flex items-center space-x-1.5">
+<span class="material-symbols-outlined text-primary text-[20px]">receipt</span>
+<span>Transparent Itemized Estimate</span>
+</h4>
+<div class="bg-surface-container-lowest p-space-md rounded-xl space-y-space-xs shadow-xs">
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Electrician Inspection &amp; Base Labor</span>
+<span class="text-on-surface font-semibold">₹249</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Spare Parts / MCB Consumables</span>
+<span class="text-on-surface font-semibold">₹120 <span class="text-outline text-[11px]">(Est.)</span></span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">FixIt Shield Insurance Cover (₹10,000)</span>
+<span class="text-primary font-bold">FREE</span>
+</div>
+<div class="flex items-center justify-between font-body-sm text-body-sm">
+<span class="text-on-surface-variant">Platform Convenience Fee</span>
+<span class="text-primary font-bold">WAIVED</span>
+</div>
+<div class="pt-space-xs mt-space-xs bg-surface-container-low -mx-space-md px-space-md py-space-xs rounded-b-xl flex items-center justify-between">
+<div>
+<span class="font-label-lg text-label-lg text-on-surface font-bold block">Estimated Total</span>
+<span class="text-[11px] text-outline font-medium">Zero advance • Pay on 100% satisfaction</span>
+</div>
+<div class="text-right">
+<span class="font-headline-md text-headline-md font-extrabold text-on-surface">₹369</span>
+<span class="block text-[11px] text-primary font-semibold">UPI / Card / Cash</span>
+</div>
+</div>
+</div>
+<!-- Direct Action Triggers -->
+<div class="flex items-center space-x-space-xs">
+<button class="flex-1 bg-surface-container hover:bg-surface-container-high text-on-surface py-2 rounded-lg font-label-md text-label-md font-semibold transition-colors flex items-center justify-center space-x-1" type="button">
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+<span>Reschedule Slot</span>
+</button>
+<button class="flex-1 bg-surface-container hover:bg-surface-container-high text-error py-2 rounded-lg font-label-md text-label-md font-semibold transition-colors flex items-center justify-center space-x-1" type="button">
+<span class="material-symbols-outlined text-[16px]">close</span>
+<span>Cancel Job</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive JavaScript for Live Lifecycle Simulator -->
+<script>
+    function setDemoState(state) {
+      const headline = document.getElementById('state-headline');
+      const eta = document.getElementById('state-eta');
+      const progressBar = document.getElementById('stepper-progress-bar');
+      const simButtons = document.querySelectorAll('#state-simulator button');
+
+      simButtons.forEach(btn => {
+        btn.classList.remove('bg-primary', 'text-on-primary', 'font-bold', 'shadow-xs');
+        btn.classList.add('text-on-surface-variant');
+      });
+
+      if (event && event.currentTarget) {
+        event.currentTarget.classList.remove('text-on-surface-variant');
+        event.currentTarget.classList.add('bg-primary', 'text-on-primary', 'font-bold', 'shadow-xs');
+      }
+
+      switch (state) {
+        case 'REQUESTED':
+          headline.innerText = 'Searching nearby verified electricians...';
+          eta.innerText = 'Assigning Pro';
+          progressBar.style.width = '16%';
+          break;
+        case 'ACCEPTED':
+          headline.innerText = 'Technician Rajesh Kumar accepted your job!';
+          eta.innerText = 'Preparing tools';
+          progressBar.style.width = '32%';
+          break;
+        case 'ON_THE_WAY':
+          headline.innerText = 'Technician Rajesh Kumar is on the way!';
+          eta.innerText = '12 Mins (2.4 km)';
+          progressBar.style.width = '48%';
+          break;
+        case 'ARRIVED':
+          headline.innerText = 'Technician Rajesh Kumar has reached your building!';
+          eta.innerText = 'At Doorstep';
+          progressBar.style.width = '64%';
+          break;
+        case 'IN_PROGRESS':
+          headline.innerText = 'Diagnostic & Repair in progress by Rajesh Kumar';
+          eta.innerText = 'Est. 30 Mins left';
+          progressBar.style.width = '82%';
+          break;
+        case 'COMPLETED':
+          headline.innerText = 'Service completed! Please inspect & verify work';
+          eta.innerText = 'Ready for Payment';
+          progressBar.style.width = '100%';
+          break;
+      }
+    }
+  </script>
+</div></main></div></body></html>

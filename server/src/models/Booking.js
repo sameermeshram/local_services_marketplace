@@ -21,6 +21,7 @@ const bookingSchema = new mongoose.Schema(
 );
 
 bookingSchema.index({ customer: 1, createdAt: -1 }, { name: "customer_createdAt" });
+bookingSchema.index({ provider: 1, createdAt: -1 }, { name: "provider_createdAt" });
 bookingSchema.index(
   { provider: 1, date: 1, timeSlot: 1 },
   {

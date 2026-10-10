@@ -152,37 +152,69 @@ export const updateAvailability = asyncHandler(async (req, res) => {
 });
 
 export const updateProfile = asyncHandler(async (req, res) => {
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    {
-      serviceType: req.body.serviceType,
-    },
-    { new: true, runValidators: true },
-  );
+  const hasField = (name) => Object.hasOwn(req.body, name);
+  const userUpdate = {};
+  if (hasField("serviceType")) userUpdate.serviceType = req.body.serviceType;
+
+  const user = Object.keys(userUpdate).length
+    ? await User.findByIdAndUpdate(
+        req.user.id,
+        { $set: userUpdate },
+        { new: true, runValidators: true },
+      )
+    : await User.findById(req.user.id);
 
   if (!user) throw new AppError("Provider not found", 404);
 
-  const serviceAreas = (req.body.serviceAreas || []).map((area) =>
-    typeof area === "string" ? { city: "", pincode: area } : area,
-  );
-  const category = await Category.findOne({ slug: req.body.serviceType, isActive: true }).select("_id");
-  const serviceName = req.body.serviceName?.trim() || req.body.serviceType;
-  const servicePrice = Number(req.body.servicePrice ?? req.body.pricePerVisit);
+  const profileUpdate = {};
+  for (const field of ["bio", "pricePerVisit", "yearsExperience"]) {
+    if (hasField(field)) profileUpdate[field] = req.body[field];
+  }
+
+  if (hasField("serviceAreas")) {
+    profileUpdate.serviceAreas = req.body.serviceAreas.map((area) =>
+      typeof area === "string"
+        ? { city: "", pincode: area.trim() }
+        : { city: area.city?.trim() || "", pincode: area.pincode.trim() },
+    );
+  }
+
+  if (hasField("serviceType")) {
+    const category = await Category.findOne({ slug: req.body.serviceType, isActive: true }).select("_id");
+    profileUpdate.categories = category ? [category._id] : [];
+  }
+
+  const serviceFields = [
+    "serviceType",
+    "serviceName",
+    "serviceDescription",
+    "servicePrice",
+    "pricePerVisit",
+  ];
+  if (serviceFields.some(hasField)) {
+    const currentProfile = await ProviderProfile.findOne({ user: req.user.id }).select("services");
+    const currentService = currentProfile?.services?.[0];
+    profileUpdate.services = [{
+      name: hasField("serviceName")
+        ? req.body.serviceName.trim() || currentService?.name || user.serviceType
+        : hasField("serviceType")
+          ? req.body.serviceType
+          : currentService?.name || user.serviceType,
+      description: hasField("serviceDescription")
+        ? req.body.serviceDescription.trim()
+        : currentService?.description || "",
+      price: hasField("servicePrice")
+        ? Number(req.body.servicePrice)
+        : hasField("pricePerVisit")
+          ? Number(req.body.pricePerVisit)
+          : currentService?.price ?? 0,
+    }];
+  }
+
   const profile = await ProviderProfile.findOneAndUpdate(
     { user: req.user.id },
-    {
-      bio: req.body.bio,
-      pricePerVisit: req.body.pricePerVisit,
-      yearsExperience: req.body.yearsExperience,
-      serviceAreas,
-      categories: category ? [category._id] : [],
-      services: [{
-        name: serviceName,
-        description: req.body.serviceDescription?.trim() || "",
-        price: servicePrice,
-      }],
-    },
-    { new: true, upsert: true, setDefaultsOnInsert: true },
+    { $set: profileUpdate },
+    { new: true, upsert: true, setDefaultsOnInsert: true, runValidators: true },
   );
 
   sendSuccess(res, { data: { user: user.toAuthJSON(), profile }, message: "Profile updated" });

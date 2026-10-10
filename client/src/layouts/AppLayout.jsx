@@ -12,11 +12,15 @@ export default function AppLayout({
   className = "",
   mainClassName = "md:ml-[280px] p-margin-desktop bg-surface min-h-[calc(100vh-64px)]",
 }) {
+  const mobileContentSpacing = mobileNav ? "pb-24 md:pb-8" : "";
+
   return (
     <div className={`bg-surface font-body-md text-on-surface min-h-screen ${className}`}>
       <SideNavBar activeItem={activeItem} role={role} notificationDot={notificationDot} />
       {topBar}
-      <main className={mainClassName}>{children}</main>
+      <main className={`${mainClassName} ${mobileContentSpacing}`.trim()}>
+        {children}
+      </main>
       {mobileNav}
     </div>
   );

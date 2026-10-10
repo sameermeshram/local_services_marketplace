@@ -11,7 +11,7 @@ export default function TopAppBar({
   children,
 }) {
   return (
-    <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16 md:ml-[280px] md:max-w-[calc(100%-280px)]">
+    <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface/90 px-margin-mobile backdrop-blur-md md:ml-[280px] md:max-w-[calc(100%-280px)] md:px-margin-desktop">
       <div className="flex items-center gap-4 flex-1">
         {title && (
           <h2 className="font-headline-sm text-headline-sm text-primary font-bold">{title}</h2>
@@ -27,8 +27,8 @@ export default function TopAppBar({
               placeholder={searchPlaceholder || "Search..."}
               className={
                 title
-                  ? "pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full text-body-md focus:outline-none focus:border-primary w-64"
-                  : "w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+                  ? "w-64 rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-4 text-body-md focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  : "w-full rounded-full border border-outline-variant bg-surface-container-low py-2 pl-10 pr-4 transition-all focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               }
             />
           </div>
@@ -36,18 +36,20 @@ export default function TopAppBar({
         {children}
       </div>
 
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-2 sm:gap-6">
         <button
           type="button"
-          className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70"
+          aria-label="Notifications"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:opacity-70"
         >
-          <MaterialIcon name="notifications" />
+          <MaterialIcon name="notifications" className="text-[22px]" />
         </button>
         <button
           type="button"
-          className="text-on-surface-variant hover:text-primary transition-colors cursor-pointer active:opacity-70"
+          aria-label="Help"
+          className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:opacity-70"
         >
-          <MaterialIcon name="help" />
+          <MaterialIcon name="help" className="text-[22px]" />
         </button>
         {userName ? (
           <>

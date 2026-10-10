@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#ffffff","on-background":"#151d1c","primary-container":"#006b62","surface-container":"#e7f0ee","surface-bright":"#f3fbf9","surface-container-low":"#edf5f3","tertiary-fixed-dim":"#93d2ca","on-tertiary-fixed":"#00201d","on-error":"#ffffff","error-container":"#ffdad6","inverse-surface":"#2a3231","surface-container-highest":"#dce4e2","surface-tint":"#006a61","inverse-on-surface":"#eaf2f0","secondary-container":"#ff8845","surface-variant":"#dce4e2","on-tertiary-fixed-variant":"#04504a","inverse-primary":"#83d5ca","on-surface":"#151d1c","on-secondary-container":"#6a2a00","tertiary-container":"#296962","on-tertiary-container":"#a7e6dd","background":"#f3fbf9","secondary-fixed":"#ffdbcb","on-tertiary":"#ffffff","outline":"#6e7977","surface":"#f3fbf9","error":"#ba1a1a","on-secondary-fixed-variant":"#793100","on-primary-container":"#96e8dd","primary-fixed":"#9ff2e6","on-primary":"#ffffff","on-primary-fixed":"#00201d","tertiary":"#05514b","primary-fixed-dim":"#83d5ca","on-primary-fixed-variant":"#005049","on-error-container":"#93000a","on-surface-variant":"#3e4947","outline-variant":"#bec9c6","secondary":"#9e4200","surface-container-high":"#e1eae8","primary":"#00514a","secondary-fixed-dim":"#ffb691","surface-container-lowest":"#ffffff","tertiary-fixed":"#afefe6","surface-dim":"#d3dcda","on-secondary-fixed":"#341100"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-lg":"1.5rem","margin-tablet":"2rem","margin-desktop":"3rem","space-sm":"0.75rem","margin":"1rem","space-md":"1rem","space-2xl":"3rem","gutter-desktop":"1.5rem","space-xs":"0.5rem","space-xxs":"0.25rem","space-xl":"2rem","gutter":"1rem"},fontFamily:{"display-mobile":["Plus Jakarta Sans"],"label-lg":["Inter"],"label-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Inter"],"title-md":["Plus Jakarta Sans"],"label-md":["Inter"],"body-sm":["Inter"],display:["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},fontSize:{"display-mobile":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"600"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-md":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"700"}],"body-lg":["18px",{lineHeight:"28px",fontWeight:"400"}],"title-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"500"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],display:["48px",{lineHeight:"56px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-sm":["20px",{lineHeight:"28px",letterSpacing:"-0.005em",fontWeight:"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-xs bg-surface-container-lowest"><img alt="Brand logo. - Primary color: #0f172a
+- Font: plusJakartaSans
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1Wl4l_--JhxvhYs5tMOcOF4n2d4gLQmJj6hxkEOwaHpnMsuWzRPGO2OAYZdud8HmR2gaCFOo7V6lJVHnyM_-jpTk2Ij5ngGUfSWhxsOUORfBLSwJKHQZbZ1wLbvaLQahzVYSUgeIRwIbBWF728_mRFt1_Y4pUcOTV5Ut8TBXUu55-_1vdM4HikiQfeoSLPiNUgqrPbVhArtuu9NgvOfW0yPwRE1ZB2XBFWTuP8w9wo6h4mgKgHuczJkUTw"/><div class="flex flex-col"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-none">FixIt Local</span><span class="font-label-sm text-label-sm text-primary tracking-normal uppercase mt-0.5">Provider Portal</span></div></div><div class="px-space-md py-space-sm"><div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span><span class="font-label-md text-label-md text-on-surface">Status: Ready</span></div><span class="font-label-sm text-label-sm bg-surface-container-lowest text-primary px-space-xs py-space-xxs rounded-full">Online</span></div></div><nav class="flex flex-col gap-space-xxs px-space-md mt-space-xs" data-active-classes="bg-primary-container text-on-primary font-label-lg"><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg transition-colors bg-primary-container text-on-primary font-label-lg" data-path="provider-overview" href="#"><span class="material-symbols-outlined text-[20px]">grid_view</span>Overview</a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="booking-requests" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">inbox</span>Booking Requests</div><span class="font-label-sm text-label-sm bg-secondary text-on-secondary px-space-xs py-space-xxs rounded-full">4</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="my-jobs" href="#"><span class="material-symbols-outlined text-[20px]">handyman</span>My Jobs</a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="services-and-pricing" href="#"><span class="material-symbols-outlined text-[20px]">sell</span>Services &amp; Pricing</a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="availability" href="#"><span class="material-symbols-outlined text-[20px]">event_available</span>Availability</a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="reviews" href="#"><span class="material-symbols-outlined text-[20px]">grade</span>Reviews</a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" data-path="provider-profile-and-settings" href="#"><span class="material-symbols-outlined text-[20px]">tune</span>Profile &amp; Settings</a></nav></div><div class="p-space-md"><div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface-variant">Week Payout</span><span class="font-label-md text-label-md text-primary font-semibold">₹18,450</span></div><div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden"><div class="bg-primary h-full w-3/4 rounded-full"></div></div><span class="font-label-sm text-label-sm text-outline">Target: ₹25,000</span></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40"><div class="w-full h-16 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-space-xxs rounded-full bg-surface-container text-on-surface"><span class="material-symbols-outlined text-[18px] text-primary">location_on</span><span class="font-label-md text-label-md">Bengaluru</span></div><div class="hidden sm:flex items-center gap-space-xs text-on-surface-variant"><span class="font-body-sm text-body-sm">Coverage:</span><span class="font-label-md text-label-md text-on-surface">Indiranagar, Koramangala +4</span></div></div><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-space-xxs bg-surface-container-low rounded-lg"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Today's Earned:</span><span class="font-title-md text-title-md text-primary">₹2,850</span></div><button class="flex items-center gap-space-xxs h-8 px-space-sm rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-on-secondary-fixed-variant transition-colors"><span class="material-symbols-outlined text-[16px]">bolt</span>Go Offline</button><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1WyE4Rw5eFimnGq4x59BC6y9hVTk37Jk1AxB--b4BQQUQO0L9nNymNpaZJnHZVjhck4rPZAI_RbyziXyXaXhg8D0KUlywz7m1LgCNyk6EWCKvKpVPzTZHEkaFPSMq35ng5NfYBQPfhlXKDZnwrxAIVO3Mv5MEMFPj0vMblG5yli-cZJJmsfof2UF8cBkuCNYvoncuhym26Pd-TdCb12WQTBHQETBTHdcY91ZQqSe_nPlVhGsRR4NF-Uu_o"/><span class="hidden lg:block font-label-md text-label-md text-on-surface">Rajesh K.</span></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Interactive View State Bar (Live Toggle) -->
+<div class="px-space-lg py-space-sm bg-surface-container flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-primary text-[20px]">tune</span>
+<span class="font-label-md text-label-md">Workspace Mode:</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Live Dispatch Engine active for Indiranagar &amp; Koramangala</span>
+</div>
+<div class="flex items-center gap-space-xxs bg-surface-container-highest p-1 rounded-lg">
+<button class="px-space-sm py-1 rounded font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1" id="btn-state-active" onclick="switchState('active')">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+        Active Jobs (Normal)
+      </button>
+<button class="px-space-sm py-1 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1" id="btn-state-empty" onclick="switchState('empty')">
+        Empty Queue
+      </button>
+<button class="px-space-sm py-1 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1" id="btn-state-skeleton" onclick="switchState('skeleton')">
+        Loading Skeleton
+      </button>
+</div>
+</div>
+<div class="px-space-lg py-space-lg max-w-[1400px] w-full mx-auto flex flex-col gap-space-xl">
+<!-- Top Provider Banner & Metrics Strip -->
+<section class="flex flex-col gap-space-md">
+<!-- Pro Greeting & Operational State -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-xl shadow-sm">
+<div class="flex items-center gap-space-md">
+<div class="relative">
+<img class="w-16 h-16 rounded-full object-cover" data-alt="Close up portrait photo of Rajesh Kumar, a skilled South Asian male certified electrician in his early 30s wearing a clean dark navy blue work uniform with a FixIt Local technician badge. Warm professional smile, reliable craftsman vibe in a well-lit workshop with tools in soft focus." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0rnSTcKR5UWbTuOOjZWNwt6n7ZVzUPFAQ1oudKQGeMde168xxSRNhUi2HVKufuYx2yDrGcrecjxQFoQK_nJttZrNBh0hiw3zbMSOapPHfvwerVTw9dRVh3JZbVkufYQWsuONbqwSCfuvKq0tY6Cnljb_Tnys9LiNNaH3-Eb8C4V70xegmmu44jd_TRndYxVFRQN3s5GASyNni4jW9IPtAltdTqNUvk0bVBZ29OtP91Mxg67VpBlgC"/>
+<span class="absolute bottom-0 right-0 w-4 h-4 bg-primary rounded-full flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[11px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-headline-md text-headline-md text-on-surface">Rajesh Kumar</span>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-primary flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+                FixIt Diamond Pro Tier
+              </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Master Licensed Electrician • Badge #IN-BLR-4892 • Auto-Dispatch Enabled</p>
+</div>
+</div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-lg">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-md text-label-md text-on-surface">Weekly Availability:</span>
+<span class="font-label-md text-label-md text-primary font-semibold">Online (Instant Dispatches)</span>
+</div>
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors font-label-md text-label-md flex items-center gap-1.5" id="toggle-instant-btn" onclick="toggleInstantDispatch()">
+<span class="material-symbols-outlined text-[18px] text-primary" id="instant-icon">toggle_on</span>
+<span id="instant-text">Instant Dispatch ON</span>
+</button>
+</div>
+</div>
+<!-- 5-Metric Precision Rail -->
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-space-sm">
+<!-- Metric 1: Net Earnings -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Today's Net</span>
+<span class="material-symbols-outlined text-[20px] text-primary">payments</span>
+</div>
+<div class="my-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface">₹2,850</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">account_balance</span>
+            Payout 9 PM to HDFC ••••4921
+          </span>
+</div>
+<!-- Metric 2: Today's Jobs -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Jobs Scheduled</span>
+<span class="material-symbols-outlined text-[20px] text-primary">assignment</span>
+</div>
+<div class="my-space-xs flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface">3</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">for today</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">1 active • 2 confirmed later</span>
+</div>
+<!-- Metric 3: Pending Requests -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<div class="absolute top-0 right-0 w-12 h-12 bg-secondary/10 rounded-bl-full flex items-start justify-end p-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary animate-pulse">timer</span>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Pending Requests</span>
+</div>
+<div class="my-space-xs flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-secondary">2</span>
+<span class="font-body-sm text-body-sm text-secondary font-medium">Action Needed</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">priority_high</span>
+            Respond within &lt; 5m
+          </span>
+</div>
+<!-- Metric 4: Pro Rating -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Customer Rating</span>
+<span class="material-symbols-outlined text-[20px] text-secondary" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<div class="my-space-xs flex items-baseline gap-space-xs">
+<span class="font-headline-lg text-headline-lg text-on-surface">4.92</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">/ 5.0</span>
+</div>
+<span class="font-label-sm text-label-sm text-primary">98% Satisfied (412 ratings)</span>
+</div>
+<!-- Metric 5: Service Coverage -->
+<div class="col-span-2 md:col-span-1 bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm uppercase tracking-wide">Active Hub</span>
+<span class="material-symbols-outlined text-[20px] text-primary">near_me</span>
+</div>
+<div class="my-space-xs">
+<span class="font-title-md text-title-md text-on-surface">Bengaluru East</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Indiranagar &amp; Koramangala Hubs</span>
+</div>
+</div>
+</section>
+<!-- CONTENT CONTAINER: NORMAL STATE -->
+<div class="flex flex-col gap-space-xl" id="view-active-content">
+<!-- Split Workspace Grid: Urgent Requests (Left 7 Cols) + Active Job in Progress (Right 5 Cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN: Urgent Booking Requests Queue (7 cols) -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Urgent Booking Requests</h2>
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm" id="requests-count-badge">2 waiting</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">lock_clock</span>
+              Auto-expires in 04:38
+            </span>
+</div>
+<!-- Request Cards Container -->
+<div class="flex flex-col gap-space-md" id="requests-list-container">
+<!-- Request Card 1 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md relative overflow-hidden transition-all" id="request-card-1">
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold text-lg shrink-0">
+                    PS
+                  </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-title-md text-title-md text-on-surface">Priya Sharma</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm">1.8 km away</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                      Indiranagar 12th Main, HAL 2nd Stage
+                    </span>
+</div>
+</div>
+<div class="flex sm:flex-col items-end justify-between sm:justify-start">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">₹320</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Your Net: ₹280</span>
+</div>
+</div>
+<!-- Service Details Box -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between flex-wrap gap-1">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary">electric_bolt</span>
+<span>Master Electrician Diagnostic &amp; MCB Tripping</span>
+</div>
+<div class="flex items-center gap-1 text-secondary font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Today, 03:00 PM (In ~25 mins)</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-body-sm text-body-sm text-on-surface-variant flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0 mt-0.5">chat_bubble_outline</span>
+<span>"Power tripping whenever water heater is turned on. Need urgent inspection before evening."</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 h-12 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors flex items-center justify-center gap-space-xs shadow-sm" onclick="acceptRequest('1', 'Priya Sharma')">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                  Accept Request
+                </button>
+<button class="h-12 px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors flex items-center justify-center gap-space-xs" onclick="declineRequest('1')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+                  Decline
+                </button>
+</div>
+</div>
+<!-- Request Card 2 -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md relative overflow-hidden transition-all" id="request-card-2">
+<div class="flex flex-col sm:flex-row sm:items-start justify-between gap-space-sm">
+<div class="flex items-start gap-space-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold text-lg shrink-0">
+                    AV
+                  </div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-title-md text-title-md text-on-surface">Amit Verma</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container text-on-surface font-label-sm text-label-sm">3.4 km away</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+                      Koramangala 4th Block, near Sony World Signal
+                    </span>
+</div>
+</div>
+<div class="flex sm:flex-col items-end justify-between sm:justify-start">
+<span class="font-headline-sm text-headline-sm text-primary font-bold">₹499</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Your Net: ₹425</span>
+</div>
+</div>
+<!-- Service Details Box -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between flex-wrap gap-1">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface">
+<span class="material-symbols-outlined text-[18px] text-primary">power</span>
+<span>AC Power Socket &amp; 16A Modular Box Installation</span>
+</div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px]">event</span>
+<span>Tomorrow, 10:30 AM Slot</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-xs rounded font-body-sm text-body-sm text-on-surface-variant flex items-start gap-2">
+<span class="material-symbols-outlined text-[16px] text-outline shrink-0 mt-0.5">chat_bubble_outline</span>
+<span>"New 1.5 ton split AC arrived today. Require fresh heavy-duty 16A socket with concealed wiring box."</span>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex items-center gap-space-sm pt-space-xs">
+<button class="flex-1 h-12 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors flex items-center justify-center gap-space-xs shadow-sm" onclick="acceptRequest('2', 'Amit Verma')">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+                  Accept Request
+                </button>
+<button class="h-12 px-space-md rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-lg text-label-lg transition-colors flex items-center justify-center gap-space-xs" onclick="declineRequest('2')">
+<span class="material-symbols-outlined text-[18px]">close</span>
+                  Decline
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN: Active Job in Progress (5 cols) -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-3 h-3 rounded-full bg-primary animate-pulse"></span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Current Active Job</h2>
+</div>
+<span class="font-label-md text-label-md text-primary font-semibold">#FL-8831</span>
+</div>
+<!-- Active Job Card -->
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<!-- Live Status Ribbon -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-lg">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">fmd_good</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Arrived at Location</span>
+</div>
+<div class="flex items-center gap-1 font-label-md text-label-md text-primary bg-surface-container-lowest px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span id="job-timer">32m 45s</span>
+</div>
+</div>
+<!-- Customer & Location Header -->
+<div class="flex items-start justify-between">
+<div>
+<span class="font-headline-sm text-headline-sm text-on-surface">Rahul Mehta</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Flat 204, Palm Grove Apts, Domlur Layout</p>
+<span class="font-label-sm text-label-sm text-primary inline-block mt-1">Ceiling Fan Motor Humming &amp; Speed Drop</span>
+</div>
+<div class="flex gap-space-xs">
+<a class="w-10 h-10 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary transition-colors" href="tel:+919876543210" title="Call Customer">
+<span class="material-symbols-outlined text-[20px]">phone</span>
+</a>
+<button class="w-10 h-10 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary transition-colors" onclick="openChatMock()" title="Message Customer">
+<span class="material-symbols-outlined text-[20px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Job Map Snapshot -->
+<div class="w-full h-32 rounded-lg overflow-hidden relative shadow-sm" data-location="Domlur Layout, Bengaluru, India" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDUzBpOD9rujAINyaPSFoFNSeBv6juGuerIRBeRBhe283a1i7nr8ZcnU7JJmQ8EYnV1ozy-kybl-m4YrpcsnplBjJC6dcv8gXXYpHLp1G4tbseT0xnMtdHuBKK9V0S2FtA26iiowp_7R0Da0GmvEkFFTuxFDLCK8VpqciWntHwx6A1Ly_1QHd8od7yOTE0JgYQgyHBewQ682Hm60GmXauLwz_k1D9CRncw-gNjG1jIG32S0qJ6M90E2')">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-space-sm">
+<div class="flex items-center gap-1 text-on-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">navigation</span>
+<span>Inside customer premises • Domlur Hub</span>
+</div>
+</div>
+</div>
+<!-- Diagnostic & Work Checklist -->
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-md text-label-md text-on-surface font-semibold">FixIt Standard Safety Checklist:</span>
+<div class="flex flex-col gap-space-xxs">
+<label class="flex items-center gap-space-xs p-space-xs rounded hover:bg-surface-container cursor-pointer transition-colors">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Safety inspection &amp; main isolator switched off</span>
+</label>
+<label class="flex items-center gap-space-xs p-space-xs rounded hover:bg-surface-container cursor-pointer transition-colors">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Replacement run-capacitor (3.15 µF) installed</span>
+</label>
+<label class="flex items-center gap-space-xs p-space-xs rounded hover:bg-surface-container cursor-pointer transition-colors">
+<input class="w-4 h-4 rounded text-primary accent-primary" id="check-earthing" onchange="toggleJobActionReady()" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">Earthing test &amp; rpm speed calibration check</span>
+</label>
+</div>
+</div>
+<!-- Parts & Billing Summary -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-1">
+<div class="flex justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Diagnostic &amp; Labor Fee:</span>
+<span class="font-medium text-on-surface">₹249</span>
+</div>
+<div class="flex justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Heavy Duty Capacitor (3.15 µF):</span>
+<span class="font-medium text-on-surface">₹120</span>
+</div>
+<div class="h-px bg-surface-container-highest my-1"></div>
+<div class="flex justify-between font-title-md text-title-md text-on-surface">
+<span>Estimated Customer Total:</span>
+<span class="text-primary font-bold">₹369</span>
+</div>
+</div>
+<!-- Completion CTA in Burnt Orange #A84700 as specified -->
+<div class="flex flex-col gap-space-xs pt-space-xs">
+<button class="w-full h-12 rounded-lg bg-secondary text-on-secondary hover:bg-on-secondary-fixed-variant transition-colors font-label-lg text-label-lg flex items-center justify-center gap-space-xs shadow-sm" id="complete-job-btn" onclick="finishCurrentJob()">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+                Generate Final Bill &amp; Complete Job
+              </button>
+<div class="flex gap-space-xs">
+<button class="flex-1 py-space-xs rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" onclick="reportIssuePrompt()">
+<span class="material-symbols-outlined text-[16px]">report_problem</span>
+                  Report Issue / Call Support
+                </button>
+<button class="flex-1 py-space-xs rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" onclick="addPartModal()">
+<span class="material-symbols-outlined text-[16px]">add_circle</span>
+                  Add Extra Material
+                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BOTTOM WIDGET: Weekly Availability & Slot Scheduler -->
+<section class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Weekly Availability &amp; Slot Planner</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Define your operating hours to control dispatch routing and avoid unwanted booking cancellations.</p>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-1.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="copyToAllDays()">
+              Duplicate to All Days
+            </button>
+<button class="px-space-md py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors shadow-sm" onclick="saveScheduleToast()">
+              Save Slots
+            </button>
+</div>
+</div>
+<!-- 7-Day Scheduler Grid -->
+<div class="grid grid-cols-1 md:grid-cols-7 gap-space-sm">
+<!-- Mon -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Mon</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">09:00 - 13:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">14:00 - 19:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">19:30 - 21:30</div>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary py-1">+ Add Slot</button>
+</div>
+<!-- Tue -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Tue</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">09:00 - 13:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">14:00 - 19:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">19:30 - 21:30</div>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary py-1">+ Add Slot</button>
+</div>
+<!-- Wed (Today) -->
+<div class="bg-primary/5 p-space-sm rounded-lg flex flex-col gap-space-xs ring-1 ring-primary/30">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-primary font-bold">Wed (Today)</span>
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-on-surface-variant line-through">09:00 - 13:00</div>
+<div class="p-1 rounded bg-primary text-on-primary font-medium shadow-xs">14:00 - 19:00 (Live)</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">19:30 - 21:30</div>
+</div>
+<span class="mt-1 text-center font-label-sm text-label-sm text-primary font-medium">3 jobs booked</span>
+</div>
+<!-- Thu -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Thu</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">09:00 - 13:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">14:00 - 19:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">19:30 - 21:30</div>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary py-1">+ Add Slot</button>
+</div>
+<!-- Fri -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Fri</span>
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">09:00 - 13:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">14:00 - 19:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">19:30 - 21:30</div>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary py-1">+ Add Slot</button>
+</div>
+<!-- Sat (Weekend Peak) -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-secondary font-bold">Sat</span>
+<span class="px-1 rounded bg-secondary-fixed text-on-secondary-fixed text-[9px] uppercase font-bold">Peak</span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm">
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">08:00 - 14:00</div>
+<div class="p-1 rounded bg-surface-container-lowest text-primary font-medium">15:00 - 20:30</div>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-on-surface-variant hover:text-primary py-1">+ Add Slot</button>
+</div>
+<!-- Sun (Half Day / Off) -->
+<div class="bg-surface-container-low p-space-sm rounded-lg flex flex-col gap-space-xs opacity-75">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Sun</span>
+<span class="font-label-sm text-label-sm text-outline">Off</span>
+</div>
+<div class="flex flex-col gap-1 text-[11px] font-label-sm justify-center items-center py-4">
+<span class="text-on-surface-variant">Scheduled Leave</span>
+<span class="text-[10px] text-outline">Rest &amp; Recharge</span>
+</div>
+<button class="mt-1 text-center font-label-sm text-label-sm text-primary py-1">Set Active</button>
+</div>
+</div>
+<!-- Dispatch Settings Controls -->
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex items-center gap-space-lg flex-wrap">
+<label class="flex items-center gap-space-xs cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span class="font-label-md text-label-md text-on-surface">Auto-accept verified bookings within 3 km</span>
+</label>
+<label class="flex items-center gap-space-xs cursor-pointer">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary" type="checkbox"/>
+<span class="font-label-md text-label-md text-on-surface">Pause alerts during transit (Safety Mode)</span>
+</label>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Next automatic payout settlement: Tonight at 09:00 PM IST</span>
+</div>
+</section>
+</div>
+<!-- CONTENT CONTAINER: EMPTY STATE -->
+<div class="hidden flex-col items-center justify-center py-16 bg-surface-container-lowest rounded-xl shadow-sm text-center px-space-lg" id="view-empty-content">
+<div class="w-20 h-20 rounded-full bg-surface-container flex items-center justify-center text-primary mb-space-md">
+<span class="material-symbols-outlined text-[40px]">task_alt</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-space-xxs">All Caught Up!</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mb-space-lg">
+        No pending booking requests right now in Indiranagar &amp; Koramangala. Keep your app online to receive the next instant dispatch ping.
+      </p>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-lg py-2.5 rounded-lg bg-primary text-on-primary font-label-lg text-label-lg hover:bg-primary-container transition-colors shadow-sm" onclick="switchState('active')">
+          Simulate Incoming Booking
+        </button>
+<button class="px-space-md py-2.5 rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors">
+          Expand Coverage Radius (+2 km)
+        </button>
+</div>
+</div>
+<!-- CONTENT CONTAINER: LOADING SKELETON STATE -->
+<div class="hidden flex-col gap-space-lg animate-pulse" id="view-skeleton-content">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Skeleton Left -->
+<div class="lg:col-span-7 flex flex-col gap-space-md">
+<div class="h-8 bg-surface-container-highest rounded w-1/3"></div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest"></div>
+<div class="flex flex-col gap-2">
+<div class="h-4 bg-surface-container-highest rounded w-36"></div>
+<div class="h-3 bg-surface-container-highest rounded w-24"></div>
+</div>
+</div>
+<div class="h-6 bg-surface-container-highest rounded w-16"></div>
+</div>
+<div class="h-20 bg-surface-container-low rounded"></div>
+<div class="h-10 bg-surface-container-highest rounded"></div>
+</div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest"></div>
+<div class="flex flex-col gap-2">
+<div class="h-4 bg-surface-container-highest rounded w-32"></div>
+<div class="h-3 bg-surface-container-highest rounded w-20"></div>
+</div>
+</div>
+<div class="h-6 bg-surface-container-highest rounded w-16"></div>
+</div>
+<div class="h-20 bg-surface-container-low rounded"></div>
+<div class="h-10 bg-surface-container-highest rounded"></div>
+</div>
+</div>
+<!-- Skeleton Right -->
+<div class="lg:col-span-5 flex flex-col gap-space-md">
+<div class="h-8 bg-surface-container-highest rounded w-1/2"></div>
+<div class="bg-surface-container-lowest p-space-lg rounded-xl shadow-sm flex flex-col gap-space-md">
+<div class="h-10 bg-surface-container-low rounded"></div>
+<div class="h-6 bg-surface-container-highest rounded w-3/4"></div>
+<div class="h-32 bg-surface-container-highest rounded"></div>
+<div class="h-24 bg-surface-container-low rounded"></div>
+<div class="h-12 bg-surface-container-highest rounded"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Toast Notification Container -->
+<div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none" id="toast-banner">
+<div class="bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-lg shadow-xl flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]" id="toast-icon">check_circle</span>
+<span class="font-label-md text-label-md" id="toast-message">Action processed successfully</span>
+</div>
+</div>
+</div>
+<script>
+  let isInstantOnline = true;
+  let timerSeconds = 32 * 60 + 45;
+
+  // Real-time ticking timer for active job
+  setInterval(() => {
+    timerSeconds++;
+    const minutes = Math.floor(timerSeconds / 60);
+    const seconds = timerSeconds % 60;
+    const el = document.getElementById('job-timer');
+    if (el) {
+      el.textContent = `${minutes}m ${seconds < 10 ? '0' : ''}${seconds}s`;
+    }
+  }, 1000);
+
+  function switchState(state) {
+    const activeView = document.getElementById('view-active-content');
+    const emptyView = document.getElementById('view-empty-content');
+    const skeletonView = document.getElementById('view-skeleton-content');
+
+    const btnActive = document.getElementById('btn-state-active');
+    const btnEmpty = document.getElementById('btn-state-empty');
+    const btnSkeleton = document.getElementById('btn-state-skeleton');
+
+    [btnActive, btnEmpty, btnSkeleton].forEach(b => {
+      b.className = 'px-space-sm py-1 rounded font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-all flex items-center gap-1';
+    });
+
+    activeView.classList.add('hidden');
+    emptyView.classList.add('hidden');
+    skeletonView.classList.add('hidden');
+
+    if (state === 'active') {
+      activeView.classList.remove('hidden');
+      btnActive.className = 'px-space-sm py-1 rounded font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1';
+    } else if (state === 'empty') {
+      emptyView.classList.remove('hidden');
+      emptyView.classList.add('flex');
+      btnEmpty.className = 'px-space-sm py-1 rounded font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1';
+    } else if (state === 'skeleton') {
+      skeletonView.classList.remove('hidden');
+      skeletonView.classList.add('flex');
+      btnSkeleton.className = 'px-space-sm py-1 rounded font-label-md text-label-md bg-surface-container-lowest text-primary shadow-sm transition-all flex items-center gap-1';
+    }
+  }
+
+  function showToast(message, icon = 'check_circle') {
+    const toast = document.getElementById('toast-banner');
+    const msg = document.getElementById('toast-message');
+    const icn = document.getElementById('toast-icon');
+    if (!toast) return;
+
+    msg.textContent = message;
+    icn.textContent = icon;
+    toast.classList.remove('translate-y-24', 'opacity-0');
+    toast.classList.add('translate-y-0', 'opacity-100');
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-24', 'opacity-0');
+      toast.classList.remove('translate-y-0', 'opacity-100');
+    }, 3200);
+  }
+
+  function toggleInstantDispatch() {
+    isInstantOnline = !isInstantOnline;
+    const icon = document.getElementById('instant-icon');
+    const text = document.getElementById('instant-text');
+    if (isInstantOnline) {
+      icon.textContent = 'toggle_on';
+      icon.className = 'material-symbols-outlined text-[18px] text-primary';
+      text.textContent = 'Instant Dispatch ON';
+      showToast('Instant Dispatch active. High priority queue on.');
+    } else {
+      icon.textContent = 'toggle_off';
+      icon.className = 'material-symbols-outlined text-[18px] text-outline';
+      text.textContent = 'Instant Dispatch PAUSED';
+      showToast('Instant Dispatch paused for scheduled rest.');
+    }
+  }
+
+  function acceptRequest(reqId, name) {
+    const card = document.getElementById(`request-card-${reqId}`);
+    if (card) {
+      card.style.transform = 'scale(0.98)';
+      card.style.opacity = '0.5';
+      setTimeout(() => {
+        card.remove();
+        showToast(`Accepted booking for ${name}. Route added to schedule!`);
+        updateRequestCount();
+      }, 300);
+    }
+  }
+
+  function declineRequest(reqId) {
+    const card = document.getElementById(`request-card-${reqId}`);
+    if (card) {
+      card.style.opacity = '0';
+      setTimeout(() => {
+        card.remove();
+        showToast('Request declined. Pass sent to adjacent technician.');
+        updateRequestCount();
+      }, 300);
+    }
+  }
+
+  function updateRequestCount() {
+    const list = document.getElementById('requests-list-container');
+    const countBadge = document.getElementById('requests-count-badge');
+    if (list && countBadge) {
+      const remaining = list.children.length;
+      countBadge.textContent = `${remaining} waiting`;
+      if (remaining === 0) {
+        switchState('empty');
+      }
+    }
+  }
+
+  function toggleJobActionReady() {
+    const check = document.getElementById('check-earthing');
+    const btn = document.getElementById('complete-job-btn');
+    if (check && btn) {
+      if (check.checked) {
+        btn.classList.add('ring-2', 'ring-secondary-fixed');
+      } else {
+        btn.classList.remove('ring-2', 'ring-secondary-fixed');
+      }
+    }
+  }
+
+  function finishCurrentJob() {
+    showToast('Job #FL-8831 Completed! ₹369 added to Today’s Net Payout.', 'receipt');
+  }
+
+  function reportIssuePrompt() {
+    showToast('Dispatch support ticket created. Pro Support agent calling you.', 'support_agent');
+  }
+
+  function addPartModal() {
+    showToast('Catalog lookup: Extra consumable or copper wire billed to customer invoice.');
+  }
+
+  function copyToAllDays() {
+    showToast('Standard 3-shift weekday hours applied across Monday through Friday.');
+  }
+
+  function saveScheduleToast() {
+    showToast('Weekly dispatch calendar updated and synced with FixIt routing grid.');
+  }
+
+  function openChatMock() {
+    showToast('Opening secure in-app chat with Rahul Mehta...');
+  }
+</script></main></div></body></html>

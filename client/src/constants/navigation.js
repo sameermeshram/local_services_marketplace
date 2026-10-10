@@ -16,3 +16,7 @@ export const MOBILE_NAV_ITEMS = [
 export const ADMIN_NAV_ITEMS = [
   { id: "admin", label: "Provider Approval", icon: "verified_user", path: "/admin/dashboard" },
 ];
+
+export const ADMIN_MOBILE_NAV_ITEMS = [
+  { id: "admin", label: "Approval", icon: "verified_user", path: "/admin/dashboard" },
+];

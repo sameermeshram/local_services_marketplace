@@ -10,7 +10,7 @@ export default function StatsCard({ icon, badge, value, label, color = "primary"
   const colors = COLOR_MAP[color] || COLOR_MAP.primary;
 
   return (
-    <div className="bg-surface-container-low p-6 rounded-2xl border border-outline-variant/50">
+    <div className="rounded-2xl border border-outline-variant/50 bg-surface-container-low p-6 shadow-sm">
       <div className="flex justify-between items-start mb-4">
         <MaterialIcon name={icon} className={`${colors.icon} p-2 rounded-lg`} />
         <span className={`text-label-md font-bold ${colors.badge}`}>{badge}</span>

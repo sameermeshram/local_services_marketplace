@@ -11,13 +11,22 @@ import { authorize } from "../middlewares/role.middleware.js";
 import * as reviewController from "../controllers/review.controller.js";
 import { createReviewRules } from "../validators/review.validator.js";
 import { bookingCreateRateLimiter } from "../config/rateLimiter.js";
+import {
+  customerBookingListRules,
+  paginationOnlyRules,
+} from "../validators/pagination.validator.js";
 
 const router = Router();
 
 router.use(protect);
 router.post("/", bookingCreateRateLimiter, authorize("customer"), validate(createBookingRules), bookingController.createBooking);
-router.get("/me", bookingController.getMyBookings);
-router.get("/provider", authorize("provider"), bookingController.getProviderBookings);
+router.get("/me", validate(customerBookingListRules), bookingController.getMyBookings);
+router.get(
+  "/provider",
+  authorize("provider"),
+  validate(paginationOnlyRules),
+  bookingController.getProviderBookings,
+);
 router.patch("/:id/cancel", authorize("customer"), bookingController.cancelBooking);
 router.patch(
   "/:id/reschedule",

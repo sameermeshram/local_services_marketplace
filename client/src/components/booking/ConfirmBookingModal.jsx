@@ -1,353 +1,177 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import MaterialIcon from "../ui/MaterialIcon";
 import StarRating from "../ui/StarRating";
-import { bookingModalProvider } from "../../data/mockData";
+import BookingRequestForm from "./BookingRequestForm";
 import { bookingService } from "../../services/api";
 
-function getUpcomingDates(count = 14) {
-  const dates = [];
-  const today = new Date();
-  for (let i = 0; i < count; i++) {
-    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const isoDate = `${year}-${month}-${day}`;
-    dates.push({
-      id: isoDate,
-      label: day,
-      disabled: i >= 7,
-    });
-  }
-  return dates;
+const TIME_LABELS = {
+  morning: "Morning (8 AM - 12 PM)",
+  afternoon: "Afternoon (12 PM - 4 PM)",
+  evening: "Evening (4 PM - 8 PM)",
+};
+
+function formatBookingDate(date) {
+  if (!date) return "";
+  return new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(new Date(`${date}T00:00:00`));
 }
 
-const TIME_SLOTS = [
-  { id: "morning", label: "Morning", range: "8AM - 12PM", icon: "light_mode" },
-  { id: "afternoon", label: "Afternoon", range: "12PM - 4PM", icon: "sunny" },
-  { id: "evening", label: "Evening", range: "4PM - 8PM", icon: "dark_mode" },
-];
-
-export default function ConfirmBookingModal({
-  open,
-  onClose,
-  provider = bookingModalProvider,
-}) {
-  const calendarDays = getUpcomingDates();
-  const [selectedDay, setSelectedDay] = useState(() => calendarDays[0].id);
-  const [selectedSlot, setSelectedSlot] = useState("morning");
+export default function ConfirmBookingModal({ open, onClose, provider }) {
   const [submitting, setSubmitting] = useState(false);
-  const [confirmed, setConfirmed] = useState(false);
-  const [showToast, setShowToast] = useState(false);
   const [error, setError] = useState("");
+  const [bookingRequest, setBookingRequest] = useState(null);
 
-  if (!open) return null;
+  if (!open || !provider) return null;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
+  const isAvailable = provider.available ?? provider.availableToday ?? true;
+  const price = provider.price ?? provider.hourlyRate ?? provider.pricePerVisit;
+  const handleSubmit = async (payload) => {
     setSubmitting(true);
-    const formData = new FormData(e.currentTarget);
-
-    const targetProviderId = provider.id || provider._id;
-    if (!targetProviderId) {
-      setError("Please select a valid provider before booking.");
-      setSubmitting(false);
-      return;
-    }
-
+    setError("");
     try {
-      await bookingService.create({
-        providerId: targetProviderId,
-        providerName: provider.name,
-        service: provider.trade || provider.services?.[0]?.name || "Standard Repair",
-        date: selectedDay,
-        timeSlot: selectedSlot,
-        address: formData.get("address"),
-        details: formData.get("details"),
-      });
-      setSubmitting(false);
-      setConfirmed(true);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 4000);
+      const response = await bookingService.create(payload);
+      setBookingRequest(response.data?.booking ?? payload);
     } catch (requestError) {
       setError(
         requestError.response?.data?.errors?.[0]?.message ||
           requestError.response?.data?.message ||
-          "Unable to create this booking. Please try again.",
+          "We couldn’t send your request. Please try again.",
       );
+    } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <>
-      <div
-        className="fixed inset-0 bg-inverse-surface/40 backdrop-blur-sm z-50"
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 pointer-events-none">
-        <div className="relative w-full max-w-2xl bg-surface rounded-xl shadow-2xl overflow-hidden max-h-[921px] flex flex-col pointer-events-auto">
-          <div className="flex items-center justify-between px-8 py-6 border-b border-outline-variant bg-surface-container-lowest">
-            <div>
-              <h2 className="font-headline-sm text-headline-sm text-on-surface">
-                Book Your Service
-              </h2>
-              <p className="font-body-sm text-body-sm text-on-surface-variant">
-                Secure a local pro in just a few steps
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="p-2 hover:bg-surface-container-high rounded-full transition-colors text-on-surface-variant cursor-pointer active:opacity-70"
-            >
-              <MaterialIcon name="close" />
-            </button>
-          </div>
-
-          <div className="overflow-y-auto px-8 py-6 space-y-8 flex-1">
-            <div className="bg-surface-bright border border-outline-variant p-4 rounded-xl flex items-center gap-4 shadow-sm">
-              <div className="relative">
-                <img
-                  src={provider.image}
-                  alt={provider.imageAlt}
-                  className="w-16 h-16 rounded-lg object-cover"
-                />
-                <div className="absolute -bottom-1 -right-1 bg-primary text-white p-1 rounded-full border-2 border-surface flex items-center justify-center">
-                  <MaterialIcon
-                    name="verified"
-                    filled
-                    className="text-[14px]"
-                  />
-                </div>
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h3 className="font-headline-sm text-headline-sm text-on-surface">
-                      {provider.name}
-                    </h3>
-                    <p className="font-label-md text-label-md text-primary uppercase tracking-wider">
-                      {provider.trade}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <StarRating
-                      rating={provider.rating}
-                      reviewCount={provider.reviewCount}
-                      size="14px"
-                      className="justify-end"
-                    />
-                    <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      ${provider.hourlyRate}/hr base rate
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <form
-              className="space-y-6"
-              id="bookingForm"
-              onSubmit={handleSubmit}
-            >
-              <section>
-                <label className="block font-headline-sm text-headline-sm mb-4 text-on-surface">
-                  1. Select a Date
-                </label>
-                <div className="grid grid-cols-7 gap-2 bg-surface-container-low p-4 rounded-xl border border-outline-variant">
-                  {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
-                    <div
-                      key={d}
-                      className="text-center font-label-md text-label-md text-on-surface-variant pb-2"
-                    >
-                      {d}
-                    </div>
-                  ))}
-                  {[28, 29, 30, 31].map((d) => (
-                    <div
-                      key={`prev-${d}`}
-                      className="opacity-30 p-2 text-center text-body-sm"
-                    >
-                      {d}
-                    </div>
-                  ))}
-                  {calendarDays.map((day) =>
-                    day.disabled ? (
-                      <div
-                        key={day.id}
-                        className="p-2 text-center text-body-sm font-bold text-on-surface-variant hover:text-primary cursor-pointer"
-                      >
-                        {day.label}
-                      </div>
-                    ) : (
-                      <span key={day.id}>
-                        <input
-                          type="radio"
-                          name="booking_date"
-                          id={day.id}
-                          className="hidden day-chip"
-                          checked={selectedDay === day.id}
-                          onChange={() => setSelectedDay(day.id)}
-                        />
-                        <label
-                          htmlFor={day.id}
-                          className="p-2 text-center text-body-sm font-bold border border-transparent rounded-lg cursor-pointer hover:border-primary transition-all block"
-                        >
-                          {day.label}
-                        </label>
-                      </span>
-                    ),
-                  )}
-                </div>
-              </section>
-
-              <section>
-                <label className="block font-headline-sm text-headline-sm mb-4 text-on-surface">
-                  2. Preferred Window
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {TIME_SLOTS.map((slot) => (
-                    <div key={slot.id} className="flex-1 min-w-[120px]">
-                      <input
-                        type="radio"
-                        name="time_slot"
-                        id={slot.id}
-                        className="hidden slot-chip"
-                        checked={selectedSlot === slot.id}
-                        onChange={() => setSelectedSlot(slot.id)}
-                      />
-                      <label
-                        htmlFor={slot.id}
-                        className="flex flex-col items-center justify-center p-4 border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container transition-all group active:scale-[0.98]"
-                      >
-                        <MaterialIcon
-                          name={slot.icon}
-                          className="mb-1 group-hover:scale-110 transition-transform"
-                        />
-                        <span className="font-label-md text-label-md">
-                          {slot.label}
-                        </span>
-                        <span className="text-[10px] opacity-70">
-                          {slot.range}
-                        </span>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </section>
-
-              <section className="space-y-4">
-                <label className="block font-headline-sm text-headline-sm text-on-surface">
-                  3. Service Location
-                </label>
-                <div className="relative group">
-                  <MaterialIcon
-                    name="location_on"
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-outline"
-                  />
-                  <input
-                    type="text"
-                    name="address"
-                    placeholder="Enter street address"
-                    className="w-full pl-12 pr-4 py-4 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant"
-                  />
-                </div>
-              </section>
-
-              <section className="space-y-4">
-                <label className="block font-headline-sm text-headline-sm text-on-surface">
-                  4. Job Details
-                </label>
-                <div className="relative group">
-                  <textarea
-                    rows={4}
-                    name="details"
-                    placeholder="Briefly describe the issue (e.g. 'Faulty kitchen outlet causing short circuit...')"
-                    className="w-full p-4 bg-surface border border-outline-variant rounded-xl focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant resize-none"
-                  />
-                  <div className="absolute right-4 bottom-4 flex items-center gap-2 text-outline-variant hover:text-primary cursor-pointer transition-colors">
-                    <MaterialIcon name="attach_file" className="text-sm" />
-                    <span className="font-label-md text-label-md">
-                      Add photos
-                    </span>
-                  </div>
-                </div>
-                {error && (
-                  <p className="text-error text-body-sm" role="alert">
-                    {error}
-                  </p>
-                )}
-              </section>
-            </form>
-          </div>
-
-          <div className="px-8 py-6 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between">
-            <div className="hidden sm:block">
-              <p className="font-label-md text-label-md text-on-surface-variant uppercase">
-                Estimated Total
-              </p>
-              <p className="font-headline-sm text-headline-sm text-on-surface">
-                $65.00 - $90.00
-              </p>
-            </div>
-            <div className="flex gap-4 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={onClose}
-                className="hidden sm:block px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                form="bookingForm"
-                disabled={submitting}
-                className={`flex-1 sm:flex-none px-10 py-3 text-white font-headline-sm text-headline-sm rounded-lg shadow-md hover:brightness-105 active:scale-95 transition-all flex items-center justify-center gap-2 ${
-                  confirmed ? "bg-primary" : "bg-secondary-container"
-                }`}
-              >
-                {submitting ? (
-                  <>
-                    <MaterialIcon
-                      name="progress_activity"
-                      className="animate-spin"
-                    />
-                    Processing...
-                  </>
-                ) : confirmed ? (
-                  "Booking Confirmed!"
-                ) : (
-                  <>
-                    Confirm Booking
-                    <MaterialIcon name="arrow_forward" />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div
-        className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-primary text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 transition-all duration-500 ${
-          showToast ? "translate-y-0 opacity-100" : "translate-y-32 opacity-0"
-        }`}
+    <div
+      className="fixed inset-0 z-[60] flex items-center justify-center bg-inverse-surface/50 p-4"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget && !submitting) onClose();
+      }}
+    >
+      <section
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="booking-dialog-title"
+        className="flex max-h-[min(90vh,900px)] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-surface shadow-2xl"
       >
-        <div className="bg-primary-container/20 p-1 rounded-full">
-          <MaterialIcon name="check_circle" filled />
+        <header className="flex items-center justify-between border-b border-outline-variant px-5 py-4 sm:px-7">
+          <div>
+            <h2 id="booking-dialog-title" className="text-xl font-bold text-on-surface">
+              {bookingRequest ? "Request sent" : "Request a service"}
+            </h2>
+            <p className="mt-1 text-sm text-on-surface-variant">
+              {bookingRequest
+                ? "Your request is pending the provider’s response."
+                : "Choose a service and tell the provider what you need."}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={submitting}
+            aria-label="Close booking dialog"
+            className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-high focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-50"
+          >
+            <MaterialIcon name="close" />
+          </button>
+        </header>
+
+        <div className="overflow-y-auto px-5 py-5 sm:px-7 sm:py-6">
+          <div className="mb-6 flex items-center gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest p-4">
+            {provider.image && (
+              <img
+                src={provider.image}
+                alt={provider.imageAlt || `${provider.name} provider profile`}
+                className="h-14 w-14 rounded-lg object-cover"
+              />
+            )}
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate font-semibold text-on-surface">{provider.name}</h3>
+              <p className="text-sm text-on-surface-variant">{provider.trade}</p>
+            </div>
+            <div className="text-right">
+              {provider.rating != null && (
+                <StarRating
+                  rating={provider.rating}
+                  reviewCount={provider.reviewCount}
+                  size="14px"
+                  className="justify-end"
+                />
+              )}
+              {price != null && (
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  Starting price: ₹{Number(price).toLocaleString("en-IN")}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {bookingRequest ? (
+            <div className="space-y-5" role="status">
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+                <p className="font-semibold text-on-surface">
+                  Booking status: {bookingRequest.status || "Pending"}
+                </p>
+                <p className="mt-1 text-sm text-on-surface-variant">
+                  The provider needs to accept your request before it is confirmed.
+                </p>
+              </div>
+              <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-on-surface-variant">Service</dt>
+                  <dd className="font-medium text-on-surface">{bookingRequest.service}</dd>
+                </div>
+                <div>
+                  <dt className="text-on-surface-variant">Preferred date</dt>
+                  <dd className="font-medium text-on-surface">{formatBookingDate(bookingRequest.date)}</dd>
+                </div>
+                <div>
+                  <dt className="text-on-surface-variant">Preferred time</dt>
+                  <dd className="font-medium text-on-surface">{TIME_LABELS[bookingRequest.timeSlot] || bookingRequest.timeSlot}</dd>
+                </div>
+              </dl>
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="min-h-11 rounded-xl border border-outline-variant px-5 py-3 font-semibold text-on-surface hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  Close
+                </button>
+                <Link
+                  to="/bookings"
+                  onClick={onClose}
+                  className="min-h-11 rounded-xl bg-primary px-5 py-3 text-center font-semibold text-on-primary hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  View my bookings
+                </Link>
+              </div>
+            </div>
+          ) : !isAvailable ? (
+            <div className="space-y-4">
+              <p className="rounded-xl bg-surface-container-low p-4 text-sm text-on-surface-variant" role="status">
+                This provider is currently unavailable for new requests.
+              </p>
+              <button type="button" onClick={onClose} className="w-full rounded-xl border border-outline-variant px-5 py-3 font-semibold text-on-surface">
+                Close
+              </button>
+            </div>
+          ) : (
+            <BookingRequestForm
+              key={provider.id || provider._id}
+              provider={provider}
+              onSubmit={handleSubmit}
+              submitting={submitting}
+              error={error}
+            />
+          )}
         </div>
-        <div>
-          <p className="font-label-md text-label-md font-bold">
-            Booking Request Sent!
-          </p>
-          <p className="text-[10px] opacity-90">
-            {provider.name.split(" ")[0]} will respond shortly.
-          </p>
-        </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

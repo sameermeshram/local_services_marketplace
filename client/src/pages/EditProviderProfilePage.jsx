@@ -1,15 +1,12 @@
 import { useEffect, useState, useRef } from "react";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
-import { editProfileAvatar, editProfilePreview } from "../data/mockData";
 import { providerService } from "../services/api";
 
-const INITIAL_PINCODES = ["90001", "90012", "90210"];
-
 export default function EditProviderProfilePage() {
-  const [previewSrc, setPreviewSrc] = useState(editProfilePreview);
-  const [pincodes, setPincodes] = useState(INITIAL_PINCODES);
-  const [experience, setExperience] = useState(8);
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [pincodes, setPincodes] = useState([]);
+  const [experience, setExperience] = useState(0);
   const [profile, setProfile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
@@ -207,12 +204,16 @@ export default function EditProviderProfilePage() {
               name="help"
               className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
             />
-            <div className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant bg-surface-container">
-              <img
-                src={editProfileAvatar}
-                alt="Provider headshot"
-                className="w-full h-full object-cover"
-              />
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-outline-variant bg-surface-container">
+              {profile?.profileImage ? (
+                <img
+                  src={profile.profileImage}
+                  alt="Provider profile"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <MaterialIcon name="person" className="text-on-surface-variant" />
+              )}
             </div>
           </div>
         </header>
@@ -258,12 +259,19 @@ export default function EditProviderProfilePage() {
         >
           <div className="col-span-12 lg:col-span-4 bg-surface-container-lowest p-8 rounded-xl border border-outline-variant shadow-sm bento-card flex flex-col items-center text-center">
             <div className="relative mb-6">
-              <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-primary/20 bg-surface-container">
-                <img
-                  src={previewSrc}
-                  alt="Profile preview"
-                  className="w-full h-full object-cover"
-                />
+              <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full border-4 border-primary/20 bg-surface-container">
+                {previewSrc ? (
+                  <img
+                    src={previewSrc}
+                    alt="Provider profile"
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <MaterialIcon
+                    name="person"
+                    className="text-6xl text-on-surface-variant"
+                  />
+                )}
               </div>
               <label
                 htmlFor="photo-upload"
@@ -275,7 +283,7 @@ export default function EditProviderProfilePage() {
                   id="photo-upload"
                   type="file"
                   className="hidden"
-                  accept="image/*"
+                  accept="image/jpeg,image/png,image/webp"
                   onChange={handlePhotoChange}
                 />
               </label>
@@ -284,7 +292,8 @@ export default function EditProviderProfilePage() {
               {uploadingPhoto ? "Uploading photo..." : "Upload Business Photo"}
             </h3>
             <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
-              Professional photos increase bookings by 40%.
+              Add a clear business photo so customers can recognize your
+              service profile.
             </p>
           </div>
 
@@ -312,10 +321,13 @@ export default function EditProviderProfilePage() {
                   <select
                     name="serviceType"
                     defaultValue={
-                      profile?.categories?.[0]?.slug || "electrician"
+                      profile?.categories?.[0]?.slug || ""
                     }
                     className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                   >
+                    <option value="" disabled>
+                      Select a service category
+                    </option>
                     <option value="electrician">Electrical Repairs</option>
                     <option value="plumbing">Plumbing</option>
                     <option value="carpentry">Carpentry</option>
@@ -453,6 +465,24 @@ export default function EditProviderProfilePage() {
                 </span>
               )}
             </div>
+            {profile?.approvalStatus === "rejected" && (
+              <div
+                className="space-y-2 rounded-lg border border-error/30 bg-error/5 p-4"
+                role="alert"
+              >
+                <p className="font-label-md font-bold text-error">
+                  Verification rejected
+                </p>
+                <p className="text-body-sm text-on-surface-variant">
+                  {profile.approvalReason?.trim()
+                    ? `Reason: ${profile.approvalReason}`
+                    : "No specific rejection reason was provided."}
+                </p>
+                <p className="text-body-sm text-on-surface-variant">
+                  Upload a new verification document to submit your profile for review again.
+                </p>
+              </div>
+            )}
             <div
               role="button"
               tabIndex={0}
@@ -550,7 +580,7 @@ export default function EditProviderProfilePage() {
             <div className="flex items-start gap-3 p-4 bg-surface-container rounded-lg border border-outline-variant">
               <MaterialIcon name="info" className="text-primary-container" />
               <p className="font-body-sm text-body-sm text-on-surface-variant leading-tight">
-                Your documents are encrypted and only used for identity
+                Your documents are stored privately and only used for identity
                 verification by our security team.
               </p>
             </div>

@@ -33,7 +33,6 @@ export function getAccessTokenFromRequest(req) {
   }
   const header = req.headers.authorization;
   if (header?.startsWith("Bearer ")) return header.slice(7);
-  if (req.query?.token) return req.query.token;
   return null;
 }
 

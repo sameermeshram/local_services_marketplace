@@ -1,0 +1,857 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"><link href="https://fonts.googleapis.com" rel="preconnect"><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"on-secondary":"#ffffff","on-background":"#151d1c","primary-container":"#006b62","surface-container":"#e7f0ee","surface-bright":"#f3fbf9","surface-container-low":"#edf5f3","tertiary-fixed-dim":"#93d2ca","on-tertiary-fixed":"#00201d","on-error":"#ffffff","error-container":"#ffdad6","inverse-surface":"#2a3231","surface-container-highest":"#dce4e2","surface-tint":"#006a61","inverse-on-surface":"#eaf2f0","secondary-container":"#ff8845","surface-variant":"#dce4e2","on-tertiary-fixed-variant":"#04504a","inverse-primary":"#83d5ca","on-surface":"#151d1c","on-secondary-container":"#6a2a00","tertiary-container":"#296962","on-tertiary-container":"#a7e6dd","background":"#f3fbf9","secondary-fixed":"#ffdbcb","on-tertiary":"#ffffff","outline":"#6e7977","surface":"#f3fbf9","error":"#ba1a1a","on-secondary-fixed-variant":"#793100","on-primary-container":"#96e8dd","primary-fixed":"#9ff2e6","on-primary":"#ffffff","on-primary-fixed":"#00201d","tertiary":"#05514b","primary-fixed-dim":"#83d5ca","on-primary-fixed-variant":"#005049","on-error-container":"#93000a","on-surface-variant":"#3e4947","outline-variant":"#bec9c6","secondary":"#9e4200","surface-container-high":"#e1eae8","primary":"#00514a","secondary-fixed-dim":"#ffb691","surface-container-lowest":"#ffffff","tertiary-fixed":"#afefe6","surface-dim":"#d3dcda","on-secondary-fixed":"#341100"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem",full:"9999px"},spacing:{"space-lg":"1.5rem","margin-tablet":"2rem","margin-desktop":"3rem","space-sm":"0.75rem","margin":"1rem","space-md":"1rem","space-2xl":"3rem","gutter-desktop":"1.5rem","space-xs":"0.5rem","space-xxs":"0.25rem","space-xl":"2rem","gutter":"1rem"},fontFamily:{"display-mobile":["Plus Jakarta Sans"],"label-lg":["Inter"],"label-sm":["Inter"],"headline-lg-mobile":["Plus Jakarta Sans"],"body-md":["Inter"],"headline-md":["Plus Jakarta Sans"],"headline-lg":["Plus Jakarta Sans"],"body-lg":["Inter"],"title-md":["Plus Jakarta Sans"],"label-md":["Inter"],"body-sm":["Inter"],display:["Plus Jakarta Sans"],"headline-sm":["Plus Jakarta Sans"]},fontSize:{"display-mobile":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"700"}],"label-lg":["14px",{lineHeight:"20px",fontWeight:"600"}],"label-sm":["11px",{lineHeight:"14px",letterSpacing:"0.02em",fontWeight:"600"}],"headline-lg-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-md":["15px",{lineHeight:"22px",fontWeight:"400"}],"headline-md":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["32px",{lineHeight:"40px",letterSpacing:"-0.015em",fontWeight:"700"}],"body-lg":["18px",{lineHeight:"28px",fontWeight:"400"}],"title-md":["16px",{lineHeight:"24px",fontWeight:"600"}],"label-md":["12px",{lineHeight:"16px",letterSpacing:"0.01em",fontWeight:"500"}],"body-sm":["13px",{lineHeight:"18px",fontWeight:"400"}],display:["48px",{lineHeight:"56px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-sm":["20px",{lineHeight:"28px",letterSpacing:"-0.005em",fontWeight:"600"}]}}}};</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-16 px-space-lg flex items-center gap-space-xs bg-surface-container-lowest"><div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary font-bold text-[18px]"><span class="material-symbols-outlined text-[22px]">build_circle</span></div><div class="flex flex-col ml-1"><span class="font-title-md text-title-md text-on-surface tracking-tight leading-none">FixIt Local</span><span class="font-label-sm text-label-sm text-primary tracking-wider uppercase font-semibold mt-0.5">ADMIN CONSOLE</span></div></div><div class="px-space-md py-space-sm"><div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between"><div class="flex items-center gap-space-xs"><span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span><span class="font-label-md text-label-md text-on-surface font-semibold">Console: Online</span></div><span class="font-label-sm text-label-sm bg-primary-container text-on-primary px-space-xs py-space-xxs rounded-full font-medium">Super Admin</span></div></div><nav class="flex flex-col gap-space-xxs px-space-md mt-space-xs" data-active-classes="bg-primary-container text-on-primary font-label-lg"><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg font-semibold transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">dashboard</span><span class="">Dashboard</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">group</span><span class="">Users</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">engineering</span><span class="">Providers</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">verified_user</span><span class="">Verification</span></div><span class="font-label-sm text-label-sm bg-secondary text-on-secondary px-space-xs py-space-xxs rounded-full font-semibold">3</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">calendar_today</span><span class="">Bookings</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span class="">Categories</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">analytics</span><span class="">Reports</span></a><a class="flex items-center justify-between px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-[20px]">gavel</span><span class="">Disputes</span></div><span class="w-2 h-2 rounded-full bg-error"></span></a><a class="flex items-center gap-space-sm px-space-sm py-space-xs rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-lg text-label-lg transition-colors" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span class="">Settings</span></a></nav></div><div class="p-space-md"><div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs"><div class="flex items-center justify-between"><span class="font-label-md text-label-md text-on-surface-variant font-semibold">Admin Ops Session</span><span class="font-label-sm text-label-sm text-primary font-semibold">Active</span></div><span class="font-label-sm text-label-sm text-on-surface">Super Admin: Ops Bengaluru</span><div class="flex items-center gap-1 text-[11px] text-outline mt-0.5"><span class="material-symbols-outlined text-[14px] text-primary">security</span>Cluster ID: BLR-HQ-01</div></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40"><div class="w-full h-16 px-space-lg flex items-center justify-between"><div class="flex items-center gap-space-md"><div class="flex items-center gap-space-xs px-space-sm py-space-xxs rounded-full bg-surface-container text-on-surface"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span><span class="font-label-md text-label-md font-semibold text-primary">System: Active</span><span class="text-on-surface-variant text-label-sm">•</span><span class="font-label-md text-label-md text-on-surface">Region: Bengaluru Central</span></div><div class="hidden sm:flex items-center gap-space-xs text-on-surface-variant"><span class="font-body-sm text-body-sm">Coverage:</span><span class="font-label-md text-label-md text-on-surface">Indiranagar, Koramangala +4 Clusters</span></div></div><div class="flex items-center gap-space-md"><button class="flex items-center gap-space-xxs h-8 px-space-sm rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined text-[16px] text-primary">history</span><span class="">Audit Log</span></button><button class="flex items-center gap-space-xxs h-8 px-space-sm rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-on-secondary-fixed-variant transition-colors"><span class="material-symbols-outlined text-[16px]">warning</span><span class="">Emergency Override</span></button><div class="h-6 w-px bg-surface-container-highest"></div><div class="flex items-center gap-space-xs"><div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-label-sm">AR</div><div class="hidden lg:flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Aditi Roy</span><span class="text-[11px] text-on-surface-variant leading-tight">Chief of Operations</span></div></div></div></div></header><main class="w-full pt-16 bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Sub-header & Operations Status Bar -->
+<header class="w-full bg-surface-container-lowest px-space-lg py-space-md shadow-sm">
+<div class="max-w-[1440px] mx-auto flex flex-col xl:flex-row xl:items-center xl:justify-between gap-space-md">
+<!-- Title & Live Dispatch Pill -->
+<div class="flex flex-wrap items-center gap-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider block">Central Governance Console</span>
+<h1 class="font-headline-md text-headline-md text-on-surface tracking-tight">Marketplace Operations &amp; Verification</h1>
+</div>
+<div class="flex items-center gap-space-xs px-space-sm py-space-xxs rounded-full bg-surface-container text-on-surface">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<span class="font-label-md text-label-md font-semibold text-primary">Bengaluru Hub 1</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">• Live Dispatch Engine Active</span>
+</div>
+</div>
+<!-- Quick Action Controls & State Simulation -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<div class="flex items-center bg-surface-container-low rounded-lg p-1">
+<button class="px-space-sm py-1 rounded text-primary font-label-sm text-label-sm bg-surface-container-lowest shadow-sm transition-all" id="viewModeAll" onclick="setOpsState('normal')">Normal</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface transition-all" id="viewModeSim" onclick="setOpsState('surge')">Surge (1.4x)</button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface transition-all" id="viewModeEmpty" onclick="setOpsState('empty')">Empty State</button>
+</div>
+<button class="flex items-center gap-space-xxs h-9 px-space-sm rounded-lg bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-container-high transition-colors" onclick="triggerGlobalRefresh()">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span class="">Refresh Feeds</span>
+</button>
+<button class="flex items-center gap-space-xxs h-9 px-space-md rounded-lg bg-secondary text-on-secondary font-label-md text-label-md hover:bg-on-secondary-fixed-variant transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">bolt</span>
+<span class="">Manual Dispatch</span>
+</button>
+</div>
+</div>
+<!-- Administrative Tabs -->
+<nav class="max-w-[1440px] mx-auto mt-space-md flex items-center gap-space-xs overflow-x-auto">
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md bg-primary-container text-on-primary font-semibold transition-all" id="tab-overview" onclick="switchTab('overview')">
+<span class="material-symbols-outlined text-[18px]">dashboard</span>
+<span class="">Dashboard Overview</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tab-verification" onclick="switchTab('verification')">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span class="">Provider Verification</span>
+<span class="px-1.5 py-0.5 rounded-full font-label-sm text-label-sm bg-secondary text-on-secondary">3 Pending</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tab-users" onclick="switchTab('users')">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span class="">Users (1,420)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tab-bookings" onclick="switchTab('bookings')">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span class="">Bookings</span>
+<span class="px-1.5 py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-primary font-semibold">38 Active</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tab-categories" onclick="switchTab('categories')">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span class="">Categories &amp; Fees</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" id="tab-disputes" onclick="switchTab('disputes')">
+<span class="material-symbols-outlined text-[18px]">gavel</span>
+<span class="">Reports &amp; Disputes</span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</button>
+</nav>
+</header>
+<!-- Main Administrative Container -->
+<div class="w-full max-w-[1440px] mx-auto px-space-lg py-space-lg flex flex-col gap-space-xl">
+<!-- Top KPI Metric Cards (5 Columns Compact) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md"><div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Active Customers</span><div class="w-7 h-7 rounded-lg bg-surface-container-low flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">person_check</span></div></div><div class="mt-space-sm"><div class="flex items-baseline gap-1"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">14,820</span><span class="text-[10px] text-outline font-semibold uppercase bg-surface-container px-1 py-0.5 rounded">Demo</span></div><div class="flex items-center gap-1 mt-1 text-primary"><span class="material-symbols-outlined text-[16px]">trending_up</span><span class="font-label-sm text-label-sm font-semibold">+12.4%</span><span class="font-body-sm text-body-sm text-on-surface-variant">simulated</span></div></div></div><div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Verified Providers</span><div class="w-7 h-7 rounded-lg bg-surface-container-low flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">verified</span></div></div><div class="mt-space-sm"><div class="flex items-baseline gap-1"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">1,280</span><span class="text-[10px] text-outline font-semibold uppercase bg-surface-container px-1 py-0.5 rounded">Demo</span></div><div class="flex items-center gap-1 mt-1"><span class="font-label-sm text-label-sm text-primary font-semibold">98.4%</span><span class="font-body-sm text-body-sm text-on-surface-variant">KYC compliance</span></div></div></div><div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-1 bg-secondary"></div><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-secondary font-semibold uppercase">Pending Verification</span><div class="w-7 h-7 rounded-lg bg-secondary-fixed flex items-center justify-center text-secondary"><span class="material-symbols-outlined text-[18px]">pending_actions</span></div></div><div class="mt-space-sm"><div class="flex items-baseline gap-space-xs"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">3</span><span class="font-label-sm text-label-sm text-secondary font-semibold">Action Needed</span></div><div class="flex items-center gap-1 mt-1 text-secondary"><span class="material-symbols-outlined text-[16px]">schedule</span><span class="font-label-sm text-label-sm font-semibold">SLA &lt; 2 hrs breach</span></div></div></div><div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Active Bookings Today</span><div class="w-7 h-7 rounded-lg bg-surface-container-low flex items-center justify-center text-primary"><span class="material-symbols-outlined text-[18px]">local_shipping</span></div></div><div class="mt-space-sm"><div class="flex items-baseline gap-1"><span class="font-headline-md text-headline-md text-on-surface tracking-tight">142</span><span class="text-[10px] text-outline font-semibold uppercase bg-surface-container px-1 py-0.5 rounded">Simulated</span></div><div class="flex items-center gap-1 mt-1 text-primary"><span class="material-symbols-outlined text-[16px]">check_circle</span><span class="font-label-sm text-label-sm font-semibold">94.2%</span><span class="font-body-sm text-body-sm text-on-surface-variant">on-time arrival</span></div></div></div><div class="bg-primary text-on-primary p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><span class="font-label-sm text-label-sm text-on-primary-container uppercase">Platform GMV (Today)</span><div class="w-7 h-7 rounded-lg bg-primary-container flex items-center justify-center text-on-primary"><span class="material-symbols-outlined text-[18px]">payments</span></div></div><div class="mt-space-sm"><div class="flex items-baseline gap-1"><span class="font-headline-md text-headline-md font-bold tracking-tight">₹2,18,450</span><span class="text-[10px] text-on-primary-container font-semibold uppercase bg-primary-container px-1 py-0.5 rounded">Demo Mock Data</span></div><div class="flex items-center justify-between mt-1 text-on-primary-container"><span class="font-body-sm text-body-sm">Take Rate: 12%</span><span class="font-label-sm text-label-sm font-semibold">₹26,214 Net</span></div></div></div></section>
+<!-- Content Workspace Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-lg items-start">
+<!-- Left Column (8 Cols): Queue & Live Booking Feeds -->
+<div class="xl:col-span-8 flex flex-col gap-space-lg">
+<!-- SECTION A: Provider Verification Queue -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" id="verificationQueueSection">
+<div class="p-space-lg flex flex-wrap items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Provider Verification Queue</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Verify credentials, trade certifications &amp; background checks</p>
+</div>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="px-space-sm py-1 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">3 Applicants Awaiting Review</span>
+</div>
+</div>
+<div class="p-space-lg flex flex-col gap-space-lg" id="verificationCardsContainer">
+<!-- Applicant Card 1: Sunil Sharma -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-space-md">
+<!-- Left: Pro Info with Avatar -->
+<div class="flex items-start gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-xl object-cover bg-surface-container" data-alt="High resolution professional portrait of an Indian male electrician in his late 30s wearing a clean dark teal polo shirt with safety glasses hung on collar, warm workshop lighting, FixIt Local verification badge motif." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCahSVIdUo8R88GDjTP3OjA7yFe3TJvqA9ze1jRd7y2ROSXI1_slbXreQPmF9Zr4NXXY-CkVGC3rgSVh1V_C2x-Z9sUqrtkUcPS91lLifTvQDWl7LI6WwxN_w_0fCy43Vws0lIyx6HX8UqRtcMSN3MZuPSXwRG4kx2Br_cxnM7vLdQRhr_5rLb2rnn-74_fOY2jq-dbc4okNG0IngmPJknhbqHDmo2N8cRE-vsLBA47MDc_lsq28lOY">
+<span class="absolute -bottom-1 -right-1 bg-primary text-on-primary rounded-full p-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface">Sunil Sharma</h3>
+<span class="px-space-xs py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">Master Electrician</span>
+<span class="px-space-xs py-0.5 rounded bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm">Pending Review</span>
+</div>
+<div class="flex items-center gap-space-md mt-1 font-body-sm text-body-sm text-on-surface-variant flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">work_history</span>
+                        9 Years Exp
+                      </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span>
+                        Indiranagar, HSR, Koramangala (8 km radius)
+                      </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">call</span>
+                        +91 98450 23119
+                      </span>
+</div>
+</div>
+</div>
+<!-- Right: Submitted Timestamp & Priority -->
+<div class="flex md:flex-col items-end justify-between md:justify-start gap-1 flex-shrink-0">
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Applied 1h 42m ago</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Token: #PRO-2024-8842</span>
+</div>
+</div>
+<!-- Submitted Documents Dossier -->
+<div class="mt-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface uppercase font-semibold">Submitted Credentials &amp; Verification Checks</span>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+<!-- Doc 1: Aadhaar -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px]">fingerprint</span>
+<div class="min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">Aadhaar Card (UIDAI)</p>
+<p class="font-body-sm text-body-sm text-primary font-semibold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]">check</span> Biometric Verified
+                        </p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary p-1" title="View Document">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</div>
+<!-- Doc 2: Police Verification -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px]">verified</span>
+<div class="min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">Police Clearance (PCC)</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Valid till Nov 2025</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary p-1" title="Download PDF">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</div>
+<!-- Doc 3: Trade License -->
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<span class="material-symbols-outlined text-primary text-[20px]">workspace_premium</span>
+<div class="min-w-0">
+<p class="font-label-md text-label-md text-on-surface truncate">ITI Wireman License</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">#ITI-KA-2016-9912</p>
+</div>
+</div>
+<button class="text-on-surface-variant hover:text-primary p-1" title="Audit License">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Action Toolbar for Decisioning -->
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-xs text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">security</span>
+<span class="">Background Score: <strong>96/100</strong> (All checks passed)</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-space-xs rounded-lg text-error hover:bg-error-container font-label-md text-label-md transition-colors" onclick="rejectApplicant('Sunil Sharma')">
+                    Reject Application
+                  </button>
+<button class="px-space-md py-space-xs rounded-lg text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors" onclick="requestResubmit('Sunil Sharma')">
+                    Request Resubmission
+                  </button>
+<button class="px-space-lg py-space-xs rounded-lg bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md transition-colors shadow-sm flex items-center gap-1" onclick="approveApplicant('Sunil Sharma', this)">
+<span class="material-symbols-outlined text-[18px]">verified</span>
+<span class="">Approve &amp; Activate Pro</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Applicant Card 2: Ramesh N. -->
+<div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm hover:shadow-md transition-shadow relative">
+<div class="flex flex-col md:flex-row md:items-start justify-between gap-space-md">
+<div class="flex items-start gap-space-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-16 h-16 rounded-xl object-cover bg-surface-container" data-alt="Close up professional portrait of Ramesh N, an experienced Indian plumbing technician wearing industrial navy overalls, warm gentle lighting, clean background, high clarity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiQgtOaNIt_A-WCJVi0M31gw5DEeD8t3-NERCmPt6Rtx00g5ilg_GXCgsZ-3438AFDoyrk8rZuupCJ04nuwUe6raFcVG486lCp-nGAcQxUMZOHU_3l5TO7_91FiERZdgXoQKpoOYrUVw9jPvB7oUkpQcAwIS3fFPMIKxZyPncbCYWsTRm5FOQHSE2HzAZ4mbByckhEGCth7S2mGPIimjWCwhYMW34hx2-L-YGAPHyTp2C4TPjPd4R3">
+<span class="absolute -bottom-1 -right-1 bg-secondary text-on-secondary rounded-full p-0.5 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">plumbing</span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-space-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface">Ramesh N.</h3>
+<span class="px-space-xs py-0.5 rounded bg-surface-container font-label-sm text-label-sm text-primary font-semibold">Senior Plumber &amp; Pipe Fitter</span>
+<span class="px-space-xs py-0.5 rounded bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">Under Investigation</span>
+</div>
+<div class="flex items-center gap-space-md mt-1 font-body-sm text-body-sm text-on-surface-variant flex-wrap">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">work_history</span>
+                        14 Years Exp
+                      </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">pin_drop</span>
+                        Whitefield, Marathahalli, Bellandur (12 km)
+                      </span>
+</div>
+</div>
+</div>
+<div class="flex md:flex-col items-end justify-between md:justify-start gap-1 flex-shrink-0">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Applied 3h 10m ago</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Token: #PRO-2024-8839</span>
+</div>
+</div>
+<div class="mt-space-md bg-surface-container-low rounded-lg p-space-md flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface uppercase font-semibold">Verification Flags &amp; Inquiries</span>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-sm">
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">fact_check</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Court Registry Check</p>
+<p class="font-body-sm text-body-sm text-primary font-semibold">Clear: No records flagged</p>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-space-sm rounded-lg flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[20px]">pending</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Skill Assessment Practical</p>
+<p class="font-body-sm text-body-sm text-secondary font-semibold">Scheduled: Today 4:30 PM (Hub 1)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm flex flex-wrap items-center justify-between gap-space-sm">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Status: Pending in-person test clearance at dispatch depot</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-md py-space-xs rounded-lg text-on-surface hover:bg-surface-container font-label-md text-label-md transition-colors">
+                    View Dossier
+                  </button>
+<button class="px-space-md py-space-xs rounded-lg bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-md text-label-md transition-colors">
+                    Fast-Track Test
+                  </button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION B: Live Marketplace Bookings & Dispute Monitor -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden" id="liveBookingsSection">
+<div class="p-space-lg flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-low">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]">radar</span>
+</div>
+<div>
+<h2 class="font-title-md text-title-md text-on-surface">Live Bookings &amp; Dispute Dispatch Monitor</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Real-time status tracking across Indiranagar, Koramangala &amp; Bengaluru Central</p>
+</div>
+</div>
+<!-- Filter Controls -->
+<div class="flex items-center gap-space-xs">
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="statusFilter">Status:</label>
+<select class="h-9 px-space-sm bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" id="statusFilter" onchange="filterBookings(this.value)">
+<option value="ALL">All Statuses (38)</option>
+<option value="DISPATCH">Pending Dispatch (4)</option>
+<option value="IN_TRANSIT">In Transit (8)</option>
+<option value="IN_PROGRESS">In Progress (19)</option>
+<option value="DISPUTED">Disputed (2)</option>
+</select>
+</div>
+</div>
+<!-- Tabular Monitor -->
+<div class="overflow-x-auto">
+<table class="w-full text-left" id="bookingsTable">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase">
+<th class="py-space-sm px-space-md">Booking ID</th>
+<th class="py-space-sm px-space-md">Customer</th>
+<th class="py-space-sm px-space-md">Assigned Pro</th>
+<th class="py-space-sm px-space-md">Category &amp; Slot</th>
+<th class="py-space-sm px-space-md">Live Status</th>
+<th class="py-space-sm px-space-md text-right">Amount</th>
+<th class="py-space-sm px-space-md text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-high text-body-sm font-body-sm">
+<!-- Row 1: IN_PROGRESS -->
+<tr class="hover:bg-surface-container-low transition-colors" data-status="IN_PROGRESS">
+<td class="py-space-md px-space-md font-label-md text-label-md font-semibold text-primary">#FX-89410</td>
+<td class="py-space-md px-space-md">
+<div class="font-label-md text-label-md text-on-surface">Pooja Venkatesh</div>
+<div class="text-on-surface-variant text-[12px]">Indiranagar, 12th Main</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">MK</div>
+<div>
+<span class="font-label-md text-label-md text-on-surface">Mukesh K.</span>
+<span class="block text-[11px] text-primary">★ 4.92 (412 jobs)</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="text-on-surface font-medium">Electrical Repair</div>
+<div class="text-on-surface-variant text-[12px]">Today, 11:30 AM (In-home)</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-primary-fixed text-on-primary-fixed font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                      IN_PROGRESS
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right font-label-md text-label-md font-semibold text-on-surface">
+                    ₹850
+                  </td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded hover:bg-surface-container" onclick="openBookingTimeline('#FX-89410')" title="View Timeline">
+<span class="material-symbols-outlined text-[18px]">timeline</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-primary rounded hover:bg-surface-container" onclick="reassignModal('#FX-89410')" title="Reassign Technician">
+<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: DISPUTED -->
+<tr class="bg-error-container/20 hover:bg-error-container/40 transition-colors" data-status="DISPUTED">
+<td class="py-space-md px-space-md font-label-md text-label-md font-semibold text-error">#FX-89392</td>
+<td class="py-space-md px-space-md">
+<div class="font-label-md text-label-md text-on-surface">Ananya Sen</div>
+<div class="text-on-surface-variant text-[12px]">Koramangala 4th Block</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-secondary text-on-secondary flex items-center justify-center text-[10px] font-bold">DR</div>
+<div>
+<span class="font-label-md text-label-md text-on-surface">Dinesh R.</span>
+<span class="block text-[11px] text-error">Scope Dispute</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="text-on-surface font-medium">Plumbing Overhaul</div>
+<div class="text-on-surface-variant text-[12px]">Today, 10:00 AM</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-error text-on-error font-semibold">
+<span class="material-symbols-outlined text-[12px]">warning</span>
+                      DISPUTED
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right font-label-md text-label-md font-semibold text-on-surface">
+                    ₹2,400
+                  </td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="px-space-xs py-1 rounded bg-secondary text-on-secondary font-label-sm text-label-sm hover:bg-on-secondary-fixed-variant" onclick="resolveDispute('#FX-89392')" title="Intervene">
+                        Mediate
+                      </button>
+</div>
+</td>
+</tr>
+<!-- Row 3: ON_THE_WAY -->
+<tr class="hover:bg-surface-container-low transition-colors" data-status="IN_TRANSIT">
+<td class="py-space-md px-space-md font-label-md text-label-md font-semibold text-primary">#FX-89425</td>
+<td class="py-space-md px-space-md">
+<div class="font-label-md text-label-md text-on-surface">Vikramaditya Rao</div>
+<div class="text-on-surface-variant text-[12px]">HSR Layout Sector 2</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">AK</div>
+<div>
+<span class="font-label-md text-label-md text-on-surface">Ajay Kumar</span>
+<span class="block text-[11px] text-primary">ETA: 6 mins (2.1 km)</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="text-on-surface font-medium">Deep AC Servicing</div>
+<div class="text-on-surface-variant text-[12px]">Today, 12:00 PM</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container text-on-surface font-semibold">
+<span class="material-symbols-outlined text-[12px] text-primary">directions_bike</span>
+                      ON_THE_WAY
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right font-label-md text-label-md font-semibold text-on-surface">
+                    ₹1,299
+                  </td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded hover:bg-surface-container" title="Live Map GPS">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: ARRIVED -->
+<tr class="hover:bg-surface-container-low transition-colors" data-status="IN_PROGRESS">
+<td class="py-space-md px-space-md font-label-md text-label-md font-semibold text-primary">#FX-89428</td>
+<td class="py-space-md px-space-md">
+<div class="font-label-md text-label-md text-on-surface">S. Meenakshi</div>
+<div class="text-on-surface-variant text-[12px]">Domlur Layout</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="flex items-center gap-space-xs">
+<div class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-[10px] font-bold">GS</div>
+<div>
+<span class="font-label-md text-label-md text-on-surface">Ganesh S.</span>
+<span class="block text-[11px] text-primary">At Doorstep</span>
+</div>
+</div>
+</td>
+<td class="py-space-md px-space-md">
+<div class="text-on-surface font-medium">Carpentry Door Repair</div>
+<div class="text-on-surface-variant text-[12px]">Today, 11:45 AM</div>
+</td>
+<td class="py-space-md px-space-md">
+<span class="inline-flex items-center gap-1 px-space-xs py-0.5 rounded-full font-label-sm text-label-sm bg-surface-container-high text-primary font-semibold">
+<span class="material-symbols-outlined text-[12px]">where_to_vote</span>
+                      ARRIVED
+                    </span>
+</td>
+<td class="py-space-md px-space-md text-right font-label-md text-label-md font-semibold text-on-surface">
+                    ₹499
+                  </td>
+<td class="py-space-md px-space-md text-center">
+<div class="flex items-center justify-center gap-1">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded hover:bg-surface-container" title="Check PIN">
+<span class="material-symbols-outlined text-[18px]">pin</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Empty State Container (Hidden by default, triggered by toggle) -->
+<div class="hidden p-space-2xl flex-col items-center justify-center text-center" id="bookingsEmptyState">
+<div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant mb-space-sm">
+<span class="material-symbols-outlined text-[32px]">filter_alt_off</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface">No matching active bookings</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1 max-w-sm">There are currently no active bookings matching this filter in Bengaluru Hub 1.</p>
+<button class="mt-space-md px-space-md py-space-xs rounded-lg bg-surface-container text-primary font-label-md text-label-md hover:bg-surface-container-high" onclick="filterBookings('ALL')">Reset Filter</button>
+</div>
+<!-- Footer Pagination & Summary -->
+<div class="p-space-md bg-surface-container-low flex flex-wrap items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant">
+<span class="">Showing 4 of 38 active bookings in selected cluster</span>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-sm py-1 rounded bg-surface-container-lowest text-on-surface shadow-sm disabled:opacity-50" disabled="">Previous</button>
+<span class="px-2">Page 1 of 10</span>
+<button class="px-space-sm py-1 rounded bg-surface-container-lowest text-on-surface shadow-sm hover:bg-surface-container">Next</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column (4 Cols): Category Management, Surge & Commission Sliders -->
+<div class="xl:col-span-4 flex flex-col gap-space-lg">
+<!-- SECTION C: Category & Service Fee Manager -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg">
+<div class="flex items-center justify-between pb-space-md">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase font-semibold">Pricing Engine</span>
+<h2 class="font-title-md text-title-md text-on-surface">Category Commission &amp; Surge</h2>
+</div>
+<button class="w-8 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-primary" onclick="toggleNewCategoryModal()" title="Add Category">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Surge Toggle Panel -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm mb-space-lg">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[22px]">bolt</span>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">Emergency Surge Dispatch</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Apply multiplier for high monsoon load</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" id="surgeToggle" onchange="toggleSurge(this)" type="checkbox">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between pt-space-xs text-secondary font-label-sm text-label-sm">
+<span class="">Current multiplier: <strong>1.4x Standard Base</strong></span>
+<span class="bg-secondary-fixed text-on-secondary-fixed px-1.5 py-0.5 rounded">Active in East Zone</span>
+</div>
+</div>
+<!-- Base Commission Configuration Slider -->
+<div class="flex flex-col gap-space-xs mb-space-lg">
+<div class="flex items-center justify-between font-label-md text-label-md">
+<span class="text-on-surface font-semibold">Marketplace Take Rate (Base Commission)</span>
+<span class="font-bold text-primary font-title-md text-title-md" id="commissionValueDisplay">12%</span>
+</div>
+<input class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" id="commissionSlider" max="25" min="5" oninput="updateCommission(this.value)" type="range" value="12">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant mt-1">
+<span class="">5% (Partner subsidy)</span>
+<span class="">12% standard</span>
+<span class="">25% premium max</span>
+</div>
+</div>
+<!-- Platform Trust Contribution -->
+<div class="p-space-md rounded-xl bg-surface-container mb-space-lg flex items-center justify-between">
+<div>
+<div class="font-label-md text-label-md text-on-surface font-semibold">FixIt Shield Contribution</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Insurance &amp; damage escrow per booking</div>
+</div>
+<div class="text-right">
+<span class="font-title-md text-title-md font-bold text-primary">₹25</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">/ confirmed job</span>
+</div>
+</div>
+<!-- Category Specific Control List -->
+<div class="flex flex-col gap-space-sm">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase font-semibold">Live Service Categories</span>
+<div class="space-y-space-xs">
+<!-- Category 1 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Electrical</span>
+<span class="block text-[11px] text-on-surface-variant">142 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">12% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+<!-- Category 2 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">plumbing</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Plumbing</span>
+<span class="block text-[11px] text-on-surface-variant">98 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">12% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+<!-- Category 3 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">cleaning_services</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Cleaning &amp; Sanitization</span>
+<span class="block text-[11px] text-on-surface-variant">210 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">10% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+<!-- Category 4 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">carpenter</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Carpentry &amp; Woodwork</span>
+<span class="block text-[11px] text-on-surface-variant">64 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">14% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+<!-- Category 5 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">format_paint</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Painting &amp; Waterproofing</span>
+<span class="block text-[11px] text-on-surface-variant">42 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">12% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+<!-- Category 6 -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">microwave</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Appliance Repair</span>
+<span class="block text-[11px] text-on-surface-variant">118 Active Pros</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<span class="font-label-sm text-label-sm bg-surface-container-lowest px-2 py-0.5 rounded text-primary font-semibold">15% Fee</span>
+<span class="w-2 h-2 rounded-full bg-primary" title="Operational"></span>
+</div>
+</div>
+</div>
+<button class="w-full mt-space-sm h-10 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1" onclick="saveCategorySettings()">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span class="">Update Commission Matrix</span>
+</button>
+</div>
+</section>
+<!-- Live Dispatch Telemetry Widget -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm p-space-lg">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm text-primary uppercase font-semibold">Hub Telemetry</span>
+<span class="material-symbols-outlined text-primary text-[20px]">sensors</span>
+</div>
+<h3 class="font-title-md text-title-md text-on-surface">Bengaluru Sub-Zone Load</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Live ping response between customer app requests &amp; nearby technician accept rates.</p>
+<div class="space-y-space-sm mt-space-md">
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="">Indiranagar &amp; Koramangala</span>
+<span class="text-primary font-semibold">92% Matched (&lt; 45s)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 92%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="">HSR Layout &amp; Bellandur</span>
+<span class="text-secondary font-semibold">78% Matched (High Load)</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-secondary rounded-full" style="width: 78%;"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between font-label-sm text-label-sm mb-1">
+<span class="">Whitefield Outer Ring</span>
+<span class="text-primary font-semibold">88% Matched</span>
+</div>
+<div class="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 88%;"></div>
+</div>
+</div>
+</div>
+<div class="mt-space-md p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between text-on-surface-variant font-body-sm text-body-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+              Avg. Turnaround Time
+            </span>
+<span class="font-semibold text-on-surface">18 mins door-to-door</span>
+</div>
+</section>
+</div>
+</div>
+<!-- Notification Toast Element (Fixed at bottom right) -->
+<div class="fixed bottom-6 right-6 max-w-md bg-inverse-surface text-inverse-on-surface px-space-md py-space-sm rounded-xl shadow-xl flex items-center gap-space-sm transition-all transform translate-y-32 opacity-0 pointer-events-none z-50" id="toastMessage">
+<span class="material-symbols-outlined text-primary-fixed text-[24px]" id="toastIcon">check_circle</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-semibold" id="toastTitle">System Notification</span>
+<span class="font-body-sm text-body-sm opacity-90" id="toastBody">Action processed successfully.</span>
+</div>
+</div>
+</div>
+<script>
+    function showToast(title, message, isError = false) {
+      const toast = document.getElementById('toastMessage');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastBody = document.getElementById('toastBody');
+      const toastIcon = document.getElementById('toastIcon');
+
+      if (!toast) return;
+
+      toastTitle.innerText = title;
+      toastBody.innerText = message;
+
+      if (isError) {
+        toastIcon.innerText = 'error';
+        toastIcon.className = 'material-symbols-outlined text-error text-[24px]';
+      } else {
+        toastIcon.innerText = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-primary-fixed text-[24px]';
+      }
+
+      toast.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+      }, 3500);
+    }
+
+    function switchTab(tabKey) {
+      const tabs = ['overview', 'verification', 'users', 'bookings', 'categories', 'disputes'];
+      tabs.forEach(t => {
+        const el = document.getElementById('tab-' + t);
+        if (el) {
+          if (t === tabKey) {
+            el.className = 'flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md bg-primary-container text-on-primary font-semibold transition-all';
+          } else {
+            el.className = 'flex items-center gap-space-xs px-space-md py-space-xs rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all';
+          }
+        }
+      });
+
+      if (tabKey === 'verification') {
+        document.getElementById('verificationQueueSection')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (tabKey === 'bookings') {
+        document.getElementById('liveBookingsSection')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        showToast('View Filter Active', `Switched view context to ${tabKey.toUpperCase()}`);
+      }
+    }
+
+    function approveApplicant(name, btnElement) {
+      const card = btnElement.closest('.bg-surface-container-lowest');
+      if (card) {
+        card.style.opacity = '0.5';
+        card.style.pointerEvents = 'none';
+        showToast('Partner Verified & Activated', `${name} has been issued active partner credentials and onboarded to Indiranagar zone.`);
+      }
+    }
+
+    function rejectApplicant(name) {
+      if (confirm(`Confirm rejection of application for ${name}? Notifications and reason checklist will be dispatched.`)) {
+        showToast('Application Rejected', `Profile for ${name} removed from immediate queue. Notice dispatched to phone/email.`, true);
+      }
+    }
+
+    function requestResubmit(name) {
+      showToast('Resubmission Dispatched', `SMS & In-App alert sent to ${name} requesting clear photograph of electrical trade certificate.`);
+    }
+
+    function filterBookings(status) {
+      const table = document.getElementById('bookingsTable');
+      const emptyState = document.getElementById('bookingsEmptyState');
+      const rows = table.querySelectorAll('tbody tr');
+      let visibleCount = 0;
+
+      rows.forEach(r => {
+        const rowStatus = r.getAttribute('data-status');
+        if (status === 'ALL' || rowStatus === status) {
+          r.style.display = '';
+          visibleCount++;
+        } else {
+          r.style.display = 'none';
+        }
+      });
+
+      if (visibleCount === 0) {
+        table.style.display = 'none';
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        table.style.display = 'table';
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+    }
+
+    function resolveDispute(bookingId) {
+      showToast('Mediation Drawer Opened', `Opening dedicated resolution desk and call transcript for ${bookingId}. Initiating ₹500 goodwill credit lock.`);
+    }
+
+    function openBookingTimeline(bookingId) {
+      showToast('Booking Telemetry', `Opening milestone log & GPS breadcrumb history for ${bookingId}.`);
+    }
+
+    function reassignModal(bookingId) {
+      showToast('Reassignment Engine', `Searching nearest verified technicians within 3.5 km for ${bookingId}.`);
+    }
+
+    function updateCommission(val) {
+      const display = document.getElementById('commissionValueDisplay');
+      if (display) display.innerText = val + '%';
+    }
+
+    function toggleSurge(checkbox) {
+      if (checkbox.checked) {
+        showToast('Surge Rate Activated', 'Surge dispatch multiplier active (1.4x standard pricing). Partner supply incentive notified.');
+      } else {
+        showToast('Surge Deactivated', 'Standard non-surge rates reinstated across Bengaluru Hub 1.');
+      }
+    }
+
+    function saveCategorySettings() {
+      const sliderVal = document.getElementById('commissionSlider')?.value || '12';
+      showToast('Settings Committed', `Marketplace take rate locked at ${sliderVal}% across registered categories.`);
+    }
+
+    function toggleNewCategoryModal() {
+      showToast('Category Studio', 'Category creation workflow modal initialized.');
+    }
+
+    function triggerGlobalRefresh() {
+      showToast('Live Sync Complete', 'Fetched latest telemetry from 142 active jobs and 38 pending handshakes.');
+    }
+
+    function setOpsState(state) {
+      const btnNormal = document.getElementById('viewModeAll');
+      const btnSurge = document.getElementById('viewModeSim');
+      const btnEmpty = document.getElementById('viewModeEmpty');
+
+      [btnNormal, btnSurge, btnEmpty].forEach(btn => {
+        if (btn) {
+          btn.className = 'px-space-sm py-1 rounded text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface transition-all';
+        }
+      });
+
+      if (state === 'normal') {
+        btnNormal.className = 'px-space-sm py-1 rounded text-primary font-label-sm text-label-sm bg-surface-container-lowest shadow-sm transition-all';
+        filterBookings('ALL');
+        showToast('Live Mode', 'Standard view with live incoming orders.');
+      } else if (state === 'surge') {
+        btnSurge.className = 'px-space-sm py-1 rounded text-secondary font-label-sm text-label-sm bg-surface-container-lowest shadow-sm transition-all';
+        const surgeCheckbox = document.getElementById('surgeToggle');
+        if (surgeCheckbox) surgeCheckbox.checked = true;
+        showToast('Surge Simulated', 'High demand condition active (+40% surcharge on labor rates).');
+      } else if (state === 'empty') {
+        btnEmpty.className = 'px-space-sm py-1 rounded text-primary font-label-sm text-label-sm bg-surface-container-lowest shadow-sm transition-all';
+        filterBookings('DISPATCH');
+        const emptyState = document.getElementById('bookingsEmptyState');
+        const table = document.getElementById('bookingsTable');
+        table.style.display = 'none';
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+        showToast('Empty Scenario', 'Simulating zero pending dispatches in queue.');
+      }
+    }
+  </script>
+</div></main></div>
+
+</body></html>

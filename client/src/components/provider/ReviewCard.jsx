@@ -8,7 +8,7 @@ const AVATAR_COLORS = {
 
 export default function ReviewCard({ review }) {
   return (
-    <div className="bg-surface p-6 rounded-2xl border border-outline-variant shadow-sm hover:shadow-md transition-shadow">
+    <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm transition-shadow hover:shadow-md">
       <div className="flex justify-between items-start mb-4">
         <div className="flex items-center gap-4">
           <div

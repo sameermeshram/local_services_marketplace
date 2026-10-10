@@ -1,30 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import StatusPill from "../components/ui/StatusPill";
+import BookingPagination from "../components/booking/BookingPagination";
+import { normalizeBookingStatus } from "../components/booking/bookingStatus";
 import { bookingService, providerService } from "../services/api";
 
 export default function ProviderDashboardPage() {
-  const [available, setAvailable] = useState(true);
+  const [available, setAvailable] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
   const [availabilityError, setAvailabilityError] = useState("");
+  const [availabilityUpdating, setAvailabilityUpdating] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pagination, setPagination] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [activeGroup, setActiveGroup] = useState("all");
 
   useEffect(() => {
     let active = true;
+    setLoading(true);
+    setError("");
 
     Promise.all([
-      bookingService.getProviderBookings(),
+      bookingService.getProviderBookings({ page, limit: 10 }),
       providerService.getProfile(),
     ])
       .then(([bookingsResponse, profileResponse]) => {
         if (!active) return;
         setBookings(bookingsResponse.data?.bookings ?? []);
-        if (typeof profileResponse.data?.profile?.isAvailable === "boolean") {
-          setAvailable(profileResponse.data.profile.isAvailable);
+        const nextPagination = bookingsResponse.data?.pagination ?? null;
+        setPagination(nextPagination);
+        if (nextPagination && nextPagination.page !== page) {
+          setPage(nextPagination.page);
         }
+        const savedAvailability = profileResponse.data?.profile?.isAvailable;
+        if (typeof savedAvailability === "boolean") setAvailable(savedAvailability);
       })
       .catch((requestError) => {
         if (active)
@@ -40,14 +53,20 @@ export default function ProviderDashboardPage() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [page, refreshKey]);
 
   const updateStatus = async (id, status) => {
+    if (status === "rejected" && !window.confirm("Reject this booking request?")) {
+      return;
+    }
     setUpdatingId(id);
     setError("");
     try {
       const response = await bookingService.updateStatus(id, status);
       const updatedBooking = response.data?.booking;
+      if (!updatedBooking) {
+        throw new Error("Booking status response was incomplete.");
+      }
       setBookings((current) =>
         current.map((booking) =>
           booking._id === id ? updatedBooking : booking,
@@ -64,20 +83,59 @@ export default function ProviderDashboardPage() {
   };
 
   const updateAvailability = async (nextAvailable) => {
+    if (available === nextAvailable || availabilityUpdating) return;
     const previous = available;
-    setAvailable(nextAvailable);
+    setAvailabilityUpdating(true);
     setAvailabilityError("");
 
     try {
-      await providerService.updateAvailability({ isAvailable: nextAvailable });
+      const response = await providerService.updateAvailability({
+        isAvailable: nextAvailable,
+      });
+      const savedAvailability = response.data?.isAvailable;
+      setAvailable(
+        typeof savedAvailability === "boolean" ? savedAvailability : nextAvailable,
+      );
     } catch (requestError) {
       setAvailable(previous);
       setAvailabilityError(
         requestError.response?.data?.message ||
           "Unable to update availability.",
       );
+    } finally {
+      setAvailabilityUpdating(false);
     }
   };
+
+  const bookingGroups = useMemo(
+    () => ({
+      all: bookings,
+      requests: bookings.filter(
+        (booking) => normalizeBookingStatus(booking.status) === "pending",
+      ),
+      upcoming: bookings.filter(
+        (booking) => normalizeBookingStatus(booking.status) === "accepted",
+      ),
+      active: bookings.filter(
+        (booking) => normalizeBookingStatus(booking.status) === "in_progress",
+      ),
+      completed: bookings.filter(
+        (booking) => normalizeBookingStatus(booking.status) === "completed",
+      ),
+    }),
+    [bookings],
+  );
+  const visibleBookings = bookingGroups[activeGroup];
+  const pendingCount = bookingGroups.requests.length;
+  const activeCount = bookingGroups.active.length;
+  const completedCount = bookingGroups.completed.length;
+  const groupOptions = [
+    { id: "all", label: "All Jobs", count: bookingGroups.all.length },
+    { id: "requests", label: "Requests", count: pendingCount },
+    { id: "upcoming", label: "Upcoming", count: bookingGroups.upcoming.length },
+    { id: "active", label: "Active", count: activeCount },
+    { id: "completed", label: "Completed", count: completedCount },
+  ];
 
   return (
     <AppLayout
@@ -96,9 +154,10 @@ export default function ProviderDashboardPage() {
             <div className="flex items-center bg-surface-container rounded-full p-1 border border-outline-variant">
               <button
                 type="button"
+                disabled={availabilityUpdating || available === null}
                 onClick={() => updateAvailability(true)}
-                className={`px-4 py-1.5 rounded-full text-label-md font-bold transition-all duration-300 ${
-                  available
+                className={`min-h-11 rounded-full px-4 py-1.5 text-label-md font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  available === true
                     ? "bg-primary text-on-primary shadow-sm"
                     : "text-on-surface-variant"
                 }`}
@@ -107,9 +166,10 @@ export default function ProviderDashboardPage() {
               </button>
               <button
                 type="button"
+                disabled={availabilityUpdating || available === null}
                 onClick={() => updateAvailability(false)}
-                className={`px-4 py-1.5 rounded-full text-label-md font-bold transition-all duration-300 ${
-                  !available
+                className={`min-h-11 rounded-full px-4 py-1.5 text-label-md font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                  available === false
                     ? "bg-primary text-on-primary shadow-sm"
                     : "text-on-surface-variant"
                 }`}
@@ -136,41 +196,96 @@ export default function ProviderDashboardPage() {
       <section className="p-margin-desktop max-w-6xl mx-auto space-y-8">
         <div>
           <h1 className="font-headline-lg text-headline-lg text-on-surface">
-            Booking Requests
+            Provider Jobs
           </h1>
           <p className="text-body-md text-on-surface-variant mt-2">
-            Review and manage service requests from your local customers.
+            Review requests and manage the jobs assigned to you.
           </p>
         </div>
 
+        {!loading && !error && (
+          <div className="grid gap-4 sm:grid-cols-3">
+            {[
+              ["Pending requests", pendingCount, "inbox"],
+              ["Active jobs", activeCount, "handyman"],
+              ["Completed jobs", completedCount, "task_alt"],
+            ].map(([label, value, icon]) => (
+              <div
+                key={label}
+                className="rounded-xl border border-outline-variant bg-surface-container-lowest p-5"
+              >
+                <MaterialIcon name={icon} className="text-primary" />
+                <p className="mt-3 text-sm text-on-surface-variant">{label}</p>
+                <p className="mt-1 text-2xl font-bold text-on-surface">{value}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!loading && !error && (
+          <div className="flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Provider jobs">
+            {groupOptions.map((group) => (
+              <button
+                key={group.id}
+                type="button"
+                role="tab"
+                aria-selected={activeGroup === group.id}
+                onClick={() => setActiveGroup(group.id)}
+                className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
+                  activeGroup === group.id
+                    ? "border-primary bg-primary text-on-primary"
+                    : "border-outline-variant bg-surface text-on-surface-variant hover:border-primary hover:text-primary"
+                }`}
+              >
+                {group.label} ({group.count})
+              </button>
+            ))}
+          </div>
+        )}
+
         {loading && (
-          <p className="py-12 text-center text-on-surface-variant">
+          <p className="py-12 text-center text-on-surface-variant" role="status">
             Loading requests...
           </p>
         )}
         {error && (
-          <p className="py-4 text-error" role="alert">
-            {error}
-          </p>
+          <div className="py-4 text-center" role="alert">
+            <p className="text-error">{error}</p>
+            <button
+              type="button"
+              onClick={() => setRefreshKey((current) => current + 1)}
+              className="mt-4 min-h-11 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
+              Try again
+            </button>
+          </div>
         )}
 
-        {!loading && !error && bookings.length === 0 && (
+        {!loading && !error && visibleBookings.length === 0 && (
           <div className="py-16 text-center border border-dashed border-outline-variant rounded-xl">
             <MaterialIcon
               name="event_available"
               className="text-primary text-5xl mb-3"
             />
             <h2 className="font-headline-sm text-headline-sm">
-              No booking requests yet
+              {activeGroup === "requests"
+                ? "No pending requests"
+                : activeGroup === "active"
+                  ? "No active jobs"
+                  : activeGroup === "completed"
+                    ? "No completed jobs"
+                    : "No provider jobs yet"}
             </h2>
             <p className="text-body-md text-on-surface-variant mt-2">
-              New customer requests will appear here.
+              {activeGroup === "requests"
+                ? "New customer requests will appear here."
+                : "Jobs from your provider account will appear here."}
             </p>
           </div>
         )}
 
         <div className="space-y-4">
-          {bookings.map((booking) => (
+          {visibleBookings.map((booking) => (
             <article
               key={booking._id}
               className="bg-surface-container-lowest border border-outline-variant rounded-xl p-6 space-y-5"
@@ -207,11 +322,13 @@ export default function ProviderDashboardPage() {
                   {booking.address}
                 </div>
               </div>
-              <p className="text-body-md text-on-surface-variant">
-                {booking.details}
-              </p>
+              {booking.details && (
+                <p className="whitespace-pre-wrap text-body-md text-on-surface-variant">
+                  {booking.details}
+                </p>
+              )}
               <div className="flex flex-wrap gap-3">
-                {booking.status === "pending" && (
+                {normalizeBookingStatus(booking.status) === "pending" && (
                   <>
                     <button
                       type="button"
@@ -231,7 +348,7 @@ export default function ProviderDashboardPage() {
                     </button>
                   </>
                 )}
-                {booking.status === "accepted" && (
+                {normalizeBookingStatus(booking.status) === "accepted" && (
                   <button
                     type="button"
                     disabled={updatingId === booking._id}
@@ -241,7 +358,7 @@ export default function ProviderDashboardPage() {
                     Start Service
                   </button>
                 )}
-                {booking.status === "in_progress" && (
+                {normalizeBookingStatus(booking.status) === "in_progress" && (
                   <button
                     type="button"
                     disabled={updatingId === booking._id}
@@ -255,6 +372,7 @@ export default function ProviderDashboardPage() {
             </article>
           ))}
         </div>
+        <BookingPagination pagination={pagination} onPageChange={setPage} />
       </section>
     </AppLayout>
   );
