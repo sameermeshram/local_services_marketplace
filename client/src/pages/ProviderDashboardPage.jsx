@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import StatusPill from "../components/ui/StatusPill";
@@ -7,6 +8,7 @@ import { normalizeBookingStatus } from "../components/booking/bookingStatus";
 import { bookingService, providerService } from "../services/api";
 
 export default function ProviderDashboardPage() {
+  const navigate = useNavigate();
   const [available, setAvailable] = useState(null);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -177,10 +179,14 @@ export default function ProviderDashboardPage() {
                 Offline
               </button>
             </div>
-            <MaterialIcon
-              name="notifications"
-              className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
-            />
+            <button
+              type="button"
+              aria-label="Notifications"
+              onClick={() => navigate("/notifications")}
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              <MaterialIcon name="notifications" />
+            </button>
           </div>
           {availabilityError && (
             <p

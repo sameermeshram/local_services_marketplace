@@ -10,7 +10,7 @@ import { categoryService, providerService } from "../services/api";
 const FILTER_OPTIONS = [
   { id: "recommended", label: "Recommended" },
   { id: "top-rated", label: "Top Rated" },
-  { id: "nearby", label: "Nearby" },
+  { id: "nearby", label: "Available Now" },
 ];
 
 export default function CustomerDashboardPage() {

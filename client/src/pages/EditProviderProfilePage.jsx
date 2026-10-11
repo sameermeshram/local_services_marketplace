@@ -1,9 +1,11 @@
 import { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLayout from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import { providerService } from "../services/api";
 
 export default function EditProviderProfilePage() {
+  const navigate = useNavigate();
   const [previewSrc, setPreviewSrc] = useState("");
   const [pincodes, setPincodes] = useState([]);
   const [experience, setExperience] = useState(0);
@@ -193,13 +195,18 @@ export default function EditProviderProfilePage() {
             </h2>
           </div>
           <div className="flex items-center gap-6">
-            <div className="relative group">
+            <button
+              type="button"
+              aria-label="Notifications"
+              onClick={() => navigate("/notifications")}
+              className="relative group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            >
               <MaterialIcon
                 name="notifications"
                 className="text-on-surface-variant cursor-pointer group-hover:text-primary transition-colors"
               />
               <span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full" />
-            </div>
+            </button>
             <MaterialIcon
               name="help"
               className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors"

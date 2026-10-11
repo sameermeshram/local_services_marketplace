@@ -1,4 +1,5 @@
 import MaterialIcon from "../ui/MaterialIcon";
+import { useNavigate } from "react-router-dom";
 
 export default function TopAppBar({
   title,
@@ -10,6 +11,8 @@ export default function TopAppBar({
   userSubtitle,
   children,
 }) {
+  const navigate = useNavigate();
+
   return (
     <header className="sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-outline-variant bg-surface/90 px-margin-mobile backdrop-blur-md md:ml-[280px] md:max-w-[calc(100%-280px)] md:px-margin-desktop">
       <div className="flex items-center gap-4 flex-1">
@@ -40,6 +43,7 @@ export default function TopAppBar({
         <button
           type="button"
           aria-label="Notifications"
+          onClick={() => navigate("/notifications")}
           className="flex min-h-11 min-w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:bg-primary/10 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:opacity-70"
         >
           <MaterialIcon name="notifications" className="text-[22px]" />

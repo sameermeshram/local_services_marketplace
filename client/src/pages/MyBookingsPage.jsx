@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import AppLayout, { MobileBottomNav, TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
@@ -55,6 +55,12 @@ export default function MyBookingsPage() {
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [reviewBooking, setReviewBooking] = useState(null);
+  const [reviewRating, setReviewRating] = useState(null);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState("");
+  const reviewDialogRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -127,6 +133,51 @@ export default function MyBookingsPage() {
     );
   };
 
+  const closeReviewDialog = (force = false) => {
+    if (reviewSubmitting && !force) return;
+    setReviewBooking(null);
+    setReviewRating(null);
+    setReviewComment("");
+    setReviewError("");
+  };
+
+  useEffect(() => {
+    if (!reviewBooking) return undefined;
+
+    const dialog = reviewDialogRef.current;
+    dialog?.querySelector("button[aria-checked='false']")?.focus();
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") closeReviewDialog();
+    };
+
+    dialog?.addEventListener("keydown", handleKeyDown);
+    return () => dialog?.removeEventListener("keydown", handleKeyDown);
+  }, [reviewBooking]);
+
+  const submitReview = async (event) => {
+    event.preventDefault();
+    if (!reviewBooking || reviewRating == null || reviewSubmitting) return;
+
+    setReviewSubmitting(true);
+    setReviewError("");
+    try {
+      await reviewService.createForBooking(reviewBooking._id, {
+        rating: reviewRating,
+        comment: reviewComment,
+      });
+      setReviewedBookingIds((current) => new Set(current).add(reviewBooking._id));
+      closeReviewDialog(true);
+      setMessage("Review submitted.");
+    } catch (requestError) {
+      setReviewError(
+        requestError.response?.data?.message || "Unable to submit review.",
+      );
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
+
   const handleBookingAction = async (booking, action) => {
     setError("");
     setMessage("");
@@ -148,21 +199,10 @@ export default function MyBookingsPage() {
     }
 
     if (action === "review") {
-      const rating = window.prompt("Rate this service from 1 to 5", "5");
-      if (!rating || ![1, 2, 3, 4, 5].includes(Number(rating))) return;
-      const comment = window.prompt("Add a comment", "");
-      try {
-        await reviewService.createForBooking(booking._id, {
-          rating: Number(rating),
-          comment: comment || "",
-        });
-        setReviewedBookingIds((current) => new Set(current).add(booking._id));
-        setMessage("Review submitted.");
-      } catch (requestError) {
-        setError(
-          requestError.response?.data?.message || "Unable to submit review.",
-        );
-      }
+      setReviewBooking(booking);
+      setReviewRating(null);
+      setReviewComment("");
+      setReviewError("");
       return;
     }
 
@@ -296,6 +336,128 @@ export default function MyBookingsPage() {
           </div>
         )}
       </div>
+      {reviewBooking && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-inverse-surface/50 p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) closeReviewDialog();
+          }}
+        >
+          <form
+            ref={reviewDialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="review-dialog-title"
+            onSubmit={submitReview}
+            className="w-full max-w-lg rounded-2xl bg-surface p-6 shadow-2xl sm:p-7"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2
+                  id="review-dialog-title"
+                  className="font-headline-sm text-headline-sm text-on-surface"
+                >
+                  Leave a review
+                </h2>
+                <p className="mt-1 text-body-sm text-on-surface-variant">
+                  Share your experience with {reviewBooking.provider?.name || "this provider"}.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={closeReviewDialog}
+                disabled={reviewSubmitting}
+                aria-label="Close review dialog"
+                className="rounded-full p-2 text-on-surface-variant hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+              >
+                <MaterialIcon name="close" />
+              </button>
+            </div>
+
+            <fieldset className="mt-6">
+              <legend className="text-label-md font-bold text-on-surface">
+                Rating
+              </legend>
+              <div
+                className="mt-2 flex gap-1"
+                role="radiogroup"
+                aria-label="Rate this service from 1 to 5 stars"
+              >
+                {[1, 2, 3, 4, 5].map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    role="radio"
+                    aria-checked={reviewRating === value}
+                    aria-label={`${value} star${value === 1 ? "" : "s"}`}
+                    onClick={() => setReviewRating(value)}
+                    disabled={reviewSubmitting}
+                    className={`rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 ${
+                      reviewRating >= value
+                        ? "text-secondary"
+                        : "text-on-surface-variant"
+                    }`}
+                  >
+                    <MaterialIcon name="star" className="text-2xl" />
+                  </button>
+                ))}
+              </div>
+              <p className="mt-1 text-label-md text-on-surface-variant" aria-live="polite">
+                {reviewRating ? `${reviewRating} of 5 stars selected` : "Select a rating to continue."}
+              </p>
+            </fieldset>
+
+            <div className="mt-5">
+              <label
+                htmlFor="review-comment"
+                className="text-label-md font-bold text-on-surface"
+              >
+                Comment <span className="font-normal text-on-surface-variant">(optional)</span>
+              </label>
+              <textarea
+                id="review-comment"
+                value={reviewComment}
+                maxLength={2000}
+                onChange={(event) => setReviewComment(event.target.value)}
+                rows={5}
+                aria-describedby="review-comment-count"
+                className="mt-2 w-full rounded-xl border border-outline-variant bg-surface p-3 text-body-md text-on-surface outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/30"
+              />
+              <p
+                id="review-comment-count"
+                className="mt-1 text-right text-label-md text-on-surface-variant"
+              >
+                {reviewComment.length}/2000
+              </p>
+            </div>
+
+            {reviewError && (
+              <p className="mt-4 text-body-sm text-error" role="alert">
+                {reviewError}
+              </p>
+            )}
+
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={closeReviewDialog}
+                disabled={reviewSubmitting}
+                className="min-h-11 rounded-xl border border-outline-variant px-5 py-3 font-semibold text-on-surface hover:bg-surface-container-low focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={reviewRating == null || reviewSubmitting}
+                className="min-h-11 rounded-xl bg-primary px-5 py-3 font-semibold text-on-primary hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {reviewSubmitting ? "Submitting..." : "Submit review"}
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </AppLayout>
   );
 }

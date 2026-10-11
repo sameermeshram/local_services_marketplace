@@ -5,15 +5,18 @@ import { notificationService } from "../services/api";
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  const loadNotifications = async () => {
+  const loadNotifications = async (force = false) => {
+    if (loading && !force) return;
     setLoading(true);
     setError("");
     try {
       const response = await notificationService.getAll();
       setNotifications(response.data?.notifications ?? []);
+      setUnreadCount(response.data?.unreadCount ?? 0);
     } catch (requestError) {
       setError(
         requestError.response?.data?.message || "Unable to load notifications.",
@@ -24,13 +27,14 @@ export default function NotificationsPage() {
   };
 
   useEffect(() => {
-    loadNotifications();
+    loadNotifications(true);
   }, []);
 
   const markRead = async (notification) => {
     if (notification.readAt) return;
     try {
       await notificationService.markRead(notification._id);
+      setUnreadCount((current) => Math.max(0, current - 1));
       setNotifications((current) =>
         current.map((item) =>
           item._id === notification._id
@@ -49,6 +53,7 @@ export default function NotificationsPage() {
   const markAllRead = async () => {
     try {
       await notificationService.markAllRead();
+      setUnreadCount(0);
       setNotifications((current) =>
         current.map((notification) => ({
           ...notification,
@@ -67,7 +72,7 @@ export default function NotificationsPage() {
     <AppLayout
       activeItem="notifications"
       mainClassName="md:ml-[280px] min-h-screen"
-      mobileNav={<MobileBottomNav activeItem="bookings" />}
+      mobileNav={<MobileBottomNav />}
       topBar={<TopAppBar title="Notifications" />}
     >
       <section className="p-margin-desktop max-w-4xl mx-auto space-y-6 pb-24 md:pb-0">
@@ -79,6 +84,11 @@ export default function NotificationsPage() {
             <p className="text-body-md text-on-surface-variant mt-2">
               Updates about your marketplace activity.
             </p>
+            {unreadCount > 0 && (
+              <p className="mt-2 text-label-md font-semibold text-primary" role="status">
+                {unreadCount} unread notification{unreadCount === 1 ? "" : "s"}
+              </p>
+            )}
           </div>
           <button
             type="button"
@@ -95,9 +105,17 @@ export default function NotificationsPage() {
           </p>
         )}
         {error && (
-          <p className="py-4 text-error" role="alert">
-            {error}
-          </p>
+          <div className="py-4" role="alert">
+            <p className="text-error">{error}</p>
+            <button
+              type="button"
+              onClick={() => loadNotifications()}
+              disabled={loading}
+              className="mt-3 min-h-11 rounded-lg border border-outline-variant px-4 py-2 text-sm font-semibold text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? "Retrying..." : "Try again"}
+            </button>
+          </div>
         )}
         {!loading && !error && notifications.length === 0 && (
           <div className="py-16 text-center border border-dashed border-outline-variant rounded-xl">
