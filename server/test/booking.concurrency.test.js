@@ -7,6 +7,7 @@ import { MongoMemoryServer } from "mongodb-memory-server";
 
 // These values are set before importing application modules. The test connects
 // directly to an ephemeral MongoDB instance and never uses the Atlas URI.
+process.env.MONGODB_URI = "mongodb://127.0.0.1:27017/local_services_marketplace_test";
 process.env.JWT_ACCESS_SECRET = "test-access-secret-that-is-at-least-thirty-two-characters";
 process.env.JWT_REFRESH_SECRET = "test-refresh-secret-that-is-at-least-thirty-two-characters";
 

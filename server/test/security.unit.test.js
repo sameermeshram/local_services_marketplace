@@ -1,6 +1,13 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import app from "../src/app.js";
+
+// The app config validates these values during import. This unit test does not
+// connect to MongoDB; the URI is only a syntactically valid local placeholder.
+process.env.MONGODB_URI = "mongodb://127.0.0.1:27017/local_services_marketplace_test";
+process.env.JWT_ACCESS_SECRET = "test-access-secret-that-is-at-least-thirty-two-characters";
+process.env.JWT_REFRESH_SECRET = "test-refresh-secret-that-is-at-least-thirty-two-characters";
+
+const { default: app } = await import("../src/app.js");
 
 function escapeRegex(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
