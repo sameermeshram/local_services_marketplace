@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import AppLayout from "../layouts/AppLayout";
+import AppLayout, { MobileBottomNav } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import { providerService } from "../services/api";
 
@@ -10,6 +10,10 @@ export default function EditProviderProfilePage() {
   const [pincodes, setPincodes] = useState([]);
   const [experience, setExperience] = useState(0);
   const [profile, setProfile] = useState(null);
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileLoadKey, setProfileLoadKey] = useState(0);
+  const [serviceAreaInput, setServiceAreaInput] = useState("");
+  const [serviceAreaError, setServiceAreaError] = useState("");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -18,9 +22,12 @@ export default function EditProviderProfilePage() {
   const [deletingDocument, setDeletingDocument] = useState(null);
   const photoInputRef = useRef(null);
   const fileInputRef = useRef(null);
+  const formRef = useRef(null);
 
   useEffect(() => {
     let active = true;
+    setProfileLoading(true);
+    setError("");
 
     providerService
       .getProfile()
@@ -45,12 +52,13 @@ export default function EditProviderProfilePage() {
               "Unable to load provider profile.",
           );
         }
-      });
+      })
+      .finally(() => { if (active) setProfileLoading(false); });
 
     return () => {
       active = false;
     };
-  }, []);
+  }, [profileLoadKey]);
 
   const handleDocumentUpload = async (file) => {
     if (!file || uploadingDocument) return;
@@ -89,10 +97,7 @@ export default function EditProviderProfilePage() {
 
   const handlePhotoChange = async (e) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => setPreviewSrc(ev.target.result);
-    reader.readAsDataURL(file);
+    if (!file || uploadingPhoto) return;
 
     const formData = new FormData();
     formData.append("photo", file);
@@ -100,8 +105,10 @@ export default function EditProviderProfilePage() {
     setError("");
     try {
       const response = await providerService.uploadPhoto(formData);
-      if (response.data?.profileImage)
+      if (response.data?.profileImage) {
         setPreviewSrc(response.data.profileImage);
+        setProfile((current) => current ? { ...current, profileImage: response.data.profileImage } : current);
+      }
       setMessage("Profile photo uploaded.");
     } catch (requestError) {
       setError(
@@ -110,6 +117,7 @@ export default function EditProviderProfilePage() {
       );
     } finally {
       setUploadingPhoto(false);
+      e.target.value = "";
     }
   };
 
@@ -154,6 +162,31 @@ export default function EditProviderProfilePage() {
     setPincodes((prev) => prev.filter((p) => p !== pin));
   };
 
+  const addPincode = () => {
+    const pin = serviceAreaInput.trim();
+    if (!/^\d{5,6}$/.test(pin)) {
+      setServiceAreaError("Enter a valid 5 or 6 digit postal code.");
+      return;
+    }
+    if (pincodes.includes(pin)) {
+      setServiceAreaError("This service area is already listed.");
+      return;
+    }
+    setPincodes((current) => [...current, pin]);
+    setServiceAreaInput("");
+    setServiceAreaError("");
+  };
+
+  const discardChanges = () => {
+    formRef.current?.reset();
+    setExperience(profile?.yearsExperience ?? 0);
+    setPincodes((profile?.serviceAreas ?? []).map((area) => area.pincode).filter(Boolean));
+    setServiceAreaInput("");
+    setServiceAreaError("");
+    setError("");
+    setMessage("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -162,7 +195,7 @@ export default function EditProviderProfilePage() {
     setError("");
 
     try {
-      await providerService.updateProfile({
+      const response = await providerService.updateProfile({
         bio: formData.get("bio"),
         serviceType: formData.get("serviceType"),
         pricePerVisit: Number(formData.get("pricePerVisit")),
@@ -172,6 +205,14 @@ export default function EditProviderProfilePage() {
         serviceDescription: formData.get("serviceDescription"),
         servicePrice: Number(formData.get("servicePrice")),
       });
+      if (response.data?.profile) {
+        setProfile((current) => ({
+          ...current,
+          ...response.data.profile,
+          user: response.data.user || current?.user,
+          categories: current?.categories,
+        }));
+      }
       setMessage("Profile changes saved.");
     } catch (requestError) {
       setError(
@@ -186,9 +227,11 @@ export default function EditProviderProfilePage() {
   return (
     <AppLayout
       activeItem="profile"
-      mainClassName="md:ml-[280px] min-h-screen"
+      role="provider"
+      mobileNav={<MobileBottomNav activeItem="profile" role="provider" />}
+      mainClassName="min-w-0 lg:ml-[250px]"
       topBar={
-        <header className="sticky top-0 z-40 w-full bg-surface/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-desktop h-16">
+        <header className="sticky top-0 z-40 flex h-[68px] w-full items-center justify-between border-b border-border-subtle bg-surface-container-lowest/95 px-4 backdrop-blur-md sm:px-6 lg:ml-[250px] lg:w-[calc(100%_-_250px)] lg:px-8">
           <div className="flex items-center gap-4">
             <h2 className="font-headline-sm text-headline-sm text-primary">
               Edit Provider Profile
@@ -205,12 +248,7 @@ export default function EditProviderProfilePage() {
                 name="notifications"
                 className="text-on-surface-variant cursor-pointer group-hover:text-primary transition-colors"
               />
-              <span className="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full" />
             </button>
-            <MaterialIcon
-              name="help"
-              className="text-on-surface-variant cursor-pointer hover:text-primary transition-colors"
-            />
             <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-outline-variant bg-surface-container">
               {profile?.profileImage ? (
                 <img
@@ -226,8 +264,8 @@ export default function EditProviderProfilePage() {
         </header>
       }
     >
-      <div className="p-margin-desktop max-w-5xl mx-auto space-y-gutter">
-        <div className="flex items-center justify-between">
+      <div className="mx-auto max-w-5xl space-y-gutter p-4 pb-24 sm:p-6 lg:p-8 lg:pb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">
               Service Provider Settings
@@ -240,8 +278,8 @@ export default function EditProviderProfilePage() {
           <button
             type="submit"
             form="provider-profile-form"
-            disabled={saving}
-            className="bg-primary text-on-primary px-8 py-3 rounded-lg font-bold shadow-lg hover:shadow-xl active:scale-[0.98] transition-all flex items-center gap-2"
+            disabled={saving || profileLoading || !profile}
+            className="flex min-h-11 items-center gap-2 self-start rounded-lg bg-primary px-6 py-3 font-bold text-on-primary shadow-lg transition-all hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 sm:self-auto"
           >
             <MaterialIcon name="save" />
             Save All Changes
@@ -258,8 +296,12 @@ export default function EditProviderProfilePage() {
           </p>
         )}
 
-        <form
-          key={profile?._id || "provider-profile-form"}
+        {profileLoading && <div className="space-y-4" role="status" aria-label="Loading provider profile"><div className="h-32 animate-pulse rounded-xl bg-surface-container-high" /><div className="h-80 animate-pulse rounded-xl bg-surface-container-high" /></div>}
+        {!profileLoading && !profile && error && <button type="button" onClick={() => setProfileLoadKey((key) => key + 1)} className="min-h-11 rounded-lg border border-outline-variant px-4 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Try again</button>}
+
+        {!profileLoading && profile && <form
+          ref={formRef}
+          key={`${profile?._id || "provider-profile"}-${profile?.updatedAt || "initial"}`}
           className="grid grid-cols-12 gap-gutter"
           id="provider-profile-form"
           onSubmit={handleSubmit}
@@ -282,7 +324,15 @@ export default function EditProviderProfilePage() {
               </div>
               <label
                 htmlFor="photo-upload"
-                className="absolute bottom-1 right-1 bg-primary text-on-primary w-10 h-10 rounded-full flex items-center justify-center cursor-pointer shadow-md hover:bg-primary-container transition-colors"
+                aria-label="Upload provider profile photo"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (["Enter", " "].includes(event.key)) {
+                    event.preventDefault();
+                    photoInputRef.current?.click();
+                  }
+                }}
+                className="absolute bottom-1 right-1 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-primary text-on-primary shadow-md transition-colors hover:bg-primary-container focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
               >
                 <MaterialIcon name="photo_camera" />
                 <input
@@ -291,6 +341,8 @@ export default function EditProviderProfilePage() {
                   type="file"
                   className="hidden"
                   accept="image/jpeg,image/png,image/webp"
+                  disabled={uploadingPhoto}
+                  onClick={(event) => event.stopPropagation()}
                   onChange={handlePhotoChange}
                 />
               </label>
@@ -310,40 +362,41 @@ export default function EditProviderProfilePage() {
             </h3>
             <div className="space-y-4">
               <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                <label htmlFor="provider-bio" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                   Professional Bio
                 </label>
                 <textarea
                   name="bio"
+                  id="provider-bio"
                   defaultValue={profile?.bio || ""}
+                  maxLength={2000}
                   className="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all min-h-[160px]"
                   placeholder="Tell clients about your expertise, your approach to work, and why they should choose you..."
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                  <label htmlFor="provider-service-type" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                     Service Category
                   </label>
                   <select
                     name="serviceType"
-                    defaultValue={
-                      profile?.categories?.[0]?.slug || ""
-                    }
+                    id="provider-service-type"
+                    defaultValue={(["electrician", "electrical_repairs"].includes(profile?.user?.serviceType || profile?.categories?.[0]?.slug) ? "electrical" : profile?.user?.serviceType || profile?.categories?.[0]?.slug || "")}
                     className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                   >
                     <option value="" disabled>
                       Select a service category
                     </option>
-                    <option value="electrician">Electrical Repairs</option>
+                    <option value="electrical">Electrical Repairs</option>
                     <option value="plumbing">Plumbing</option>
+                    <option value="hvac">Heating and Cooling</option>
                     <option value="carpentry">Carpentry</option>
-                    <option value="painter">Painting</option>
                     <option value="cleaning">Cleaning</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                  <label htmlFor="provider-price-per-visit" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                     Price Per Visit (Min)
                   </label>
                   <div className="relative">
@@ -353,6 +406,9 @@ export default function EditProviderProfilePage() {
                     <input
                       type="number"
                       name="pricePerVisit"
+                      id="provider-price-per-visit"
+                      min="0"
+                      step="0.01"
                       defaultValue={profile?.pricePerVisit ?? 0}
                       className="w-full bg-surface border border-outline-variant rounded-lg p-3 pl-8 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                     />
@@ -361,34 +417,41 @@ export default function EditProviderProfilePage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                  <label htmlFor="provider-service-name" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                     Primary Service
                   </label>
                   <input
                     name="serviceName"
+                    id="provider-service-name"
+                    maxLength={120}
                     defaultValue={profile?.services?.[0]?.name || ""}
                     className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                  <label htmlFor="provider-service-price" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                     Service Price
                   </label>
                   <input
                     type="number"
                     name="servicePrice"
+                    id="provider-service-price"
+                    min="0"
+                    step="0.01"
                     defaultValue={profile?.services?.[0]?.price ?? 0}
                     className="w-full bg-surface border border-outline-variant rounded-lg p-3 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
                   />
                 </div>
               </div>
               <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                <label htmlFor="provider-service-description" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                   Service Description
                 </label>
                 <textarea
                   name="serviceDescription"
+                  id="provider-service-description"
                   defaultValue={profile?.services?.[0]?.description || ""}
+                  maxLength={500}
                   rows={3}
                   placeholder="Describe what is included in this service."
                   className="w-full bg-surface border border-outline-variant rounded-lg p-4 font-body-md text-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
@@ -403,23 +466,26 @@ export default function EditProviderProfilePage() {
             </h3>
             <div className="space-y-6">
               <div>
-                <label className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
+                <label htmlFor="provider-experience" className="block font-label-md text-label-md text-on-surface-variant mb-1 ml-1">
                   Years of Experience
                 </label>
                 <input
                   type="range"
+                  id="provider-experience"
                   min="0"
-                  max="30"
+                  max="80"
                   value={experience}
+                  aria-valuetext={`${experience} years`}
+                  aria-describedby="provider-experience-value"
                   onChange={(e) => setExperience(Number(e.target.value))}
                   className="w-full accent-primary h-2 bg-surface-container-high rounded-lg appearance-none cursor-pointer"
                 />
                 <div className="flex justify-between mt-2 text-on-surface-variant font-body-sm">
                   <span>New Professional</span>
-                  <span className="text-primary font-bold">
+                  <span id="provider-experience-value" className="text-primary font-bold" aria-live="polite">
                     {experience} Years Experience
                   </span>
-                  <span>Expert (30+)</span>
+                  <span>Expert (80)</span>
                 </div>
               </div>
               <div>
@@ -433,18 +499,17 @@ export default function EditProviderProfilePage() {
                       className="bg-primary-container/20 text-primary-container px-3 py-1 rounded-full flex items-center gap-1 font-label-md border border-primary/20"
                     >
                       {pin}
-                      <button type="button" onClick={() => removePincode(pin)}>
+                      <button type="button" aria-label={`Remove service area ${pin}`} onClick={() => removePincode(pin)} className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">
                         <MaterialIcon name="close" className="text-[14px]" />
                       </button>
                     </span>
                   ))}
-                  <button
-                    type="button"
-                    className="border border-dashed border-outline text-on-surface-variant px-3 py-1 rounded-full font-label-md hover:bg-surface-container-high transition-colors"
-                  >
-                    + Add New
-                  </button>
                 </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                  <input type="text" inputMode="numeric" pattern="[0-9]{5,6}" maxLength={6} value={serviceAreaInput} onChange={(event) => { setServiceAreaInput(event.target.value.replace(/\D/g, "")); setServiceAreaError(""); }} aria-label="New service area postal code" aria-describedby={serviceAreaError ? "service-area-error" : undefined} placeholder="Add a 5 or 6 digit postal code" className="min-h-11 min-w-0 flex-1 rounded-lg border border-outline-variant bg-surface px-3 text-sm text-on-surface focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30" />
+                  <button type="button" onClick={addPincode} className="min-h-11 rounded-lg border border-outline-variant px-4 text-sm font-semibold text-on-surface hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Add area</button>
+                </div>
+                {serviceAreaError && <p id="service-area-error" className="mt-2 text-sm text-error" role="alert">{serviceAreaError}</p>}
               </div>
             </div>
           </div>
@@ -493,13 +558,15 @@ export default function EditProviderProfilePage() {
             <div
               role="button"
               tabIndex={0}
+              aria-label="Upload verification document"
+              aria-disabled={uploadingDocument}
               onClick={() =>
                 !uploadingDocument && fileInputRef.current?.click()
               }
               onKeyDown={(e) =>
-                e.key === "Enter" &&
+                ["Enter", " "].includes(e.key) &&
                 !uploadingDocument &&
-                fileInputRef.current?.click()
+                (e.preventDefault(), fileInputRef.current?.click())
               }
               onDragOver={(e) => e.preventDefault()}
               onDragLeave={(e) => e.preventDefault()}
@@ -531,9 +598,11 @@ export default function EditProviderProfilePage() {
                 className="hidden"
                 accept="image/jpeg,image/png,image/webp,application/pdf"
                 disabled={uploadingDocument}
+                onClick={(event) => event.stopPropagation()}
                 onChange={(e) => {
                   const selected = e.target.files?.[0];
                   if (selected) handleDocumentUpload(selected);
+                  e.target.value = "";
                 }}
               />
             </div>
@@ -593,31 +662,26 @@ export default function EditProviderProfilePage() {
             </div>
           </div>
 
-          <div className="col-span-12 pt-8 flex items-center justify-between border-t border-outline-variant">
-            <button
-              type="button"
-              className="text-error font-bold flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-error/5 transition-colors"
-            >
-              <MaterialIcon name="delete_forever" />
-              Deactivate Account
-            </button>
-            <div className="flex gap-4">
+          <div className="col-span-12 flex flex-wrap items-center justify-end gap-3 border-t border-outline-variant pt-8">
+            <div className="flex flex-wrap justify-end gap-3">
               <button
                 type="button"
-                className="border border-outline text-on-surface font-bold px-8 py-3 rounded-lg hover:bg-surface-container-high transition-all"
+                onClick={discardChanges}
+                disabled={saving}
+                className="min-h-11 rounded-lg border border-outline px-6 py-3 font-bold text-on-surface transition-all hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 Discard Changes
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-secondary-container text-on-secondary-container font-bold px-12 py-3 rounded-lg shadow-lg hover:shadow-xl active:scale-[0.95] transition-all"
+                className="min-h-11 rounded-lg bg-secondary-container px-8 py-3 font-bold text-on-secondary-container shadow-lg transition-all hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 active:scale-[0.95] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save Changes"}
               </button>
             </div>
           </div>
-        </form>
+        </form>}
       </div>
     </AppLayout>
   );

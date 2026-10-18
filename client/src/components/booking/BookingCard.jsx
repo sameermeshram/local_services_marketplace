@@ -31,15 +31,6 @@ function BookingActions({ actions, onAction, disabled }) {
           Cancel
         </button>
       )}
-      {actions.includes("track") && (
-        <button
-          type="button"
-          onClick={() => onAction("track")}
-          className="w-full rounded-lg bg-primary px-6 py-2 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-container focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 md:w-auto"
-        >
-          Track job
-        </button>
-      )}
       {actions.includes("review") && (
         <button
           type="button"
@@ -123,7 +114,7 @@ export default function BookingCard({
         <BookingActions
           actions={booking.actions}
           onAction={(action) => {
-            if (action === "details" || action === "track") {
+            if (action === "details") {
               setDetailsOpen(true);
             }
             onAction(action);
@@ -167,14 +158,11 @@ export default function BookingCard({
               <div className="flex items-start gap-3">
                 <MaterialIcon name="location_on" className="text-primary" />
                 <div>
-                  <h4 className="font-semibold text-on-surface">Job tracking</h4>
+                  <h4 className="font-semibold text-on-surface">Service status</h4>
                   <p className="mt-1 text-sm text-on-surface-variant">
                     {normalizedStatus === "in_progress"
-                      ? "Your provider has started work at the service location."
-                      : "Your provider’s booking status is updated by the service provider."}
-                  </p>
-                  <p className="mt-2 text-xs text-on-surface-variant">
-                    Live GPS, ETA, distance, and map data are not available for this booking.
+                      ? "Your provider marked this service as in progress."
+                      : "Your provider updates the booking status here."}
                   </p>
                 </div>
               </div>
@@ -182,7 +170,7 @@ export default function BookingCard({
           )}
           {(normalizedStatus === "rejected" || normalizedStatus === "cancelled") && (
             <p className="mt-5 rounded-2xl border border-error/20 bg-error/5 p-4 text-sm text-error" role="status">
-              This booking has ended and no further job tracking is available.
+              This booking has ended.
             </p>
           )}
           <button

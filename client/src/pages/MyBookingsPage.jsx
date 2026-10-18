@@ -1,66 +1,68 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import AppLayout, { MobileBottomNav, TopAppBar } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import FilterPills from "../components/ui/FilterPills";
 import BookingCard from "../components/booking/BookingCard";
 import BookingPagination from "../components/booking/BookingPagination";
 import {
-  isActiveBookingStatus,
   normalizeBookingStatus,
 } from "../components/booking/bookingStatus";
 import { bookingService, reviewService } from "../services/api";
 
 const TAB_OPTIONS = [
   { id: "all", label: "All Bookings" },
-  { id: "pending", label: "Pending" },
-  { id: "upcoming", label: "Upcoming" },
-  { id: "completed", label: "Completed" },
-  { id: "cancelled", label: "Cancelled" },
+  { id: "active", label: "Active" },
+  { id: "past", label: "Past" },
 ];
 
 function matchesTab(booking, tab) {
   const status = normalizeBookingStatus(booking.status);
   if (tab === "all") return true;
-  if (tab === "pending") return status === "pending";
-  if (tab === "upcoming") return isActiveBookingStatus(status);
-  if (tab === "completed") return status === "completed";
-  return ["rejected", "cancelled"].includes(status);
+  if (tab === "active") return ["pending", "accepted", "in_progress"].includes(status);
+  if (tab === "past") return ["completed", "rejected", "cancelled"].includes(status);
+  return true;
 }
 
 function statusGroupForTab(tab) {
-  if (["pending", "upcoming"].includes(tab)) return "active";
-  if (["completed", "cancelled"].includes(tab)) return "past";
+  if (tab === "active") return "active";
   return undefined;
 }
 
 function getEmptyState(tab) {
   const copy = {
     all: ["No bookings yet", "Your service requests will appear here."],
-    pending: ["No pending bookings", "New service requests awaiting a provider response will appear here."],
-    upcoming: ["No upcoming bookings", "Accepted service appointments will appear here."],
-    completed: ["No completed bookings", "Completed services will appear here."],
-    cancelled: ["No cancelled bookings", "Rejected or cancelled requests will appear here."],
+    active: ["No active bookings", "Bookings awaiting a response or currently in progress will appear here."],
+    past: ["No past bookings", "Completed, rejected, and cancelled bookings will appear here."],
   };
   return copy[tab];
 }
 
 export default function MyBookingsPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const focusedBookingId = searchParams.get("booking");
   const [activeTab, setActiveTab] = useState("all");
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
   const [reviewedBookingIds, setReviewedBookingIds] = useState(new Set());
+  const [reviewsLoaded, setReviewsLoaded] = useState(false);
+  const [reviewLoadError, setReviewLoadError] = useState("");
+  const [reviewLoadKey, setReviewLoadKey] = useState(0);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [bookingActionId, setBookingActionId] = useState(null);
+  const bookingActionRef = useRef(null);
   const [reviewBooking, setReviewBooking] = useState(null);
   const [reviewRating, setReviewRating] = useState(null);
   const [reviewComment, setReviewComment] = useState("");
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const reviewSubmittingRef = useRef(false);
   const [reviewError, setReviewError] = useState("");
   const reviewDialogRef = useRef(null);
+  const reviewReturnFocusRef = useRef(null);
 
   useEffect(() => {
     let active = true;
@@ -68,17 +70,16 @@ export default function MyBookingsPage() {
     setError("");
 
     const statusGroup = statusGroupForTab(activeTab);
+    const params = focusedBookingId || activeTab === "past"
+      ? {}
+      : { page, limit: 10, ...(statusGroup ? { statusGroup } : {}) };
     bookingService
-      .getMine({
-        page,
-        limit: 10,
-        ...(statusGroup ? { statusGroup } : {}),
-      })
+      .getMine(params)
       .then((response) => {
         if (!active) return;
         setBookings(response.data?.bookings ?? []);
         const nextPagination = response.data?.pagination ?? null;
-        setPagination(nextPagination);
+        setPagination(focusedBookingId || activeTab === "past" ? null : nextPagination);
         if (nextPagination && nextPagination.page !== page) {
           setPage(nextPagination.page);
         }
@@ -96,10 +97,12 @@ export default function MyBookingsPage() {
     return () => {
       active = false;
     };
-  }, [activeTab, page, refreshKey]);
+  }, [activeTab, page, refreshKey, focusedBookingId]);
 
   useEffect(() => {
     let active = true;
+    setReviewsLoaded(false);
+    setReviewLoadError("");
     reviewService
       .getMine()
       .then((response) => {
@@ -112,18 +115,21 @@ export default function MyBookingsPage() {
               .map((booking) => booking._id || booking),
           ),
         );
+        setReviewsLoaded(true);
       })
       .catch(() => {
-        // Reviews are optional to the booking history experience.
+        if (active) setReviewLoadError("Review eligibility could not be confirmed.");
       });
     return () => {
       active = false;
     };
-  }, []);
+  }, [reviewLoadKey]);
 
   const visibleBookings = bookings.filter((booking) =>
     matchesTab(booking, activeTab),
   );
+  const focusedBookingMissing = focusedBookingId && !loading && !error &&
+    !bookings.some((booking) => booking._id === focusedBookingId);
 
   const updateBooking = (updatedBooking) => {
     setBookings((current) =>
@@ -145,20 +151,34 @@ export default function MyBookingsPage() {
     if (!reviewBooking) return undefined;
 
     const dialog = reviewDialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     dialog?.querySelector("button[aria-checked='false']")?.focus();
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") closeReviewDialog();
+      if (event.key === "Tab" && dialog) {
+        const focusable = [...dialog.querySelectorAll("button:not([disabled]), textarea:not([disabled]), [href]")];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus(); }
+      }
     };
 
     dialog?.addEventListener("keydown", handleKeyDown);
-    return () => dialog?.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      dialog?.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = previousOverflow;
+      reviewReturnFocusRef.current?.focus();
+    };
   }, [reviewBooking]);
 
   const submitReview = async (event) => {
     event.preventDefault();
-    if (!reviewBooking || reviewRating == null || reviewSubmitting) return;
+    if (!reviewBooking || reviewRating == null || reviewSubmittingRef.current) return;
 
+    reviewSubmittingRef.current = true;
     setReviewSubmitting(true);
     setReviewError("");
     try {
@@ -174,6 +194,7 @@ export default function MyBookingsPage() {
         requestError.response?.data?.message || "Unable to submit review.",
       );
     } finally {
+      reviewSubmittingRef.current = false;
       setReviewSubmitting(false);
     }
   };
@@ -185,7 +206,10 @@ export default function MyBookingsPage() {
     if (action === "details" || action === "track") return;
 
     if (action === "cancel") {
+      if (bookingActionRef.current) return;
       if (!window.confirm("Cancel this booking request?")) return;
+      bookingActionRef.current = booking._id;
+      setBookingActionId(booking._id);
       try {
         const response = await bookingService.cancel(booking._id);
         updateBooking(response.data.booking);
@@ -194,11 +218,15 @@ export default function MyBookingsPage() {
         setError(
           requestError.response?.data?.message || "Unable to cancel booking.",
         );
+      } finally {
+        bookingActionRef.current = null;
+        setBookingActionId(null);
       }
       return;
     }
 
     if (action === "review") {
+      reviewReturnFocusRef.current = document.activeElement;
       setReviewBooking(booking);
       setReviewRating(null);
       setReviewComment("");
@@ -206,27 +234,6 @@ export default function MyBookingsPage() {
       return;
     }
 
-    if (action !== "reschedule") return;
-    const date = window.prompt("Enter the new service date", booking.date);
-    if (!date) return;
-    const timeSlot = window.prompt(
-      "Enter time window: morning, afternoon, or evening",
-      booking.timeSlot,
-    );
-    if (!timeSlot) return;
-
-    try {
-      const response = await bookingService.reschedule(booking._id, {
-        date,
-        timeSlot,
-      });
-      updateBooking(response.data.booking);
-      setMessage("Booking rescheduled.");
-    } catch (requestError) {
-      setError(
-        requestError.response?.data?.message || "Unable to reschedule booking.",
-      );
-    }
   };
 
   const [emptyTitle, emptyDescription] = getEmptyState(activeTab);
@@ -234,17 +241,15 @@ export default function MyBookingsPage() {
   return (
     <AppLayout
       activeItem="bookings"
-      mainClassName="md:ml-[280px] min-h-screen"
+      mainClassName="min-w-0 lg:ml-[250px]"
       mobileNav={<MobileBottomNav activeItem="bookings" />}
       topBar={
         <TopAppBar
           title="My Bookings"
-          showSearch
-          searchPlaceholder="Search bookings..."
         />
       }
     >
-      <div className="mx-auto max-w-6xl p-margin-desktop pb-24 md:pb-0">
+      <div className="mx-auto max-w-6xl space-y-6 p-4 pb-24 sm:p-6 lg:p-8 lg:pb-0">
         <FilterPills
           variant="tabs"
           options={TAB_OPTIONS}
@@ -254,6 +259,13 @@ export default function MyBookingsPage() {
             setPage(1);
           }}
         />
+
+        {focusedBookingId && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4">
+            <p className="text-sm font-medium text-on-surface">Showing the booking linked from your notification.</p>
+            <button type="button" onClick={() => setSearchParams({})} className="min-h-11 shrink-0 rounded-lg border border-outline-variant px-3 text-sm font-semibold text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Show all bookings</button>
+          </div>
+        )}
 
         {loading && (
           <p className="py-12 text-center text-on-surface-variant" role="status">
@@ -272,24 +284,34 @@ export default function MyBookingsPage() {
             </button>
           </div>
         )}
+        {focusedBookingMissing && (
+          <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 text-center" role="status">
+            <h2 className="font-semibold text-on-surface">Booking not found</h2>
+            <p className="mt-2 text-sm text-on-surface-variant">This booking is not available in your account.</p>
+            <button type="button" onClick={() => setSearchParams({})} className="mt-4 min-h-11 rounded-lg border border-outline-variant px-4 text-sm font-semibold text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Return to all bookings</button>
+          </div>
+        )}
         {message && (
           <p className="py-4 text-center text-primary" role="status">
             {message}
           </p>
         )}
+        {reviewLoadError && <p className="text-center text-sm text-error" role="status">{reviewLoadError} <button type="button" onClick={() => setReviewLoadKey((key) => key + 1)} className="font-semibold underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">Try again</button></p>}
 
         {!loading && !error && visibleBookings.length > 0 && (
           <div className="space-y-4">
-            {visibleBookings.map((booking) => {
+            {(focusedBookingId ? visibleBookings.filter((booking) => booking._id === focusedBookingId) : visibleBookings).map((booking) => {
               const status = normalizeBookingStatus(booking.status);
               const actions =
                 status === "pending"
-                  ? ["reschedule", "cancel", "details"]
-                  : isActiveBookingStatus(status)
-                    ? ["track", "details"]
+                  ? ["cancel", "details"]
+                  : status === "accepted"
+                    ? ["details"]
+                    : status === "in_progress"
+                      ? ["details"]
                     : status === "completed"
                       ? [
-                          ...(reviewedBookingIds.has(booking._id) ? [] : ["review"]),
+                          ...(reviewsLoaded && !reviewedBookingIds.has(booking._id) ? ["review"] : []),
                           "details",
                         ]
                       : ["details"];
@@ -298,6 +320,7 @@ export default function MyBookingsPage() {
                 <BookingCard
                   key={booking._id}
                   onAction={(action) => handleBookingAction(booking, action)}
+                  actionDisabled={bookingActionId !== null}
                   booking={{
                     ...booking,
                     serviceIcon: "build",
@@ -311,11 +334,11 @@ export default function MyBookingsPage() {
           </div>
         )}
 
-        {!loading && !error && visibleBookings.length > 0 && (
+        {!focusedBookingId && !loading && !error && visibleBookings.length > 0 && (
           <BookingPagination pagination={pagination} onPageChange={setPage} />
         )}
 
-        {!loading && !error && visibleBookings.length === 0 && (
+        {!focusedBookingId && !loading && !error && visibleBookings.length === 0 && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <MaterialIcon
               name="calendar_today"
@@ -390,8 +413,16 @@ export default function MyBookingsPage() {
                     type="button"
                     role="radio"
                     aria-checked={reviewRating === value}
+                    tabIndex={reviewRating === value || (reviewRating == null && value === 1) ? 0 : -1}
                     aria-label={`${value} star${value === 1 ? "" : "s"}`}
                     onClick={() => setReviewRating(value)}
+                    onKeyDown={(event) => {
+                      if (!["ArrowRight", "ArrowLeft", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+                      event.preventDefault();
+                      const next = Math.min(5, Math.max(1, value + (["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1)));
+                      setReviewRating(next);
+                      reviewDialogRef.current?.querySelector(`[aria-label="${next} star${next === 1 ? "" : "s"}"]`)?.focus();
+                    }}
                     disabled={reviewSubmitting}
                     className={`rounded-lg p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 ${
                       reviewRating >= value

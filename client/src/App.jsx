@@ -20,7 +20,7 @@ export default function App() {
       <Route path="/login" element={<LoginRegisterPage />} />
       <Route path="/verify-email" element={<VerifyEmail />} />
       <Route path="/" element={protectedPage(<CustomerDashboardPage />)} />
-      <Route path="/bookings" element={protectedPage(<MyBookingsPage />)} />
+      <Route path="/bookings" element={protectedPage(<MyBookingsPage />, "customer")} />
       <Route
         path="/notifications"
         element={protectedPage(<NotificationsPage />)}

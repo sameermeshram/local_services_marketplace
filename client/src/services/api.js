@@ -73,6 +73,9 @@ api.interceptors.response.use(
     } catch (refreshError) {
       refreshPromise = null;
       clearAccessToken();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("auth:session-expired"));
+      }
       return Promise.reject(refreshError);
     }
   }
@@ -91,6 +94,10 @@ export const adminService = {
   getPendingProviders: () => unwrap(api.get("/admin/providers/pending")),
   approveProvider: (id) => unwrap(api.patch(`/admin/providers/${id}/approve`)),
   rejectProvider: (id, reason) => unwrap(api.patch(`/admin/providers/${id}/reject`, { reason })),
+  getVerificationDocument: (id, index) =>
+    api.get(`/admin/providers/${id}/verification-documents/${index}`, {
+      responseType: "blob",
+    }),
   getVerificationDocumentUrl: (id, index) => `${API_BASE_URL}/admin/providers/${id}/verification-documents/${index}`,
 };
 
@@ -115,7 +122,6 @@ export const providerService = {
         headers: { "Content-Type": "multipart/form-data" },
       })
     ),
-  getDashboard: () => unwrap(api.get("/providers/me/dashboard")),
 };
 
 export const bookingService = {
@@ -123,12 +129,8 @@ export const bookingService = {
   getMine: (params) => unwrap(api.get("/bookings/me", { params })),
   getProviderBookings: (params) => unwrap(api.get("/bookings/provider", { params })),
   updateStatus: (id, status) => unwrap(api.patch(`/bookings/${id}/status`, { status })),
-  getById: (id) => unwrap(api.get(`/bookings/${id}`)),
   cancel: (id, payload) => unwrap(api.patch(`/bookings/${id}/cancel`, payload)),
   reschedule: (id, payload) => unwrap(api.patch(`/bookings/${id}/reschedule`, payload)),
-  accept: (id) => unwrap(api.patch(`/bookings/${id}/accept`)),
-  reject: (id, payload) => unwrap(api.patch(`/bookings/${id}/reject`, payload)),
-  complete: (id) => unwrap(api.patch(`/bookings/${id}/complete`)),
 };
 
 export const reviewService = {

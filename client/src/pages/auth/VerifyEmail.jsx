@@ -128,16 +128,6 @@ export default function VerifyEmail() {
                 >
                   Go to Login
                 </button>
-                <p className="text-on-surface-variant font-body-sm">
-                  Need help?{" "}
-                  <button
-                    type="button"
-                    onClick={handleGoToLogin}
-                    className="text-primary font-semibold hover:underline"
-                  >
-                    Request a new verification email
-                  </button>
-                </p>
               </div>
             </div>
           )}
