@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AppLayout, { MobileBottomNav } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
 import StatusPill from "../components/ui/StatusPill";
@@ -9,6 +9,9 @@ import { bookingService, providerService } from "../services/api";
 
 export default function ProviderDashboardPage() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const focusedBookingId = searchParams.get("booking");
+  const focusedCardRef = useRef(null);
   const [available, setAvailable] = useState(null);
   const [profile, setProfile] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -125,6 +128,27 @@ export default function ProviderDashboardPage() {
     }
   };
 
+  const focusedBooking = useMemo(() => {
+    if (!focusedBookingId) return null;
+    return bookings.find((booking) => booking._id === focusedBookingId) || null;
+  }, [bookings, focusedBookingId]);
+
+  const focusedBookingMissing = Boolean(
+    focusedBookingId && !loading && !error && !focusedBooking,
+  );
+
+  useEffect(() => {
+    if (focusedBookingId && !loading && focusedBooking) {
+      const timer = setTimeout(() => {
+        focusedCardRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [focusedBookingId, loading, focusedBooking]);
+
   const bookingGroups = useMemo(
     () => ({
       all: bookings,
@@ -145,6 +169,9 @@ export default function ProviderDashboardPage() {
   );
   const filteredBookings = bookingGroups[activeGroup] || bookingGroups.all;
   const visibleBookings = filteredBookings.slice((page - 1) * 10, page * 10);
+  const displayedBookings = focusedBookingId
+    ? (focusedBooking ? [focusedBooking] : [])
+    : visibleBookings;
   const localPagination = {
     page,
     limit: 10,
@@ -280,7 +307,13 @@ export default function ProviderDashboardPage() {
                 key={group.id}
                 type="button"
                 aria-pressed={activeGroup === group.id}
-                onClick={() => { setActiveGroup(group.id); setPage(1); }}
+                onClick={() => {
+                  setActiveGroup(group.id);
+                  setPage(1);
+                  if (focusedBookingId) {
+                    setSearchParams({});
+                  }
+                }}
                 className={`min-h-11 shrink-0 rounded-full border px-4 py-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 ${
                   activeGroup === group.id
                     ? "border-primary bg-primary text-on-primary"
@@ -311,9 +344,40 @@ export default function ProviderDashboardPage() {
           </div>
         )}
 
+        {focusedBookingId && !focusedBookingMissing && (
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-primary/20 bg-primary/5 p-4" role="status">
+            <p className="text-sm font-medium text-on-surface">
+              Showing the booking request linked from your notification.
+            </p>
+            <button
+              type="button"
+              onClick={() => setSearchParams({})}
+              className="min-h-11 shrink-0 rounded-lg border border-outline-variant px-3 text-sm font-semibold text-on-surface hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Show all jobs
+            </button>
+          </div>
+        )}
+
+        {focusedBookingMissing && (
+          <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 text-center" role="status">
+            <h2 className="font-semibold text-on-surface">Booking not found</h2>
+            <p className="mt-2 text-sm text-on-surface-variant">
+              This booking request was not found or is not assigned to your provider account.
+            </p>
+            <button
+              type="button"
+              onClick={() => setSearchParams({})}
+              className="mt-4 min-h-11 rounded-lg border border-outline-variant px-4 text-sm font-semibold text-on-surface hover:bg-surface-container-high focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            >
+              Return to all jobs
+            </button>
+          </div>
+        )}
+
         {statusMessage && <p className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-sm font-medium text-primary" role="status" aria-live="polite">{statusMessage}</p>}
 
-        {!loading && !error && visibleBookings.length === 0 && (
+        {!focusedBookingId && !loading && !error && visibleBookings.length === 0 && (
           <div className="py-16 text-center border border-dashed border-outline-variant rounded-xl">
             <MaterialIcon
               name="event_available"
@@ -333,93 +397,102 @@ export default function ProviderDashboardPage() {
         )}
 
         <div className="space-y-4">
-          {visibleBookings.map((booking) => (
-            <article
-              key={booking._id}
-              className="space-y-5 rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 shadow-card sm:p-6"
-            >
-              <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
-                <div>
-                  <h2 className="font-headline-sm text-headline-sm">
-                    {booking.service}
-                  </h2>
-                  <p className="mt-1 break-words text-body-md text-on-surface-variant">
-                    {booking.customer?.name || "Customer"}{booking.customer?.phone ? ` · ${booking.customer.phone}` : " · Contact unavailable"}
+          {displayedBookings.map((booking) => {
+            const isFocused = booking._id === focusedBookingId;
+            return (
+              <article
+                key={booking._id}
+                ref={isFocused ? focusedCardRef : null}
+                id={`booking-${booking._id}`}
+                className={`space-y-5 rounded-2xl border bg-surface-container-lowest p-4 shadow-card transition-all duration-200 sm:p-6 ${
+                  isFocused
+                    ? "border-primary ring-2 ring-primary/30"
+                    : "border-outline-variant"
+                }`}
+              >
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+                  <div>
+                    <h2 className="font-headline-sm text-headline-sm">
+                      {booking.service}
+                    </h2>
+                    <p className="mt-1 break-words text-body-md text-on-surface-variant">
+                      {booking.customer?.name || "Customer"}{booking.customer?.phone ? ` · ${booking.customer.phone}` : " · Contact unavailable"}
+                    </p>
+                  </div>
+                  <StatusPill status={booking.status} />
+                </div>
+                <div className="grid sm:grid-cols-3 gap-4 text-body-sm">
+                  <div>
+                    <span className="block text-label-md text-on-surface-variant uppercase">
+                      Date
+                    </span>
+                    <time dateTime={booking.date}>{booking.date}</time>
+                  </div>
+                  <div>
+                    <span className="block text-label-md text-on-surface-variant uppercase">
+                      Window
+                    </span>
+                    {booking.timeSlot}
+                  </div>
+                  <div>
+                    <span className="block text-label-md text-on-surface-variant uppercase">
+                      Address
+                    </span>
+                    {booking.address}
+                  </div>
+                </div>
+                {booking.details && (
+                  <p className="whitespace-pre-wrap text-body-md text-on-surface-variant">
+                    {booking.details}
                   </p>
-                </div>
-                <StatusPill status={booking.status} />
-              </div>
-              <div className="grid sm:grid-cols-3 gap-4 text-body-sm">
-                <div>
-                  <span className="block text-label-md text-on-surface-variant uppercase">
-                    Date
-                  </span>
-                  <time dateTime={booking.date}>{booking.date}</time>
-                </div>
-                <div>
-                  <span className="block text-label-md text-on-surface-variant uppercase">
-                    Window
-                  </span>
-                  {booking.timeSlot}
-                </div>
-                <div>
-                  <span className="block text-label-md text-on-surface-variant uppercase">
-                    Address
-                  </span>
-                  {booking.address}
-                </div>
-              </div>
-              {booking.details && (
-                <p className="whitespace-pre-wrap text-body-md text-on-surface-variant">
-                  {booking.details}
-                </p>
-              )}
-              <div className="flex flex-wrap gap-3">
-                {normalizeBookingStatus(booking.status) === "pending" && (
-                  <>
+                )}
+                <div className="flex flex-wrap gap-3">
+                  {normalizeBookingStatus(booking.status) === "pending" && (
+                    <>
+                      <button
+                        type="button"
+                        disabled={updatingId !== null}
+                        onClick={() => updateStatus(booking._id, "accepted")}
+                        className="min-h-11 rounded-lg bg-primary px-5 py-2 font-bold text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {updatingId === booking._id ? "Updating…" : "Accept"}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={updatingId !== null}
+                        onClick={() => updateStatus(booking._id, "rejected")}
+                        className="min-h-11 rounded-lg border border-error px-5 py-2 font-bold text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        {updatingId === booking._id ? "Updating…" : "Reject"}
+                      </button>
+                    </>
+                  )}
+                  {normalizeBookingStatus(booking.status) === "accepted" && (
                     <button
                       type="button"
                       disabled={updatingId !== null}
-                      onClick={() => updateStatus(booking._id, "accepted")}
-                      className="min-h-11 rounded-lg bg-primary px-5 py-2 font-bold text-on-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      onClick={() => updateStatus(booking._id, "in_progress")}
+                      className="min-h-11 rounded-lg bg-secondary px-5 py-2 font-bold text-on-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {updatingId === booking._id ? "Updating…" : "Accept"}
+                      {updatingId === booking._id ? "Updating…" : "Start Service"}
                     </button>
+                  )}
+                  {normalizeBookingStatus(booking.status) === "in_progress" && (
                     <button
                       type="button"
                       disabled={updatingId !== null}
-                      onClick={() => updateStatus(booking._id, "rejected")}
-                      className="min-h-11 rounded-lg border border-error px-5 py-2 font-bold text-error focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-error focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      onClick={() => updateStatus(booking._id, "completed")}
+                      className="min-h-11 rounded-lg bg-secondary px-5 py-2 font-bold text-on-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      {updatingId === booking._id ? "Updating…" : "Reject"}
+                      {updatingId === booking._id ? "Updating…" : "Mark Complete"}
                     </button>
-                  </>
-                )}
-                {normalizeBookingStatus(booking.status) === "accepted" && (
-                  <button
-                    type="button"
-                    disabled={updatingId !== null}
-                    onClick={() => updateStatus(booking._id, "in_progress")}
-                    className="min-h-11 rounded-lg bg-secondary px-5 py-2 font-bold text-on-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {updatingId === booking._id ? "Updating…" : "Start Service"}
-                  </button>
-                )}
-                {normalizeBookingStatus(booking.status) === "in_progress" && (
-                  <button
-                    type="button"
-                    disabled={updatingId !== null}
-                    onClick={() => updateStatus(booking._id, "completed")}
-                    className="min-h-11 rounded-lg bg-secondary px-5 py-2 font-bold text-on-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {updatingId === booking._id ? "Updating…" : "Mark Complete"}
-                  </button>
-                )}
-              </div>
-            </article>
-          ))}
+                  )}
+                </div>
+              </article>
+            );
+          })}
         </div>
-        {!loading && !error && <BookingPagination pagination={localPagination} onPageChange={setPage} />}
+        {!focusedBookingId && !loading && !error && <BookingPagination pagination={localPagination} onPageChange={setPage} />}
       </section>
     </AppLayout>
   );

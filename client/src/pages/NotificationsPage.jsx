@@ -2,9 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AppLayout, { TopAppBar, MobileBottomNav } from "../layouts/AppLayout";
 import MaterialIcon from "../components/ui/MaterialIcon";
+import { useAuthUser } from "../components/navigation/AuthUserContext";
 import { notificationService } from "../services/api";
 
 export default function NotificationsPage() {
+  const authUser = useAuthUser();
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -82,8 +84,11 @@ export default function NotificationsPage() {
 
         {!loading && !error && <ol className="space-y-3" aria-label="Your notifications">
           {notifications.map((notification) => {
-            const bookingId = notification.booking?._id;
+            const bookingId = notification.booking?._id || (typeof notification.booking === "string" ? notification.booking : null);
             const linked = Boolean(bookingId);
+            const bookingPath = authUser?.role === "provider"
+              ? `/provider/dashboard?booking=${encodeURIComponent(bookingId)}`
+              : `/bookings?booking=${encodeURIComponent(bookingId)}`;
             const content = <>
               <MaterialIcon name={notification.readAt ? "notifications_none" : "notifications_active"} className="mt-1 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
@@ -98,7 +103,7 @@ export default function NotificationsPage() {
               {!notification.readAt && <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full bg-primary" aria-label="Unread" />}
             </>;
             return <li key={notification._id} className={`rounded-xl border p-4 transition-colors sm:p-5 ${notification.readAt ? "border-outline-variant bg-surface-container-lowest" : "border-primary/30 bg-primary/5"}`}>
-              {linked ? <Link to={`/bookings?booking=${encodeURIComponent(bookingId)}`} onClick={() => markRead(notification).catch(() => {})} aria-label={`${notification.readAt ? "" : "Unread: "}${notification.title}. View booking`} className="flex min-w-0 items-start gap-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{content}</Link> : <div className="flex min-w-0 items-start gap-4">{content}</div>}
+              {linked ? <Link to={bookingPath} onClick={() => markRead(notification).catch(() => {})} aria-label={`${notification.readAt ? "" : "Unread: "}${notification.title}. View booking`} className="flex min-w-0 items-start gap-4 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary">{content}</Link> : <div className="flex min-w-0 items-start gap-4">{content}</div>}
             </li>;
           })}
         </ol>}
